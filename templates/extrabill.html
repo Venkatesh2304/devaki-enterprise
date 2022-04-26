@@ -1,0 +1,50 @@
+<html>
+<head>
+    <title>Extra bills</title>
+</head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    var x;
+    function start() {
+        function aja() {
+            return new Promise(function (resolve, reject) {
+                $.ajax({
+                    type: 'POST',
+                    url: '/extrabill/start',
+                    success: function (data) {
+                        resolve(data) // Resolve promise and go to then()
+                    },
+                    error: function (err) {
+                        reject(err) // Reject the promise and go to catch()
+                    }
+                });
+            });
+        }
+
+        aja().then(function (data) {
+            // Run this when your request was successful
+            console.log(data);
+            window.open('/extradownload/' + JSON.parse(data)['file'], '_blank');
+        }).catch(function (err) {
+            // Run this when promise was rejected via reject()
+            console.log(err.responseText)
+            console.log(window.open('/extradownload/' + err.responseText, '_blank'));
+        })
+    }
+    function stop() {
+        $.ajax({
+            type: 'POST',
+            url: '/extrabill/stop' 
+        });
+    }
+
+  
+</script>
+<body>
+    <button onclick="start();">START</button>
+    <button onclick="stop();">STOP</button>
+    <a href="/extrabill/generateall">Generate</a>
+    <a href="/extrabills/report/all">Rerport</a>
+
+</body>
+</html>

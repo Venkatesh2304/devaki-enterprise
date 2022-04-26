@@ -1,0 +1,14 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Outstanding</title>
+</head>
+<body>
+    <input type="date" id="date" />
+    <button onclick="var x = document.getElementById('date').value; if (x == '') { window.location.href = '/outstanding/today' } else {window.location.href = '/outstanding//'+x}">Generate</button>
+    <button onclick="var x = document.getElementById('date').value; if (x == '') { window.location.href = '/outstanding/download/today' } else {window.location.href = '/outstanding/download//'+x}">Download</button><br />
+    <p> Lasst updated : {{last}}</p>
+</body>
+</html>

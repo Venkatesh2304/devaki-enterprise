@@ -1,0 +1,27 @@
+function y() {
+var jsonObj= [];
+var x ;
+var jsonObjforheaders= [{"1":"","2":"","3":"Beat :","4":"From Date :","5":"Salesman :","6":"To Date :","7":"Class : ","8":"Bill From:","9":"product","10":"Bill To:","11":"Brand :","12":"Party: ","13":"Type :","14":"Party Type","val1":"DEVAKI ENTERPRISES","val2":"","val3":"List of Beats","val4":"__from__","val5":"List of SalesMan","val6":"__to__","val7":"List of Classes","val8":"","val9":"List of Products","val10":"","val11":"List of Brands","val12":"List of Outlets","val13":"List of Channels","val14":"List of Party Type"}];
+var jsonObjfileInfi= [{"title":"Bill Wise Sales,Bill Wise Sales","reportfilename":"Bill Wise Sales","viewpage":"report/billWiseSales.jsp","viewname":"BILL_WISE_SALES_PROCEDURE","querycount":1}] ;
+var jsonObjWhereClause=  {":val1":"__from__",":val2":"__to__",":val3":"Beat",":val4":"",":val5":"",":val6":"",":val7":"",":val8":"",":val9":"",":val10":"",":val11":"",":val12":"",":val13":"",":val14":"",":val15":"ALL",":val16":"",":val17":"",":val18":"All Bills",":val19":"Yes",":val20":"Units",":val21":16};
+return $.ajax({
+		method : "POST",
+		url : '/rsunify/app/reportsController/generatereport.do',
+		data : {
+			'jsonData' : JSON.stringify(jsonObj),//json object to store  to sql data
+				'jsonObjforheaders':JSON.stringify(jsonObjforheaders),//json object to store header lebel of report
+				'jsonObjfileInfi':JSON.stringify(jsonObjfileInfi),// json object to store report file name,title and view resolver
+				'orderBy':'[Bill Number],[Beat],[Bill Date]',//order condition
+				'jsonObjWhereClause':JSON.stringify(jsonObjWhereClause),//Where condition 
+				
+		},
+		async:false
+			});
+	}	
+function z() {
+    $.when(y()).done(function (data) {
+	window.open('/rsunify/app/reportsController/downloadReport?filePath='+data,'_blank');
+});}
+		 		  
+z();
+

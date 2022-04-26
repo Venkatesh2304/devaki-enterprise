@@ -1,0 +1,169 @@
+<style>
+table{
+	width: 100%; 
+    font-family: -webkit-pictograph; 
+}
+th,td {
+	border-bottom: 1px solid #ddd;
+	text-align: left;
+}
+select {
+  height: auto;
+}
+button {
+ height:auto;
+}
+input,button,select{
+float :left;
+  width:15%;
+  border-bottom-color: rgb(224, 224, 224);
+border-bottom-left-radius: 10px;
+border-bottom-right-radius: 10px;
+border-bottom-style: solid;
+border-bottom-width: 1px;
+border-left-color: rgb(224, 224, 224);
+border-left-style: solid;
+border-left-width: 1px;
+border-right-color: rgb(224, 224, 224);
+border-right-style: solid;
+border-right-width: 1px;
+border-top-color: rgb(224, 224, 224);
+border-top-left-radius: 10px;
+border-top-right-radius: 10px;
+border-top-style: solid;
+border-top-width: 1px;
+box-sizing: border-box;
+color: rgb(0, 0, 0);
+cursor: text;
+font-family: "Gilroy", sans-serif;
+font-size: 20px;
+height: auto;
+width: auto;
+outline:none;
+margin: 2px;
+padding: 10;
+}
+select {
+	outline:none;
+	height:auto;
+	font-family: "Gilroy", sans-serif;
+font-size: 20px;
+	
+}
+input:focus{
+    transform:scale(1.04);
+    box-shadow: rgba(70, 74, 85, 0.08) 0px 13px 22px 0px;
+}
+button {
+	cursor:default;
+	display:left;
+  background: #66d9ff;
+    color: white;
+    width: auto;
+    
+}
+#billno1,#billno2{
+    width:10%;
+}
+</style>
+
+<!DOCTYPE html>
+<script>
+    function add() {
+        function creates(billno, vehicle) {
+            tr = document.createElement('tr');
+            tr.id = billno;
+            td1 = document.createElement('td');
+            td1.innerText = billno;
+            td2 = document.createElement('td');
+            inputs = document.createElement('input');
+            inputs.value = vehiclename[vehicle];
+            inputs.name = billno;
+            //inputs.disabled=true;
+            inputs.setAttribute('name', billno);
+            inputs.setAttribute('value', vehiclename[vehicle]);
+            td3 = document.createElement('button');
+            td3.setAttribute('type', 'button');
+            td3.innerText = 'Delete';
+            td3.id = billno;
+            td3.setAttribute('onclick', 'document.getElementById(this.id).remove();');
+            tr.appendChild(td1);
+            tr.appendChild(td2);
+            tr.appendChild(td3);
+            td2.appendChild(inputs);
+            document.querySelector("#form > table").insertBefore(tr, document.querySelector("#form > table").childNodes[2]);
+        }
+        var ele = document.getElementById('vehicle').childNodes;
+        var vehiclename = {};
+        for (var i = 0; i < ele.length; i++) {
+            vehiclename[ele[i].innerText] = ele[i].className;
+        }
+        billno1 = document.getElementById('billno1').value;
+        billno2 = document.getElementById('billno2').value;
+        vehicle = document.getElementById('vehicle').value;
+        if (billno2 == '') {
+            if (billno1[0] != '.') {
+                creates('DEV' + billno1, vehicle);
+            }
+            else {
+                creates(billno1, vehicle);
+            }
+        }
+        else {
+            for (var a = parseInt(billno1); a < parseInt(billno2) + 1; a++) {
+                creates('DEV' + a.toString(), vehicle);
+                   }
+        }
+        document.getElementById('billno2').value = '';
+    
+}
+    
+ window.addEventListener('load',function(){
+  document.getElementById('date1').value='{{prevdate}}' ;
+ });
+ function deletes() {
+    var confirmation = prompt("TYPE 'delete' :" );
+    if(confirmation=='delete'){          
+ 	var elements = document.getElementsByTagName('tr');
+while (elements[0]) elements[0].parentNode.removeChild(elements[0]);
+}
+
+    }
+   
+</script>
+<MARQUEE style='color: cornflowerblue;font-size: 25;'>DEVAKI ENTERPRISES - EWAY BILL</marquee>
+<form name='form' id='form' action='/eway/save' method='POST'>
+    <input type='date' id='date1' name='date1' placeholder="from"/>
+    <input type='date' id='date' name='date2' placeholder="to"/>
+    <select name='vehicle' id='vehicle'>
+        {%for i in vehicle.keys()%}
+        <option class="{{vehicle[i]}}">{{i}}</option>
+        {%endfor%}
+    </select>
+    <select id='beat' onchange="document.getElementById('billno1').value = '.' + this.value; document.getElementById('billno2').value = '';">
+        {% for i in beats %}
+        <option>{{i}}</option>
+        {%endfor%}
+    </select>
+
+    <input type='text' id='billno1' />
+    <input type='text' id='billno2' />
+    <button type='button' onclick='add();'>Add</button>
+    <button type='button' onclick='document.getElementById("form").action="/eway/generate" ; document.getElementById("form").submit();'>Eway</button>
+    <button type='button' onclick='document.getElementById("form").action="/eway/generate" ; document.getElementById("form").submit();'>Invoice</button>
+    <table name='table'>
+        <tr>
+            <th>Bill number</th>
+            <th>Vehicle</th>
+            <th>Delete</th>
+        </tr>
+        {%for i in prev%}
+        <tr id='{{i[0]}}'>
+            <td>{{i[0]}}</td>
+            <td><input name='{{i[0]}}' value='{{i[1]}}'></td>
+            <td><button type='button' id='{{i[0]}}' onclick='document.getElementById(this.id).remove();'>Delete</button></td>
+        </tr>
+        {%endfor%}
+    </table>
+    <button type='button' onclick=deletes()>Delete All entries</button>
+</form>

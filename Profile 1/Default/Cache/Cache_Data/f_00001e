@@ -1,0 +1,3228 @@
+var gaugeOptions = {
+	chart: {
+	    type: 'solidgauge'
+	},
+    credits: {
+        enabled: false
+    },
+    series: [{
+        name: 'Size',
+        data: [],
+        dataLabels: {
+            format: ''
+        },
+        tooltip: {
+            valueSuffix: '%'
+        }
+    }],
+    title:{
+        text:''
+    },
+    pane: {
+        center: ['50%', '85%'],
+        size: '140%',
+        startAngle: -90,
+        endAngle: 90,
+        background: {
+            backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || '#EEE',
+            innerRadius: '60%',
+            outerRadius: '100%',
+            shape: 'arc'
+        }
+    },
+    tooltip: {
+        enabled: false
+    },
+    yAxis: {
+    	min: 0,
+        max: 100,
+        title: {
+            text: ''
+        },
+        stops: [
+            [0.0, '#55BF3B'], // green
+            [0.6, '#55BF3B'],
+            [0.61, '#f48b05'], // yellow
+            [0.799, '#f48b05'],
+            [0.8, '#DF5353'] // red
+        ],
+        allowDecimals: false,
+        lineWidth: 0,
+        minorTickInterval: null,
+        tickAmount: 2,
+        title: {
+            y: -70
+        },
+        labels: {
+            y: 16,
+           // format: '{value:.2f}',
+            formatter: function() {
+                return parseInt(this.value, 10) + "%";
+            }
+        }
+    },
+    plotOptions: {
+        solidgauge: {
+            dataLabels: {
+                y: 5,
+                borderWidth: 0,
+                useHTML: true
+            }
+        }
+    }
+};
+
+var chartHandleTitle = {
+	area: {title: "Area", icon: "area-basic.png"},
+	arearange: {title: "Area Range", icon: "arearange.png"},
+	areaspline: {title: "Area Spline", icon: "areaspline.png"},
+	bar: {title: "Bar", icon: "bar-basic.png"},												
+	column: {title: "Column", icon: "column-basic.png"},
+	columnrange: {title: "Column Range", icon: "columnrange.png"},
+	column_line: {title: "Combo [Column - Line]", icon: "combo-dual-axes.png"},
+	pie_column_line: {title: "Combo [Pie - Column - Line]", icon: "combo-column-pie.png"},
+	funnel: {title: "Funnel", icon: "funnel.png"},
+	gauge: {title: "Gauge", icon: "gauge-speedometer.png"},
+	solidgauge: {title: "Solid Gauge", icon: "gauge-solid.png"},															
+	heatmap: {title: "Heat Map", icon: "heatmap.png"},
+	line: {title: "Line", icon: "line-basic.png"},
+	pie: {title: "Pie", icon: "pie-basic.png"},														
+	pyramid: {title: "Pyramid", icon: "pyramid.png"},														
+	spider: {title: "Spider Web", icon: "polar-spider.png"},		
+	spline: {title: "Spline", icon: "spline-inverted.png"},																																										
+	waterfall: {title: "Water Fall", icon: "waterfall.png"},
+	drilled_pie: {title: "Drilled Down Pie", icon: "pie-basic.png"},
+	drilled_bar: {title: "Drilled Down Bar", icon: "bar-basic.png"},
+	drilled_column: {title: "Drilled Down Column", icon: "column-basic.png"},
+	stacked_bar: {title: "Stacked Bar", icon: "bar-stacked-default.png"},
+	stacked_column: {title: "Stacked Column", icon: "column-stacked-default.png"},
+	dual_axes: {title: "Dual Axes", icon: "combo-dual-axes.png"}
+};
+
+var ikeaHighChartThemes = {
+	dfault: {
+		colors : ['#73879C', '#CCFFCC', '#0099CC', '#66CCFF', '#003399', '#097054', '#FFDE00', '#6599FF'],
+		chart : {
+			backgroundColor : 'rgba(255, 255, 255, 0.0)',
+		},
+		title : {
+			style : {
+				color : '#73879C',
+			}
+		},
+		subtitle : {
+			style : {
+				color : '#73879C'
+			}
+		},
+		xAxis: {
+	       lineWidth: 1,
+	       lineColor: '#bbbbbb',
+	       tickWidth: 1,
+	       tickColor: '#bbbbbb',
+	       labels: {
+	           style: {
+	        	   color: '#777'	               
+	           }
+	       }
+	   },
+	   yAxis: {
+	       gridLineWidth: 1,
+	       gridLineColor: '#d9d9d9',
+	       labels: {
+	          style: {
+	        	  color: '#777'	              
+	          }
+	       }
+	   },
+		plotOptions: {
+	        series: {
+	            borderColor: null
+	        }
+	    },
+		legend : {
+			itemStyle : {
+				color : '#73879C'
+			},
+			itemHoverStyle : {
+				color : 'gray'
+			}
+		}
+	},
+	dark_white: {
+		colors : "#2b908f #90ee7e #f45b5b #7798BF #aaeeee #ff0066 #eeaaee #55BF3B #DF5353 #7798BF #aaeeee"
+			.split(" "),
+		chart : {
+			backgroundColor : 'rgba(255, 255, 255, 0.0)',
+			style : {
+				fontFamily : "'Unica One', sans-serif"
+			},
+			plotBorderColor : "#606063"
+		},
+		title : {
+			style : {
+				color : "#E0E0E3",
+				textTransform : "uppercase",
+				fontSize : "20px"
+			}
+		},
+		subtitle : {
+			style : {
+				color : "#E0E0E3",
+				textTransform : "uppercase"
+			}
+		},
+		xAxis : {
+			gridLineColor : "#707073",
+			labels : {
+				style : {
+					color : "#E0E0E3"
+				}
+			},
+			lineColor : "#707073",
+			minorGridLineColor : "#505053",
+			tickColor : "#707073",
+			title : {
+				style : {
+					color : "#A0A0A3"
+				}
+			}
+		},
+		yAxis : {
+			gridLineColor : "#707073",
+			labels : {
+				style : {
+					color : "#E0E0E3"
+				}
+			},
+			lineColor : "#707073",
+			minorGridLineColor : "#505053",
+			tickColor : "#707073",
+			tickWidth : 1,
+			title : {
+				style : {
+					color : "#A0A0A3"
+				}
+			}
+		},
+		tooltip : {
+			backgroundColor : "rgba(0, 0, 0, 0.85)",
+			style : {
+				color : "#F0F0F0"
+			}
+		},
+		plotOptions : {
+			series : {
+				dataLabels : {
+					color : "#B0B0B3"
+				},
+				marker : {
+					lineColor : "#333"
+				},
+				borderColor: null
+			},
+			boxplot : {
+				fillColor : "#505053"
+			},
+			candlestick : {
+				lineColor : "white"
+			},
+			errorbar : {
+				color : "white"
+			}
+		},
+		legend : {
+			itemStyle : {
+				color : "#E0E0E3"
+			},
+			itemHoverStyle : {
+				color : "#FFF"
+			},
+			itemHiddenStyle : {
+				color : "#606063"
+			}
+		},
+		credits : {
+			style : {
+				color : "#666"
+			}
+		},
+		labels : {
+			style : {
+				color : "#707073"
+			}
+		},
+		drilldown : {
+			activeAxisLabelStyle : {
+				color : "#F0F0F3"
+			},
+			activeDataLabelStyle : {
+				color : "#F0F0F3"
+			}
+		},
+		navigation : {
+			buttonOptions : {
+				symbolStroke : "#DDDDDD",
+				theme : {
+					fill : "#505053"
+				}
+			}
+		},
+		rangeSelector : {
+			buttonTheme : {
+				fill : "#505053",
+				stroke : "#000000",
+				style : {
+					color : "#CCC"
+				},
+				states : {
+					hover : {
+						fill : "#707073",
+						stroke : "#000000",
+						style : {
+							color : "white"
+						}
+					},
+					select : {
+						fill : "#000003",
+						stroke : "#000000",
+						style : {
+							color : "white"
+						}
+					}
+				}
+			},
+			inputBoxBorderColor : "#505053",
+			inputStyle : {
+				backgroundColor : "#333",
+				color : "silver"
+			},
+			labelStyle : {
+				color : "silver"
+			}
+		},
+		navigator : {
+			handles : {
+				backgroundColor : "#666",
+				borderColor : "#AAA"
+			},
+			outlineColor : "#CCC",
+			maskFill : "rgba(255,255,255,0.1)",
+			series : {
+				color : "#7798BF",
+				lineColor : "#A6C7ED"
+			},
+			xAxis : {
+				gridLineColor : "#505053"
+			}
+		},
+		scrollbar : {
+			barBackgroundColor : "#808083",
+			barBorderColor : "#808083",
+			buttonArrowColor : "#CCC",
+			buttonBackgroundColor : "#606063",
+			buttonBorderColor : "#606063",
+			rifleColor : "#FFF",
+			trackBackgroundColor : "#404043",
+			trackBorderColor : "#404043"
+		},
+		legendBackgroundColor : "rgba(0, 0, 0, 0.5)",
+		background2 : "#505053",
+		dataLabelsColor : "#B0B0B3",
+		textColor : "#C0C0C0",
+		contrastTextColor : "#F0F0F3",
+		maskColor : "rgba(255,255,255,0.3)"
+	},
+	dark_green: {
+		colors : ['#54B2AE', '#E8D0A9', '#B7AFA3', '#C1DAD6', '#F5FAFA', '#ACD1E9', '#6D929B', '#727B84', '#F4F3EE'],
+		chart : {
+			backgroundColor : 'rgba(255, 255, 255, 0.0)',
+		},
+		title : {
+			style : {
+				color : '#54B2AE',
+			}
+		},
+		subtitle : {
+			style : {
+				color : '#54B2AE'
+			}
+		},
+		plotOptions: {
+	        series: {
+	            borderColor: null
+	        }
+	    },
+		xAxis: {    
+		    gridLineColor : "#707073",
+			labels : {
+				style : {
+					color : "#E0E0E3"
+				}
+			},
+			lineColor : "#707073",
+			minorGridLineColor : "#505053",
+			tickColor : "#707073",
+			title : {
+				style : {
+					color : "#A0A0A3"
+				}
+			}	    
+		   },
+		   yAxis: {
+			   gridLineColor : "#707073",
+				labels : {
+					style : {
+						color : "#E0E0E3"
+					}
+				},
+				lineColor : "#707073",
+				minorGridLineColor : "#505053",
+				tickColor : "#707073",
+				tickWidth : 1,
+				title : {
+					style : {
+						color : "#A0A0A3"
+					}
+				}
+		   },
+		legend : {
+			itemStyle : {
+				color : "#E0E0E3"
+			},
+			itemHoverStyle : {
+				color : "#FFF"
+			},
+			itemHiddenStyle : {
+				color : "#606063"
+			}
+		},
+		labels : {
+			style : {
+				color : "#707073"
+			}
+		},
+		drilldown : {
+			activeAxisLabelStyle : {
+				color : "#F0F0F3"
+			},
+			activeDataLabelStyle : {
+				color : "#F0F0F3"
+			}
+		},
+		navigation : {
+			buttonOptions : {
+				symbolStroke : "#DDDDDD",
+				theme : {
+					fill : "#505053"
+				}
+			}
+		},
+		rangeSelector : {
+			buttonTheme : {
+				fill : "#505053",
+				stroke : "#000000",
+				style : {
+					color : "#CCC"
+				},
+				states : {
+					hover : {
+						fill : "#707073",
+						stroke : "#000000",
+						style : {
+							color : "white"
+						}
+					},
+					select : {
+						fill : "#000003",
+						stroke : "#000000",
+						style : {
+							color : "white"
+						}
+					}
+				}
+			},
+			inputBoxBorderColor : "#505053",
+			inputStyle : {
+				backgroundColor : "#333",
+				color : "silver"
+			},
+			labelStyle : {
+				color : "silver"
+			}
+		},
+		navigator : {
+			handles : {
+				backgroundColor : "#666",
+				borderColor : "#AAA"
+			},
+			outlineColor : "#CCC",
+			maskFill : "rgba(255,255,255,0.1)",
+			series : {
+				color : "#7798BF",
+				lineColor : "#A6C7ED"
+			},
+			xAxis : {
+				gridLineColor : "#505053"
+			}
+		},
+		scrollbar : {
+			barBackgroundColor : "#808083",
+			barBorderColor : "#808083",
+			buttonArrowColor : "#CCC",
+			buttonBackgroundColor : "#606063",
+			buttonBorderColor : "#606063",
+			rifleColor : "#FFF",
+			trackBackgroundColor : "#404043",
+			trackBorderColor : "#404043"
+		},
+		legendBackgroundColor : "rgba(0, 0, 0, 0.5)",
+		background2 : "#505053",
+		dataLabelsColor : "#B0B0B3",
+		textColor : "#C0C0C0",
+		contrastTextColor : "#F0F0F3",
+		maskColor : "rgba(255,255,255,0.3)"
+	},
+	aqua_white: {
+		colors : ['#FFFFFF', '#CCCCCC', '#F9F6F4', '#E9E0DB', '#C9A798', '#CCCC9A', '#666666', '#999967', '#4F2412'],
+		chart : {
+			backgroundColor : 'rgba(255, 255, 255, 0.0)',
+		},
+		title : {
+			style : {
+				color : '#FFFFFF',
+			}
+		},
+		subtitle : {
+			style : {
+				color : '#FFFFFF'
+			}
+		},
+		plotOptions: {
+	        series: {
+	            borderColor: null
+	        }
+	    },
+		xAxis: {
+		       lineWidth: 1,
+		       lineColor: '#cccccc',
+		       tickWidth: 1,
+		       tickColor: '#cccccc',
+		       labels: {
+		           style: {
+		        	   color: '#cccccc'		               
+		           }
+		       }
+		   },
+		   yAxis: {
+		       gridLineWidth: 1,
+		       gridLineColor: '#d9d9d9',
+		       labels: {
+		          style: {
+		        	  color: '#cccccc'
+		           }
+		       }
+		   },
+		legend : {
+			itemStyle : {
+				color : '#FFFFFF'
+			},
+			itemHoverStyle : {
+				color : '#FFFFFF'
+			}
+		}
+	},
+	green_white: {
+		colors : ['#FFFFFF', '#F1EFE2', '#E7E4D3', '#C0C0C0', '#EBF4FA', '#BBD9EE', '#206BA4', '#999966', '#6699CC'],
+		chart : {
+			backgroundColor : 'rgba(255, 255, 255, 0.0)',
+		},
+		title : {
+			style : {
+				color : '#FFFFFF',
+			}
+		},
+		subtitle : {
+			style : {
+				color : '#FFFFFF'
+			}
+		},
+		plotOptions: {
+	        series: {
+	            borderColor: null
+	        }
+	    },
+		
+		   
+		   xAxis : {
+				gridLineColor : "#707073",
+				labels : {
+					style : {
+						color : "#FFF"
+					}
+				},
+				lineColor : "#707073",
+				minorGridLineColor : "#505053",
+				tickColor : "#707073",
+				title : {
+					style : {
+						color : "#FFF"
+					}
+				}
+			},
+			yAxis : {
+				gridLineColor : "#707073",
+				labels : {
+					style : {
+						color : "#FFF"
+					}
+				},
+				lineColor : "#707073",
+				minorGridLineColor : "#505053",
+				tickColor : "#707073",
+				tickWidth : 1,
+				title : {
+					style : {
+						color : "#FFF"
+					}
+				}
+			},
+			legend : {
+				itemStyle : {
+					color : "#E0E0E3"
+				},
+				itemHoverStyle : {
+					color : "#FFF"
+				},
+				itemHiddenStyle : {
+					color : "#606063"
+				}
+			},
+			labels : {
+				style : {
+					color : "#707073"
+				}
+			}
+	},
+	white_green: {
+		colors : ['#54B2AE', '#005A04', '#CCFFBB', '#3A5F0B', '#9C9F84', '#A97D5D', '#F7DCB4', '#5C755E'],
+		chart : {
+			backgroundColor : 'rgba(255, 255, 255, 0.0)',
+		},
+		title : {
+			style : {
+				color : '#54B2AE',
+			}
+		},
+		subtitle : {
+			style : {
+				color : '#54B2AE'
+			}
+		},
+		plotOptions: {
+	        series: {
+	            borderColor: null
+	        }
+	    },
+		legend : {
+			itemStyle : {
+				color : '#54B2AE'
+			},
+			itemHoverStyle : {
+				color : '#54B2AE'
+			}
+		}
+	},
+	orange_white: {
+		colors : ['#FFFFFF', '#CCCCCC', '#F9F6F4', '#E9E0DB', '#C9A798', '#4F2412', '#C8D7E3', '#000000', '#98B1C4'],
+		chart : {
+			backgroundColor : 'rgba(255, 255, 255, 0.0)',
+		},
+		title : {
+			style : {
+				color : '#FFFFFF',
+			}
+		},
+		subtitle : {
+			style : {
+				color : '#FFFFFF'
+			}
+		},
+		plotOptions: {
+	        series: {
+	            borderColor: null
+	        }
+	    },
+		xAxis: {
+		       lineWidth: 1,
+		       lineColor: '#cccccc',
+		       tickWidth: 1,
+		       tickColor: '#cccccc',
+		       labels: {
+		           style: {
+		        	   color: '#eeeeee'
+		           }
+		       }
+		   },
+		   yAxis: {
+		       gridLineWidth: 1,
+		       gridLineColor: '#d9d9d9',
+		       labels: {
+		          style: {
+		        	  color: '#eeeeee'		              
+		           }
+		       }
+		   },
+		legend : {
+			itemStyle : {
+				color : '#FFFFFF'
+			},
+			itemHoverStyle : {
+				color : '#FFFFFF'
+			}
+		}
+	},
+	white_orange: {
+		colors : ['#F39C12', '#771100', '#CC6633', '#999999', '#CCCCCC', '#9C9284', '#CCCC99', '#000000', '#FF9900'],
+		chart : {
+			backgroundColor : 'rgba(255, 255, 255, 0.0)',
+		},
+		title : {
+			style : {
+				color : '#F39C12',
+			}
+		},
+		subtitle : {
+			style : {
+				color : '#F39C12'
+			}
+		},
+		plotOptions: {
+	        series: {
+	            borderColor: null
+	        }
+	    },
+		legend : {
+			itemStyle : {
+				color : '#F39C12'
+			},
+			itemHoverStyle : {
+				color : '#F39C12'
+			}
+		}
+	},
+	red_white: {
+		colors : ['#FFFFFF', '#727B84', '#DF9496', '#F6F4DA', '#F4F3EE', '#D9E2E1', '#A2ADBC', '#D9D4AE', '#575234'],
+		chart : {
+			backgroundColor : 'rgba(255, 255, 255, 0.0)',
+		},
+		title : {
+			style : {
+				color : '#FFFFFF',
+			}
+		},
+		plotOptions: {
+	        series: {
+	            borderColor: null
+	        }
+	    },
+		xAxis: {		       
+		       labels: {
+		           style: {
+		        	   color: '#cccccc'		               
+		           }
+		       }
+		   },
+		   yAxis: {		       
+		       labels: {
+		          style: {
+		        	  color: '#cccccc'
+		           }
+		       }
+		   },
+		subtitle : {
+			style : {
+				color : '#FFFFFF'
+			}
+		},
+		legend : {
+			itemStyle : {
+				color : '#FFFFFF'
+			},
+			itemHoverStyle : {
+				color : '#FFFFFF'
+			}
+		}
+	},
+	white_red: {
+		colors : ['#DD4B39', '#D01A55', '#FCB3D0', '#FF6600', '#000000', '#FFD800', '#587058', '#587498', '#E86850'],
+		chart : {
+			backgroundColor : 'rgba(255, 255, 255, 0.0)',
+		},
+		title : {
+			style : {
+				color : '#DD4B39',
+			}
+		},
+		subtitle : {
+			style : {
+				color : '#DD4B39'
+			}
+		},
+		plotOptions: {
+	        series: {
+	            borderColor: null
+	        }
+	    },
+		
+		legend : {
+			itemStyle : {
+				color : '#DD4B39'
+			},
+			itemHoverStyle : {
+				color : '#DD4B39'
+			}
+		}
+	}
+};
+
+/*  */
+var ikeaDashboardManagerObj = null;
+/*  */
+var ikeaDashboardManager = function() {
+	/**/
+	this.request = null;
+	/**/
+	this.meta = null;
+	/**/
+	this.ajaxFlaq = false;
+	/**/
+	this.data = {};
+	/**/
+	this.groups = {};
+	/**/
+	this.uvoption = {};
+	/**/
+	this.general = {};
+	/**/
+	this.widgets = {};
+	/**/
+	this.dsbId = -1; 
+	/**/
+	this.dashboard = "";
+	/**/
+	this.dashboardID = null;
+	/**/
+	this.isEditMode = false;
+	/**/
+	this.rawWidgets = {};
+	/**/
+	this.usedWidgets = [];
+	/**/
+	this.draggedWidget = null;
+	/**/
+	this.defferedPayload = null;
+	/**/
+	this.activeFilterDuration = 1;
+	/**/
+	this.activeFilterSection = null;
+	/**/
+	this.container = $("#rsu-dashboard-viewer-pad");
+	/**/
+	this.widgetListContainer = $("div.ikea-dashboard-widget-list-holder");
+	
+	/**/
+	this.targetItem = null;
+	/**/
+	this.totalRows = null;
+	/**/
+	this.totalColumns = null;
+	/**/
+	this.currentRow = null;
+	/**/
+	this.currentColumn = null;
+	/**/
+	this.currentWidget = null;
+	/**/
+	this.gItemWidth = null;
+	/**/
+	this.gItemHeight = null;	
+	/**/
+	this.isMoving = false;
+	/**/
+	this.isResizing = false;
+	/**/
+	this.widgetCornerClicked = false;
+	/**/
+	this.widgetClicked = false;
+	/**/
+	this.resizeDir = "";
+	/**/
+	this.diffX = 0;
+	/**/
+	this.diffY = 0;
+	/* Holds the selected duration property */
+	this.activeFilterDuration = 1;
+	/* MRP or TUP unit option */
+	this.activeFilterType = null;
+	/* Act as a local session for active filter properties */
+	this.filters = {};
+	/* Used for reloading dashboard while maintain the filter states */
+	this.groupKeys = [];
+	/* Used for reloading dashboard while maintain the filter states */
+	this.groupIndex = -1;
+	/* drag drop error flag */
+	this.isErrorOnDrop = false;
+	/**/
+	this.surveyor = null;
+	this.surveyIndex = 0;
+	this.surveyAnswers = {};
+	this.surveyLocalKey = "";
+	this.questionBlock = null;
+	this.callLogout = false;
+	this.initialDashboardLoad = true;
+	
+	this.init = function() {
+		$("#loadPage").hide();
+		$("div.rsu-probe-container").hide();
+		$("#rsu-transaction-body-wrapper").hide();
+		$("#rsu-dashboard-container").show();
+		/**/
+		this.registerEvents();
+		/**/
+		movable(this.widgetListContainer[0], this.widgetListContainer.find("h3")[0]);
+		this.load("new_dashboard");
+		/**/
+		this.gItemHeight = parseFloat(this.container.css("grid-template-rows").split(' ')[0]);
+		/**/
+		this.gItemWidth = parseFloat(this.container.css("grid-template-columns").split(' ')[0]);
+		/**/
+		this.totalRows = this.container.css("grid-template-rows").split(' ').length;
+		/**/
+		this.totalColumns = this.container.css("grid-template-columns").split(' ').length;
+		
+		Highcharts.setOptions({
+		    lang: {
+		        thousandsSep: ','
+		    }
+		});
+		
+		/* Initialize the timer for scheduled refresh */
+		var me = this;
+		/*setInterval(function() {
+			if (!me.ajaxFlaq && !rSuControllerObj.contextObj) {
+				me.reload();
+			}
+		}, 360000);*/
+	};
+	
+	this.deferredInit =- function() {
+		
+	};
+	
+	this.registerEvents = function() {
+		
+		/* Global error handler */
+		window.onerror = function (message, file, line, col, error) {
+		   console.log("Error occurred: " + error.message);
+		   return false;
+		};
+		window.addEventListener("error", function (e) {
+			console.log("Error occurred: " + e.error.message);
+		   return false;
+		});
+		
+		/* Global click event handler */
+		$(document).on("click", function() {
+			$("div.ikea-widget-supported-type-list").hide();
+			$("div.ikea-dashboard-filter-box").remove();
+		});
+		
+		/**/
+		$(document).on("click", "#ikea-widget-list-close-btn", this, function(e) {
+			e.data.widgetListContainer.hide();
+			e.preventDefault();
+		});	
+		
+		$(document).on("click", "#ikea-dashboard-reset-btn", this, function(e) {
+			
+			e.preventDefault();
+		});	
+		
+		$(document).on("click", "div.widget-holder > a.remove-btn", this, function(e) {
+			e.data.removeWidget($(this).parent().attr("data-id"), $(this).closest("div.rsu-dashboard-group-container").attr("data-gr-handle"));
+		});
+		
+		$(document).on("click", "div.widget-holder > a.zoom-btn", this, function(e) {
+			e.preventDefault();  
+		    e.stopPropagation();
+			e.data.zoomWidget($(this));
+		});
+		
+		$(document).on("click", "div.widget-holder > a.help-btn", this, function(e) {
+			e.preventDefault();  
+		    e.stopPropagation();
+			e.data.showHelp($(this).attr("data-id"));
+		});
+		
+		$(document).on("click", "a.widget-previewer-close-btn", function() {
+			$(this).parent().remove();
+		});
+		
+		$( document ).on("click", "a.ikea-widget-transformation-btn", function(e) {
+			e.preventDefault();  
+		    e.stopPropagation();
+		    if ($(this).next().is(":visible")) {
+		    	$(this).next().hide();
+		    } else {
+		    	$(this).next().show();
+		    }
+		});
+		
+		$(document).on("click", "div.ikea-widget-supported-type-list > a", this, function(e) {
+			e.preventDefault();  
+			e.data.mask($(this).closest("div.widget-holder"), false);
+			/* Prepare the request object */
+			e.data.request = e.data.prepareRequest("/visualizer/list", "dashboard", "TRANSFORM_WIDGET", 0, {
+				ID: $(this).attr("data-id"), 
+				SUB_TYPE: $(this).attr("data-type"),
+				DID : e.data.dashboardID,
+				OPTIONS: e.data.filters[$(this).attr("data-id")],
+			});
+			/* Initiate the request */
+			e.data.dock();
+		});
+		
+		$( document ).on("click", "button.rsu-dashboard-group-config-btn", this, function(e) {
+			e.preventDefault();  
+		    e.stopPropagation();
+		    if ($('body').find('div.ikea-dashboard-group-config-dialog').length > 0) {
+		    	$('body').find('div.ikea-dashboard-group-config-dialog').remove();
+		    } else {		    	
+		    	e.data.loadGroupConfigDialog(e, $(this).parent().attr("data-gr-handle"));
+		    }
+		});
+		
+		$(document).on("click", "button.rsu-dashboard-filter-btn", this, function(e) {
+			e.data.showFilterBox($(this));
+			e.preventDefault();
+			e.stopPropagation();
+		});
+		
+		$(document).on("click", "input.ikea-dashboard-filter-item", this, function(e) {    
+			e.stopPropagation();
+			var type = $(this).attr("data-type"),
+				id = $(this).closest("div.ikea-dashboard-filter-box").attr("data-id");
+			
+			/* Store in the local filter session object */
+			e.data.filters[id][$(this).attr("data-filter")] = $(this).val();
+			if (type == "GROUP") {
+				e.data.activeFilterSection = id;
+				/* Prepare the request object */
+				e.data.request = e.data.prepareRequest("/visualizer/list", "dashboard", "GET_DASHBOARD_SECTION", 0, {
+					ID: id,
+					DASHBOARD: e.data.dashboard, 
+					OPTIONS: e.data.filters[id],
+					FILTERS: e.data.filters
+				});
+			} else {
+				/* Prepare the request object */
+				e.data.request = e.data.prepareRequest("/visualizer/list", "dashboard", "GET_SINGLE_WIDGET", 0, {
+					ID: id,
+					DID : e.data.dashboardID,
+					OPTIONS: e.data.filters[id]
+				});
+			}			
+			e.data.mask($(this).closest("div.ikea-dashboard-filter-box"), false);
+			/* Initiate the request */
+			e.data.dock();
+		});		
+		
+		$(document).on("click", "div.ikea-dashboard-filter-box, div.ikea-dashboard-widget-mask", function(e) {
+			e.stopPropagation();
+		});
+		
+		$(document).on("click", "div.group-config-theme-container span.preview", this, function(e) {
+			//var grHandle = $(this).closest("div.group-config-theme-container").attr("data-gr-handle");
+			$(this).closest("div.group-config-theme-container").find("div.theme-entry").removeClass("selected");
+			$(this).parent().addClass("selected");			
+			var keys = Object.keys(e.data.groups);
+			for (var i = 0; i< keys.length; i++) {
+				e.data.groups[keys[i]].theme = $(this).attr("data-theme");
+			}			
+			e.data.reLoadGroupContainer(null);
+			e.data.updateDashboard();		
+		});
+		
+		$(document).on("change", "input.group-config-check-box", this, function(e) {
+			var grHandle = $(this).closest("div.ikea-dashboard-group-config-dialog").attr("data-gr-handle");
+			if (e.data.groups[grHandle]) {
+				if ($(this).is(":checked")) {
+					e.data.groups[grHandle][$(this).attr("data-option")] = true;
+				} else {
+					e.data.groups[grHandle][$(this).attr("data-option")] = false;
+				}
+				e.data.reLoadGroupContainer(grHandle);
+			}						
+		});
+		
+		$(document).on("change", "select.group-config-field-title_alignment", this, function(e) {
+			var grHandle = $(this).closest("div.ikea-dashboard-group-config-dialog").attr("data-gr-handle");
+			if (e.data.groups[grHandle]) {
+				e.data.groups[grHandle]["title_alignment"] = $(this).val();
+				e.data.reLoadGroupContainer(grHandle);
+			}
+		});
+		
+		$(document).on("click", "#ikea-dashboard-widget-type-wrapper > a", this, function(e) {
+			e.preventDefault();	    
+			e.stopPropagation();
+			if ($(this).hasClass("selected")) {
+				$(this).removeClass();
+				e.data.renderWidgetPool();
+			} else {
+				$("#ikea-dashboard-widget-type-wrapper > a").removeClass("selected");
+				$(this).addClass("selected");
+				e.data.renderWidgetPool($(this).attr("data-type"));
+			}
+		});
+		
+		$( document ).on( "dragstart", "#ikea-dashboard-widget-list > a", this, function(e) {
+			e.data.draggedWidget = $(e.target);
+			e.data.reLoadGroupContainer(null);
+		});
+		
+		$( document ).on( "dragend", "#ikea-dashboard-widget-list > a", this, function(e) {
+			e.data.draggedWidget = null;
+			e.data.reLoadGroupContainer(null);
+		});
+		
+		$( document ).on( "dragenter", "div.widget-holder.placeholder", this, function(e) { 
+			e.preventDefault();  
+		    e.stopPropagation();
+		    $(this).addClass("highlight");
+		});
+		
+		$( document ).on( "dragover", "div.widget-holder.placeholder", function(e) {
+			e.preventDefault();  
+		    e.stopPropagation();
+		});
+		
+		$( document ).on( "dragleave", "div.widget-holder.placeholder", function(e) {
+			e.preventDefault();  
+		    e.stopPropagation(); 
+		    $(e.target).removeClass("highlight");
+		});
+		
+		$( document ).on( "drop dragdrop", "div.widget-holder.placeholder", this, function(e) {
+			e.preventDefault();  
+		    e.stopPropagation();
+			$(e.target).removeClass("placeholder").removeClass("highlight");
+			e.data.dropWidget($(e.target));
+		});
+		
+		$(document).on("click", "a.preview-close-btn", function() {
+			$(this).parent().remove();
+		});
+		
+		$(document).on("click", "a.ikea-model-close-btn", function() {
+			$(this).closest("div.ikea-model-dialog").remove();
+			$('.easyui-menubutton').each(function(){
+	        	if($(this).hasClass('tsi-disabled'))  
+	        		$(this).removeClass('disabled').removeClass("tsi-disabled");
+	        });
+		});
+		
+		$(document).on("click", "#ikea-survey-next-btn", this, function(e) {
+			if(e.data.storeAnswer()) {
+				e.data.surveyIndex++;
+				e.data.renderSurveyQuestion();	
+			} else {
+				
+			}	 		
+		});
+		
+		$(document).on("click", "#ikea-survey-prev-btn", this, function(e) {
+			if(e.data.storeAnswer()) {
+				e.data.surveyIndex--;
+				e.data.renderSurveyQuestion();
+			} else {
+				
+			}	 		
+		});
+		
+		$(document).on("click", ".ikea-survey-close-btn", this, function(e) {
+			e.data.surveyIndex = 0;
+			if ($(this).hasClass("survey-submit")) {
+				e.data.submitSurvey();	
+			}		
+			$("div.ikea-survey-ghost-back").remove();
+		});
+		
+		$(document).on("click", "#ikea-survey-restart-btn", this, function(e) {
+			e.data.surveyIndex = 0;
+			e.data.renderSurveyQuestion();
+		});
+		
+		$(document).on("click", "#ikea-survey-proceed-btn", this, function(e) {
+			e.data.renderSurveyQuestion();	
+		});	
+		
+	};
+	
+	this.load = function(_handle) {
+		this.dashboard = _handle;
+		this.mask(this.container, true);
+		/* Prepare the request object */
+		this.request = this.prepareRequest("/visualizer/list", "dashboard", "WIDGET", 0, {TYPE: "FAT"});
+		/* Initiate the request */
+		this.dock();
+	};
+	
+	this.reload = function() {
+		if (this.groupKeys.length > 0 && this.groupIndex < this.groupKeys.length) {
+			if(!$('div.ikea-dashboard-widget-mask').is(":visible")){
+				this.mask(this.container, true);
+			}
+			/* Prepare the request object */
+			this.request = this.prepareRequest("/visualizer/list", "dashboard", "GET_GROUP", 0, {
+				ID: this.groupKeys[this.groupIndex],
+				DASHBOARD: this.dashboard, 
+				OPTIONS: this.filters[this.groupKeys[this.groupIndex]],
+				FILTERS: this.filters
+			});
+			/* Initiate the request */
+			this.dock();
+		}
+	};
+	
+	this.prepareDashboardMeta = function(_data) {
+		var i = 0,
+			j = 0,
+			keys = [],
+			payload = JSON.parse(_data.payload);
+		
+		this.groupKeys = [];
+		this.groupIndex = 0;
+		this.dashboardID = payload.ID;
+		this.data = payload.DATA;
+		this.groups = payload.GROUPS;
+		this.uvoption = (payload.UVOPTION) ? payload.UVOPTION : {};
+		this.general = (payload.GENERAL) ? payload.GENERAL : {
+			height: 100,
+			rows: 70,
+			columns: 100
+		};			
+		/* Prepare used widgets list */
+		this.usedWidgets = [];
+		ghandles = Object.keys(this.groups);
+		for (i = 0; i < ghandles.length; i++) {
+			this.groupKeys.push(ghandles[i]);
+			keys = Object.keys(this.groups[ghandles[i]].widgets);
+			for (j = 0; j < keys.length; j++) {
+				this.usedWidgets.push(this.groups[ghandles[i]].widgets[keys[j]].id);
+			}
+		}
+		/* Now we have the complete dashboard object with data */
+		this.renderDashboard();	
+		/* Render the widget pool list widget */
+		this.renderWidgetPool();
+	};
+	
+	this.handleMenuClick = function(_item) {
+		if( $(_item).attr("data-context") == "logtodo" ) {
+			$(".middle-content").show();		
+			//dashboard hiding process
+			$( "#loadPage" ).hide();
+			//$( ".middle-content" ).hide();
+			/* Make sure Transaction body is opened */
+			$( "#rsu-transaction-body-wrapper" ).show();	
+			
+			/* Make sure the probe container is visible */
+			$("div.rsu-probe-container").show();
+			/* Hide the dashboard */
+			$("#rsu-dashboard-container").hide();
+			$(".ikea-acm-info-marquee").hide();			
+			$("div.widget-holder").html("");
+			
+			/**/
+			//$("#rsu-dashboard-menu-item").find("span.l-btn-text").html("Dashboard");
+			//$("#rsu-dashboard-menu-item").attr("data-context", "dashboard");
+			return;
+		}
+		
+		if (!rSuControllerObj.contextObj) {
+			$(".middle-content").hide();
+			//if ($(_item).attr("data-context") !== "reload") {
+				
+				//$(_item).attr("data-context", "reload");
+				//$(_item).find("span.l-btn-text").html("Reload");
+		//	}
+			$("div.ikea-widget-filter-wrapper > a:last").addClass("selected").siblings().removeClass("selected");
+			this.widgetListContainer.hide();
+			if(!$("#rsu-dashboard-container").is(":visible")){
+				$("#loadPage").hide();
+				$("div.rsu-probe-container").hide();
+				$("#rsu-transaction-body-wrapper").hide();
+				$("div.ikea-acm-info-marquee").show();
+				$("#rsu-dashboard-container").show();
+			}
+			this.reload();
+			//
+			
+		}
+	};
+	
+	this.handleEscKey = function() {
+		/* Close the Chart viewer - if opened already */
+		if ($("div.ikea-dashboard-widget-previewer").length > 0) {
+			$("div.ikea-dashboard-widget-previewer").remove();
+		}
+		if ($("div.ikea-dashboard-filter-box").length > 0) {
+			$("div.ikea-dashboard-filter-box").remove();
+		}
+		if($(".ikea-dashboard-widget-help-model").length){
+			$("a.ikea-model-close-btn").click();
+		}
+		/**/
+		
+		if(!this.isErrorOnDrop){
+			this.disableEditMode();
+		}else{
+			this.isErrorOnDrop = false;
+		}
+			
+	};
+	
+	this.toggleEditMode = function(e) {
+		if( isCrossDock_User == "false" ){
+			if (this.isEditMode) {
+				this.disableEditMode();
+			} else {
+				this.enableEditMode();
+				/* Show the theme selector */
+				this.loadGroupConfigDialog();
+			}	
+		}
+	};
+	
+	this.enableEditMode = function() {
+		this.isEditMode = true;
+		this.widgetListContainer.show();
+		$("div.rsu-dashboard-group-container").addClass("editing");
+		this.container.addClass("rsu-dashboard-viewer-pad-editing");
+		
+		if ($("div.rsu-dashboard-group-container").hasClass("ui-sortable-disabled")) {
+			$("div.rsu-dashboard-group-container").sortable('enable');
+		} else {
+			$("div.rsu-dashboard-group-container").sortable({containment: 'document', update: this.reOrderGroup}).disableSelection();
+		}
+	};
+	
+	this.disableEditMode = function() {		
+		//this.saveGroupConfig();		
+		this.isEditMode = false;
+		this.widgetListContainer.hide();
+		$('div.ikea-dashboard-group-config-dialog').remove();
+		$("div.rsu-dashboard-group-container").removeClass("editing");
+		this.container.removeClass("rsu-dashboard-viewer-pad-editing");		
+	};
+	
+	this.reOrderGroup = function(_e, _ui) {
+		var payload = {},
+			options = {},
+			wgroup = $(_e.target).attr("data-gr-handle");
+		
+		if (ikeaDashboardManagerObj.groups[wgroup]) {
+			options["GROUPS"] = ikeaDashboardManagerObj.groups;
+			options["GROUPS"][wgroup].widgets = [];
+			$(_e.target).find("div.widget-holder").each(function() {
+				var wid = $(this).attr("data-id");
+				if (ikeaDashboardManagerObj.widgets[wid]) {
+					options["GROUPS"][wgroup].widgets.push({
+						id: parseInt(wid, 10),
+						type: ikeaDashboardManagerObj.widgets[wid].type,						
+						dsource: (ikeaDashboardManagerObj.widgets[wid].options.data_source ? ikeaDashboardManagerObj.widgets[wid].options.data_source : null) 
+					});
+				}
+			});
+			options["UVOPTION"] = ikeaDashboardManagerObj.uvoption;
+			options["GENERAL"] = ikeaDashboardManagerObj.general;
+			payload["OPTIONS"] = options;
+			payload["HANDLE"] = ikeaDashboardManagerObj.dashboard;
+			payload["ID"] = ikeaDashboardManagerObj.dashboardID;
+			ikeaDashboardManagerObj.ajaxFlaq = false;
+			ikeaDashboardManagerObj.request = ikeaDashboardManagerObj.prepareRequest("/visualizer/update", "dashboard", "USER_WIDGET", 0, payload);
+			ikeaDashboardManagerObj.dock();
+		}
+	};
+	
+	this.showFilterBox = function(_btn) {
+		var i = 0,
+			j = 0,
+			keys = [],
+			width = 0,
+			html = '',
+			item = null,
+			groups = null,
+			filters = null,
+			checked = "",
+			dOptions = {},
+			id = _btn.attr("data-id"),
+			type = _btn.attr("data-type"),
+			coords = this.getCoords(_btn[0]),
+			grHandle = _btn.parent().attr("data-gr-handle");
+		
+		if ($("div.ikea-dashboard-filter-box").length > 0) {
+			$("div.ikea-dashboard-filter-box").remove();
+		} else {
+			if (this.groups[id]) {				
+				groups = this.groups[id].filters !== "" ? this.groups[id].filters : null;				
+				if (this.groups[id].default_options !== "") {
+					dOptions = JSON.parse(this.groups[id].default_options);
+				}
+			} else if (this.widgets[id]) {
+				groups = this.widgets[id].options.filters !== "" ? this.widgets[id].options.filters : null;
+				if (this.widgets[id].options.default_options !== "") {
+					dOptions = JSON.parse(this.widgets[id].options.default_options);
+				}
+			} else {
+				/* Unlikely */
+			} 
+		}	
+		
+		if (groups && groups !== "") {
+			groups = JSON.parse(groups+"");
+			html = '<div class="ikea-dashboard-filter-box" data-id="'+ id +'" data-chart-type="'+ _btn.closest("div.widget-holder").attr("data-chart-type") +'">';
+			keys = Object.keys(groups);
+			for (i = 0; i < keys.length; i++) {
+				html += '<div class="dashboard-filter-wrapper">';
+				html += '<p>'+ dOptions[keys[i]].title +'</p>';
+				for (j = 0; j < groups[keys[i]].length; j++) {
+					checked = "";					
+					if (this.filters[id] && (groups[keys[i]][j].value == this.filters[id][keys[i]])) {
+						checked = "checked";
+					}	
+					html += '<label><input type="radio" name="filter_'+ id +'_'+ keys[i] +'" class="ikea-dashboard-filter-item" data-filter="'+ keys[i] +'" data-type="'+ type +'" value="'+ groups[keys[i]][j].value +'" '+ checked +' /> '+ groups[keys[i]][j].label +'</label>';
+				}
+				html += '</div>';
+			}
+			html += '</div>';
+			html = $(html);
+			$('body').append(html);
+			width = html.outerWidth();
+			html.css("top", coords.top +"px");
+			html.css("left", (coords.left - width) +"px");
+		}
+	};
+	
+	this.loadGroupConfigDialog = function(_e) {
+		var top = 50,
+			right = 50,
+			keys = Object.keys(this.groups),
+			html = '<div class="ikea-dashboard-group-config-dialog" data-gr-handle="" style="top: '+ top +'px; right: '+ right +'px;">';
+			
+		html += '<div class="group-config-theme-container" data-gr-handle="">';
+		
+		this.groups[keys[0]].theme = (this.groups[keys[0]].theme) ? this.groups[keys[0]].theme : "dfault";
+		
+		html += '<div class="theme-entry default '+ (this.groups[keys[0]].theme === "dfault" ? "selected" : "") +'">';
+		html += '<span class="preview" data-theme="dfault"></span>';			
+		html += '</div>';
+		html += '<div class="theme-entry dark-white '+ (this.groups[keys[0]].theme === "dark_white" ? "selected" : "") +'">';
+		html += '<span class="preview" data-theme="dark_white"></span>';			
+		html += '</div>';
+		//html += '<div class="theme-entry dark-green '+ (this.groups[keys[0]].theme === "dark_green" ? "selected" : "") +'">';
+		//html += '<span class="preview" data-theme="dark_green"></span>';			
+		//html += '</div>';			
+		//html += '<div class="theme-entry aqua-white '+ (this.groups[keys[0]].theme === "aqua_white" ? "selected" : "") +'">';
+		//html += '<span class="preview" data-theme="aqua_white"></span>';			
+		//html += '</div>';	
+		//html += '<div class="theme-entry green-white '+ (this.groups[keys[0]].theme === "green_white" ? "selected" : "") +'">';
+		//html += '<span class="preview" data-theme="green_white"></span>';			
+		//html += '</div>';
+		html += '<div class="theme-entry white-green '+ (this.groups[keys[0]].theme === "white_green" ? "selected" : "") +'">';
+		html += '<span class="preview" data-theme="white_green"></span>';			
+		html += '</div>';
+		//html += '<div class="theme-entry orange-white '+ (this.groups[keys[0]].theme === "orange_white" ? "selected" : "") +'">';
+		//html += '<span class="preview" data-theme="orange_white"></span>';			
+		//html += '</div>';
+		html += '<div class="theme-entry white-orange '+ (this.groups[keys[0]].theme === "white_orange" ? "selected" : "") +'">';
+		html += '<span class="preview" data-theme="white_orange"></span>';			
+		html += '</div>';	
+		//html += '<div class="theme-entry red-white '+ (this.groups[keys[0]].theme === "red_white" ? "selected" : "") +'">';
+		//html += '<span class="preview" data-theme="red_white"></span>';			
+		//html += '</div>';
+		html += '<div class="theme-entry white-red '+ (this.groups[keys[0]].theme === "white_red" ? "selected" : "") +'">';
+		html += '<span class="preview" data-theme="white_red"></span>';			
+		html += '</div>';
+		
+		html += '</div>';
+		
+		html += '</div>';
+		html = $(html);
+		$('body').append(html);
+		movable(html[0], html[0]);
+	};
+	
+	this.saveGroupConfig = function() {
+		var dialogBox = $('body').find('div.ikea-dashboard-group-config-dialog');
+		var grpHandle = dialogBox.attr("data-gr-handle");
+		if (this.groups[grpHandle]) {
+			if (dialogBox.find("input.group-config-field-grp-title").val() != "") {
+				this.groups[grpHandle].group_title = dialogBox.find("input.group-config-field-grp-title").val();
+			} else {
+				this.groups[grpHandle].group_title = "";
+			}
+			if (dialogBox.find("input.group-config-field-reload-interval").val() != "") {
+				this.groups[grpHandle].reload_interval = dialogBox.find("input.group-config-field-reload-interval").val();
+			} else {
+				this.groups[grpHandle].reload_interval = 0;
+			}
+			
+			if (dialogBox.find("input.group-config-field-show_group_title").is(":checked")) {
+				this.groups[grpHandle].show_group_title = true;
+			} else {
+				this.groups[grpHandle].show_group_title = false;
+			}
+			if (dialogBox.find("input.group-config-field-show_widgets_title").is(":checked")) {
+				this.groups[grpHandle].show_widgets_title = true;
+			} else {
+				this.groups[grpHandle].show_widgets_title = false;
+			}
+			this.groups[grpHandle].title_alignment = dialogBox.find("select.group-config-field-title_alignment").val();		
+			if (dialogBox.find("input.group-config-field-merge_background").is(":checked")) {
+				this.groups[grpHandle].merge_background = true;
+			} else {
+				this.groups[grpHandle].merge_background = false;
+			}
+			if (dialogBox.find("input.group-config-field-show_seperators").is(":checked")) {
+				this.groups[grpHandle].show_seperators = true;
+			} else {
+				this.groups[grpHandle].show_seperators = false;
+			}
+			dialogBox.remove();
+			this.reLoadGroupContainer(grpHandle);
+			this.updateDashboard();
+		}
+	};
+	
+	this.renderDashboard = function() {
+		var i = 0,
+			j = 0,
+			k = 0,
+			wId = '',
+			keys = [],
+			me = this,
+			html  = '',
+			groupMeta = null,
+			widgetMeta = null;
+			
+		this.container.html("");
+		this.container.css("height", this.general.height +"vh");
+		this.container.css("grid-template-rows", "repeat("+ this.general.rows +", 1fr)");
+		this.container.css("grid-template-columns", "repeat("+ this.general.columns +", 1fr)");
+		
+		keys = Object.keys(this.groups);
+		for (i = 0; i < keys.length; i++) {
+			if (!this.groups[keys[i]].is_nested) {
+				this.container.append($(this.loadGroupContainer(this.groups[keys[i]])));
+			}
+		}
+		this.loadWidgets(this.container);
+		this.insertWidgetSeperators();	
+		//this.container.dbReArrange();
+	};
+	
+	this.loadGroupContainer = function(_grpConfig) {
+		var i = 0,
+			keys = [],
+			dOptions = {},
+			dOptionsRaw = '',
+			dOptTitle = '',
+			items = [],
+			wCount = 0,
+			gclass = '',
+			wHolder = '',			
+			gHtml = '<div data-gr-handle="'+ _grpConfig.handle +'" ';
+		
+		wCount = (this.draggedWidget && _grpConfig.can_manage) ? (_grpConfig.widgets.length+1) : _grpConfig.widgets.length;
+		gclass = 'rsu-dashboard-group-container '+ _grpConfig.type +' '+ _grpConfig.theme;
+		if (_grpConfig.is_nested) {
+			gclass += ' nested';
+		}
+		if (_grpConfig.merge_background) {
+			gclass += ' merged_background';
+		}
+		if (this.isEditMode) {
+			gclass += ' editing';
+		}
+		if (_grpConfig.show_group_title) {
+			gclass += ' has-title';
+		}
+		if (_grpConfig.has_filter) {
+			gclass += ' has-filter';
+			/* Put an entry on global filter property */
+			if (!this.filters[_grpConfig.handle]) {
+				this.filters[_grpConfig.handle] = {};				
+				_grpConfig.default_options = _grpConfig.default_options ? _grpConfig.default_options : "";
+				if (_grpConfig.default_options !== "") {
+					dOptionsRaw = JSON.parse(_grpConfig.default_options);
+					keys = Object.keys(dOptionsRaw);
+					for (i = 0; i < keys.length; i++) {
+						dOptions[keys[i]] = dOptionsRaw[keys[i]].value;
+					}
+					this.filters[_grpConfig.handle] = dOptions;
+				}		
+			}
+			/**
+			 * adding dynamic filter for ss
+			 * 
+			 * 
+			 */
+			var fltr = JSON.parse(_grpConfig.filters);
+			if(typeof fltr.ORDERTYPE != "undefined"){
+				var found = false;
+				for(var i=0;i<fltr.ORDERTYPE.length;i++){
+					if( fltr.ORDERTYPE[i].label == "SS" ){
+						found = true;
+						break;
+					}
+				}
+				if(!found){
+					fltr.ORDERTYPE.push({ "label": "SS","value": "ss"});
+				}
+				
+			}
+			_grpConfig.filters = JSON.stringify(fltr);
+			
+			/**
+			 * adding dynamic filter for Phyzii
+			 * 
+			 * 
+			 */
+			var fltr = JSON.parse(_grpConfig.filters);
+			if(typeof fltr.ORDERTYPE != "undefined"){
+				var found = false;
+				for(var i=0;i<fltr.ORDERTYPE.length;i++){
+					if( fltr.ORDERTYPE[i].label == "Phyzii" ){
+						found = true;
+						break;
+					}
+				}
+				if(!found){
+					fltr.ORDERTYPE.push({ "label": "Phyzii","value": "phyzii"});
+				}
+				
+			}
+			_grpConfig.filters = JSON.stringify(fltr);
+			
+			/**
+			 * adding dynamic filter for Veeva
+			 * 
+			 * 
+			 */
+			var fltr = JSON.parse(_grpConfig.filters);
+			if(typeof fltr.ORDERTYPE != "undefined"){
+				var found = false;
+				for(var i=0;i<fltr.ORDERTYPE.length;i++){
+					if( fltr.ORDERTYPE[i].label == "Veeva" ){
+						found = true;
+						break;
+					}
+				}
+				if(!found){
+					fltr.ORDERTYPE.push({ "label": "Veeva","value": "veeva"});
+				}
+				
+			}
+			_grpConfig.filters = JSON.stringify(fltr);
+			
+			
+			
+			/**
+			 * adding dynamic filter for salesEdge
+			 * 
+			 * 
+			 */
+			var fltr = JSON.parse(_grpConfig.filters);
+			if(typeof fltr.ORDERTYPE != "undefined"){
+				var found = false;
+				for(var i=0;i<fltr.ORDERTYPE.length;i++){
+					if( fltr.ORDERTYPE[i].label == "salesEDGE" ){
+						found = true;
+						break;
+					}
+				}
+				if(!found){
+					fltr.ORDERTYPE.push({ "label": "salesEDGE","value": "salesEDGE"});
+				}
+				
+			}
+			_grpConfig.filters = JSON.stringify(fltr);
+			
+			dOptTitle = this.prepareDefaultFilter(_grpConfig.filters, this.filters[_grpConfig.handle], _grpConfig.handle);
+		}
+		if (_grpConfig.show_seperators) {
+			gclass += ' has-seperators';
+		}
+				
+		if (_grpConfig.can_manage) {
+			gclass += ' can-be-managed';
+		} else {
+			gclass += ' cannot-be-managed';
+		}
+		
+		gHtml += 'class="'+ gclass +'" ';			
+		if (_grpConfig.type === "container-h") {
+			gHtml += 'style="grid-template-columns: repeat('+ wCount +', 1fr);';
+		} else {
+			gHtml += 'style="grid-template-rows: repeat('+ wCount +', 1fr);';
+		}
+		if (!_grpConfig.is_nested) {
+			gHtml += 'grid-row-end: '+ _grpConfig.row_end +';';
+			gHtml += 'grid-row-start: '+ _grpConfig.row_start +';';
+			gHtml += 'grid-column-end: '+ _grpConfig.column_end +';';
+			gHtml += 'grid-column-start: '+ _grpConfig.column_start +';';
+		}
+		gHtml += '">';
+		//gHtml += '"><button class="rsu-dashboard-group-config-btn"><i class="fa fa-gear"></i></button>';
+		//gHtml += '<button class="rsu-dashboard-group-remove-btn"><i class="fa fa-times"></i></button>';
+		if (_grpConfig.has_filter) {
+			gHtml += '<button class="rsu-dashboard-filter-btn" title="Filter" data-id="'+ _grpConfig.handle +'" data-type="GROUP"><i class="fa fa-filter"></i></button>';
+		}
+		for (i = 0; i < _grpConfig.widgets.length; i++) {			
+			gHtml += '<div class="widget-holder '+ _grpConfig.widgets[i].type +' '+ (_grpConfig.show_widgets_title ? "has-title" : "") +' '+ (_grpConfig.widgets[i].pending ? "pending-data" : "") +'" data-id="'+ _grpConfig.widgets[i].id +'" data-theme="'+ _grpConfig.theme +'" data-widget-loaded="no" draggable="true">';
+			if (_grpConfig.widgets[i].type === "container-h" || 
+				_grpConfig.widgets[i].type === "container-v") {
+				if (this.groups[_grpConfig.widgets[i].id]) {
+					gHtml += this.loadGroupContainer(this.groups[_grpConfig.widgets[i].id]);
+				}				
+			}
+			gHtml += '</div>';
+		}	
+		
+		/* Add place holder for dragged widgets */
+		if (this.draggedWidget && _grpConfig.can_manage) {
+			gHtml += '<div class="widget-holder '+ (_grpConfig.show_widgets_title ? "has-title" : "") +' placeholder" data-id="" data-theme="'+ _grpConfig.theme +'" data-widget-loaded="no" draggable="true"></div>';
+		}
+		
+		if (_grpConfig.show_group_title) {
+			_grpConfig.title = _grpConfig.title != "" ? _grpConfig.title : "Ikea Widget Group";
+			gHtml += '<h3 class="ikea-dashboard-group-title-h3" style="text-align: '+ _grpConfig.title_alignment +';" data-title="'+ _grpConfig.group_title +'">'+ _grpConfig.group_title +'</h3>';
+		} else {
+			gHtml += '<span class="ikea-widget-active-filter">'+ dOptTitle +'</span>';
+		}
+		gHtml += '</div>';		
+		return gHtml;
+	};
+	
+	this.reLoadGroupContainer = function(_grpHandle) {
+		var me = this,
+			passAll = _grpHandle == null ? true : false;
+		$("div.rsu-dashboard-group-container").each(function() {
+			if (passAll || $(this).attr("data-gr-handle") == _grpHandle) {
+				gContainer = $(me.loadGroupContainer(me.groups[$(this).attr("data-gr-handle")]));
+				$(this).replaceWith(gContainer);
+				me.loadWidgets(gContainer);
+				me.insertWidgetSeperators();	
+			}
+		});
+		
+		if (this.isEditMode) {
+			this.enableEditMode();
+		}
+	};
+	
+	this.loadWidgets = function(_container) {
+		var me = this,
+			keys = [],
+			dOptions = {},
+			dOptionsRaw = '';
+		_container.find("div.widget-holder").each(function() {
+			if (me.widgets[$(this).attr("data-id")] && 
+				!$(this).hasClass("container-v") && 
+				!$(this).hasClass("container-h") &&
+				!$(this).hasClass("pending-data")) {
+				$(this).html("");
+				var meta = me.widgets[$(this).attr("data-id")];
+				/* Get the title config from group meta */
+				var grHandle = $(this).closest("div.rsu-dashboard-group-container").attr("data-gr-handle");
+				meta["show_title"] = true;
+				meta["title_alignment"] = "left";
+				if (me.groups[grHandle]) {
+					meta["show_title"] = me.groups[grHandle].show_widgets_title;
+					meta["title_alignment"] = me.groups[grHandle].title_alignment;
+				}
+				
+				/* Inject dynamic filter default options */
+				if (me.data[meta.id].filters && me.data[meta.id].default_options) {
+					meta.options["filters"] = JSON.stringify(me.data[meta.id].filters);
+					meta.options["default_options"] = JSON.stringify(me.data[meta.id].default_options);
+				}
+				
+				/* Put an entry on global filter property */
+				if (!me.filters[meta.id]) {
+					keys = [];
+					dOptions = {};
+					dOptionsRaw = '';
+					me.filters[meta.id] = {};					
+					meta.default_options = meta.options.default_options ? meta.options.default_options : "";
+					if (meta.options.default_options !== "") {						
+						dOptionsRaw = JSON.parse(meta.options.default_options);
+						keys = Object.keys(dOptionsRaw);
+						for (i = 0; i < keys.length; i++) {
+							dOptions[keys[i]] = dOptionsRaw[keys[i]].value;
+						}
+						me.filters[meta.id] = dOptions;
+					}				
+				}	
+				
+				if (meta.type === "chart") {
+					me.renderChartWidget($(this), meta, me.groups[grHandle].can_manage);
+				} else if (meta.type === "status") {
+					me.renderStatusWidget($(this), meta, me.groups[grHandle].can_manage);
+				} else if (meta.type === "top_items") {
+					me.renderTopItemsWidget($(this), meta, me.groups[grHandle].can_manage);
+				} else if (meta.type === "pending_items") {
+					me.renderPendingItemWidget($(this), meta, me.groups[grHandle].can_manage);
+				} else if (meta.type === "scheduled_alert") {
+					me.renderScheduledAlertWidget($(this), meta, me.groups[grHandle].can_manage);
+				} else {
+					/* Unlikely */
+				}		
+			}
+		});
+	};
+	
+	this.insertWidgetSeperators = function() {
+		$("div.rsu-dashboard-group-container.has-seperators").each(function() {
+			var top = 0,
+				left = 0,
+				width = 0,
+				height = 0,
+				holder = null,
+				elemRect = null,
+				holders = $(this).find(">div.widget-holder"),
+				containerRect = $(this)[0].getBoundingClientRect();			
+			for (var i = 0; i < (holders.length - 1); i++) {
+				//holder = $(this).children(">div:nth-child("+ i +")");
+				elemRect = $(holders[i])[0].getBoundingClientRect();
+				top = elemRect.top - containerRect.top;
+				left = elemRect.left - containerRect.left;
+				width = $(holders[i]).outerWidth();
+				height = $(holders[i]).outerHeight();
+				if ($(this).hasClass("container-v")) {
+					$(holders[i]).after('<div class="seperator" style="top: '+ parseInt(top + height + 4) +'px;left: '+ (left + 20) +'px;width: '+ (width-38)+'px;"></div>');
+				} else {
+					$(holders[i]).after('<div class="seperator" style="left: '+ parseInt(left + width + 4) +'px;top: '+ (top + 20) +'px;height: '+ (height-39) +'px;"></div>');
+				}
+			}
+		});
+	};
+	
+	this.zoomWidget = function(_btn) {
+		if($(".ikea-dashboard-widget-previewer").is(":visible")){
+			return;
+		}
+		var me = this,
+			id = _btn.attr("data-id"),
+			type = _btn.attr("data-type"),
+			theme = _btn.attr("data-theme");
+		if (this.widgets[id]) {
+			var viewer = $('<div class="ikea-dashboard-widget-previewer '+ theme +'"><div class="holder" data-theme="'+ theme +'"></div></div>');
+			setTimeout(function() {
+				viewer.css("opacity", "1");
+				viewer.css("transform", "scale(1)");
+				if (type == "chart") {
+					
+				} else if (type == "") {
+					
+				} else if (type == "") {
+					
+				} else {
+					/* Unlikely */
+				}
+				me.renderChartWidget(viewer.find("div.holder"), me.widgets[id], false);	
+				viewer.append($('<a href="#" class="preview-close-btn"><i class="fa fa-times"></i></a>'));
+			}, 200);		
+			$('body').append(viewer);
+		}
+	};
+	
+	this.showHelp = function(_wid) {
+		disable();
+		var html  = '';
+		if (this.widgets[_wid]) {
+			html = '<div class="ikea-model-dialog ikea-model-ghost-back">';
+			html += '<div class="ikea-dashboard-widget-help-model">';
+			html += '<div class="model-header"><h1>About '+ this.widgets[_wid].title +' Widget</h1><a href="#" class="ikea-model-close-btn"><i class="fa fa-times"></i></a></div>';
+			html += '<div class="model-content">';
+			html += '<p>'+ this.widgets[_wid].options.help +'</p>';			
+			html += '</div></div></div>';
+			$('body').append($(html));
+		}		
+	};
+	
+	this.dropWidget = function(_holder) {
+		var me = this,
+			meta = null,
+			grHandle = "",
+			keys = [];
+			dOptions = {};
+			dOptionsRaw = '';
+			
+			
+			
+			if (this.widgets[this.draggedWidget.attr("data-id")]) {
+				meta = this.widgets[this.draggedWidget.attr("data-id")];
+
+				var wCount = _holder.parent().find("div.widget-holder").length;
+				var isStatusWidgetContainer = _holder.parent().hasClass("has-filter");
+				var errFlag = false;
+				var errMsg = "";
+				if(isStatusWidgetContainer){
+					if(meta.type == "chart"){
+						errMsg= "Can't add Chart type widgets Here!, due to usability issue.!";
+						errFlag = true;
+					}else{
+						if(wCount > 7){
+							errMsg= "Can't add more than seven widgets, Due to usability issue.!";
+							errFlag = true;
+						}
+					}
+				}else{
+					if (meta.type == "status"){
+						errMsg= "Can't add Status type widgets Here!, due to usability issue!";
+						errFlag = true;
+					}else{
+						if( wCount > 3 ){
+							errMsg = "Can't add more than Three widgets, Due to usability issue.!";
+							errFlag = true;
+						}
+					}
+				}
+				if(errFlag){
+					this.isErrorOnDrop = true;
+					dlg = $.messager.confirm({title: 'Confirm', msg: errMsg,
+						width : 420,
+						onClose:function(){
+							$(".ikea-logout-ghost-back").remove();
+						},
+						buttons:[{
+							text: 'OK',
+							onClick: function(){	
+								$(".ikea-logout-ghost-back").remove();
+								me.isErrorOnDrop = false;
+								dlg.dialog('destroy');
+								return false;
+							}
+						}]
+					});
+					$(".panel-tool").on('click', function(event){
+						me.isErrorOnDrop = false;
+						$(".ikea-logout-ghost-back").remove();
+						dlg.dialog('destroy');
+						return false;
+					});
+					$("body").append($('<div class="ikea-logout-ghost-back"></div>'));
+					return;
+				}
+
+				/*if (meta.type == "chart" && wCount > 4) {
+				alert("Can't add more than four widgets, Due to usability issue.!");
+				return;
+			} else if (meta.type == "status" && wCount > 7) {
+				alert("Can't add more than six widgets, Due to usability issue.!");
+				return;
+			} else {
+				 //Ignore 
+			}*/
+
+				_holder.attr("data-id", meta.id);
+				_holder.attr("data-widget-loaded", "false");
+				_holder.addClass("pending-data");
+				/* Push it into use widget list */
+				this.usedWidgets.push(meta.id);
+				this.renderWidgetPool();
+				this.draggedWidget = null;
+				grHandle = _holder.parent().attr("data-gr-handle");
+				meta["show_title"] = true;
+				meta["title_alignment"] = "left";
+
+				if(this.groups[grHandle]) {
+					this.groups[grHandle].widgets.push({
+						type: meta.type,
+						id: parseInt(meta.id),
+						pending: true,
+						dsource: (meta.options.data_source ? meta.options.data_source : null) 
+					});
+					meta["show_title"] = this.groups[grHandle].show_widgets_title;
+					meta["title_alignment"] = this.groups[grHandle].title_alignment;
+				}
+
+				/* Put an entry on global filter property */
+				if (!this.filters[meta.id]) {
+					keys = [];
+					dOptions = {};
+					dOptionsRaw = '';
+					this.filters[meta.id] = {};	
+
+					meta.default_options = meta.options.default_options ? meta.options.default_options : "";
+					if (meta.options.default_options !== "") {						
+						dOptionsRaw = JSON.parse(meta.options.default_options);
+						keys = Object.keys(dOptionsRaw);
+						for (i = 0; i < keys.length; i++) {
+							dOptions[keys[i]] = dOptionsRaw[keys[i]].value;
+						}
+						this.filters[meta.id] = dOptions;
+					}		
+				}
+
+				if (meta.is_demo || this.data[meta.id]) {
+					delete this.groups[grHandle].widgets[(this.groups[grHandle].widgets.length - 1)].pending;
+					if (meta.type === "chart") {
+						this.renderChartWidget(_holder, meta, this.groups[grHandle].can_manage);
+					} else if (meta.type === "status") {
+						this.renderStatusWidget(_holder, meta, this.groups[grHandle].can_manage);
+					} else if (meta.type === "top_items") {
+						this.renderTopItemsWidget(_holder, meta, this.groups[grHandle].can_manage);
+					} else if (meta.type === "pending_items") {
+						this.renderPendingItemsWidget(_holder, meta, this.groups[grHandle].can_manage);
+					} else {
+						/* Unlikely */
+					}
+					/* Update the server side */
+					this.updateDashboard();				
+					this.reLoadGroupContainer(null);
+				} else {			
+					this.reLoadGroupContainer(null);
+					$("div.widget-holder").each(function() {
+						if ($(this).attr("data-id") == meta.id) {
+							me.mask($(this), false);
+							return;
+						}
+					});
+					/* Data has to be fetched from the server for this widget */
+					/* Prepare the request object */
+					this.request = this.prepareRequest("/visualizer/list", "dashboard", "GET_SINGLE_WIDGET", 0, {ID: meta.id, DID: this.dashboardID, DURATION: this.activeFilterDuration});
+					/* Initiate the request */
+					this.dock();
+				}			
+				/* Refresh the sortable - needed to fix some issue */		
+			} else {
+			/* Unlikely */
+		}
+	};
+	
+	this.renderChartWidget = function(_container, _meta, _can_manage) {
+		if (_meta.is_demo) {
+			this.data[_meta.id] = _meta.options.demo[_meta.options.sub_type];
+		}
+		var i = 0,
+			j = 0,
+			is_multi_widget = false,
+			_theme = _container.attr("data-theme");
+		if (this.data[_meta.id] && this.data[_meta.id] !== "") {
+			var data = this.data[_meta.id];			
+			if( typeof data.dynamicTitle !== "undefined"){
+				_meta.title = data.dynamicTitle;
+			}
+			if (data.chart) {
+				if (data.chart.type !== "solidgauge") {
+					data["title"] = {
+						text:''
+				    };
+					data.chart["renderTo"] = _container[0];					
+					if(data.yAxis && Array.isArray(data.yAxis)) {
+						data.yAxis[0]["labels"] = {};
+						data.yAxis[0]["labels"]["style"] = {};
+						data.yAxis[0]["labels"]["style"]["color"] = Highcharts.getOptions().colors[1];
+						data.yAxis[0]["labels"]["formatter"] = function() {
+							if (this.value >= 10000000) {
+								return this.value / 10000000 + 'C';
+							} else if (this.value >= 100000) {
+								return this.value / 100000 + 'L';
+							} else if (this.value >= 1000) {
+								return this.value / 1000 + 'K';
+							} else {
+								return this.value
+							}										              
+			            };
+			            
+			            data.yAxis[1]["labels"] = {};
+						data.yAxis[1]["labels"]["style"] = {};
+						data.yAxis[1]["labels"]["style"]["color"] = Highcharts.getOptions().colors[0];
+						data.yAxis[1]["labels"]["formatter"] = function() {
+							if (this.value >= 10000000) {
+								return this.value / 10000000 + 'C';
+							} else if (this.value >= 100000) {
+								return this.value / 100000 + 'L';
+							} else if (this.value >= 1000) {
+								return this.value / 1000 + 'K';
+							} else {
+								return this.value
+							}										              
+			            };
+					} else if(data.yAxis && typeof data.yAxis === 'object') {
+						data.yAxis["labels"] = {};
+						data.yAxis["labels"]["formatter"] = function() {
+							if (this.value >= 10000000) {
+								return this.value / 10000000 + 'C';
+							} else if (this.value >= 100000) {
+								return this.value / 100000 + 'L';
+							} else if (this.value >= 1000) {
+								return this.value / 1000 + 'K';
+							} else {
+								return this.value
+							}										              
+			            };
+					}					
+					//new Highcharts.Chart(data);
+					new Highcharts.Chart(Highcharts.merge(data, ikeaHighChartThemes[_theme]));					
+				} else {	
+					var discPer = parseFloat(data.value) * 100 /  parseFloat(data.usable);
+					gaugeOptions.series[0].data.push(discPer);
+					//gaugeOptions.series[0].data.push(parseFloat(34));
+					//gaugeOptions.yAxis["title"]["text"] = data.title;
+					//gaugeOptions.yAxis.max = parseFloat(86);
+					//gaugeOptions.yAxis.tickInterval = parseInt(data.usable)/1000;
+					
+					//gaugeOptions.yAxis.max = parseFloat(data.usable);
+					gaugeOptions.series[0].dataLabels.format = '<div style="text-align:center"><span style="font-size:25px;color:' +
+	                ((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black') + '">'+parseInt(discPer)+' %</span><br/>' +
+	                   '<span style="font-size:12px;color:silver">'+  parseFloat(data.value).toFixed(2)+' GB of '+ parseFloat(data.usable).toFixed(2)+' GB</span></div>'				
+					gaugeOptions.series[0].tooltip.valueSuffix = (data.suffix);
+					//gaugeOptions.chart["height"] = 200;
+					gaugeOptions.chart["renderTo"] = _container[0];
+					gaugeOptions["title"]["text"] = data["subtitle"]["text"];					
+					new Highcharts.Chart(Highcharts.merge(gaugeOptions, ikeaHighChartThemes[_theme]));
+				}		
+				if (_meta.options.supported_types && _meta.options.supported_types.length > 0) {
+					is_multi_widget = true;
+					_container.append($('<a href="#" class="ikea-widget-transformation-btn" title="Transform"><i class="fa fa-retweet"></i></a>'));
+					var html = '<div class="ikea-widget-supported-type-list">';
+					for (i = 0; i < _meta.options.supported_types.length; i++) {
+						html += '<a href="#" data-id="'+ _meta.id +'" data-type="'+ _meta.options.supported_types[i].handle +'" title="Change to '+ _meta.options.supported_types[i].title +'"><img src="/rsunify/resources/dashboard/imgs/chart_types/'+ chartHandleTitle[_meta.options.supported_types[i].handle].icon +'" alt="'+ _meta.options.supported_types[i].title +'"/></a>';
+					}
+					html += '</div>';
+					_container.append($(html));
+					_container.attr("data-chart-type", data.chart.type);
+				}
+				_container.attr("data-widget-loaded", "yes");
+			} else {
+				_container.html('<span class="data-corrupted">No Data</span>');
+			}			
+		} else {			
+			_container.html('<span class="data-corrupted">No Data</span>');
+		}
+		
+		if (_can_manage) {
+			_container.append($('<a href="#" class="remove-btn"><i class="fa fa-times"></i></a>'));
+		}
+		_container.append($('<a href="#" class="zoom-btn" data-type="chart" data-id="'+ _meta.id +'" data-theme="'+ _theme +'" title="Maximize"><i class="fa fa-window-maximize"></i></a>'));		
+		/* Add Help Btn */
+		_meta.options.help = _meta.options.help ? _meta.options.help : "";
+		if (_meta.options.help !== "") {
+			_container.append($('<a href="#" class="help-btn '+ (is_multi_widget ? "has-multi-widget" : "no-multi-widget") +'" data-id="'+ _meta.id +'" title="About this Widget"><i class="fa fa-question"></i></a>'));
+		}
+		
+		/* Now insert the title */
+		if (_meta.show_title) {									
+			_container.prepend($('<h3 class="ikea-widget-title-h3" style="text-align: '+ _meta.title_alignment +';">'+ _meta.title +' <strong>'+ this.prepareDefaultFilter(_meta.options.filters, this.filters[_meta.id], _meta.id) +'</strong></h3>'));
+		} else {
+			_container.append($('<span class="ikea-widget-active-filter">'+ this.prepareDefaultFilter(_meta.options.filters, this.filters[_meta.id], _meta.id) +'</span>'));
+		}
+		/* Add Filter Btn */
+		_meta.options.filters = _meta.options.filters ? _meta.options.filters : "";
+		if (_meta.options.filters !== "") {
+			_container.append($('<button class="rsu-dashboard-filter-btn" title="Filter" data-id="'+ _meta.id +'" data-type="WIDGET"><i class="fa fa-filter"></i></button>'));
+		}
+	};
+	
+	this.renderStatusWidget = function(_container, _meta, _can_manage) {
+		var amount = 0.00,
+			html = '',
+			demo = {},
+			data = {},
+			icon = 'fa-tags',
+			_theme = _container.attr("data-theme"),
+			sub_type = _meta.options.sub_type ? _meta.options.sub_type : null;
+		if (_meta.is_demo) {			
+			demo = _meta.options.demo;			
+			icon = _meta.options.icon ? _meta.options.icon : (demo.icon ? demo.icon : "");
+			this.data[_meta.id] = demo;
+		} else {
+			//icon = _meta.options.icon ? _meta.options.icon : ((_meta.options.demo.icon) ? _meta.options.demo.icon : "");
+			//theme = _meta.options.theme ? _meta.options.theme : ((_meta.options.demo.theme) ? _meta.options.demo.theme : "");
+		}
+		if (this.data[_meta.id] && this.data[_meta.id] !== "") {
+			data = this.data[_meta.id];			
+			if (_meta.id != 12) {
+				html = '<div title="Rs. '+parseFloat(data.amount).toFixed(2)+'"  class="ikea-dashboard-widget ikea-status-widget '+ sub_type +' '+ _theme +'" data-swtype="'+ sub_type +'">';
+				html += '<table><tr><td><div class="content-wrapper">';				
+				if (sub_type === "status_1") {						
+					html += '<span class="title">'+ data.title +'</span>';
+					html += '<span class="value">'+ data.value +'</span>';
+				} else if (sub_type === "status_2") {
+					html += '<span class="title">'+ data.title +'</span>';
+					html += '<span class="value">'+ data.value +'</span>';
+					html += '<div class=""><span class="percent '+ data.status +'">'+ data.percent +'</span> <span class="message">'+ data.message +'</span></div>';
+				} else if (sub_type === "status_3") {
+					html += '<div class="title">'+ data.title +'</div>';
+					html += '<div class="value '+ data.status +'"><i class="fa fa-caret-'+ data.status +'"></i> <span>'+ data.value +'</span></div>';
+					html += '<div class="message">'+ data.message +'</div>';
+				} else if (sub_type === "status_4") {
+					html += '<i class="fa '+ icon +'"></i>';
+					html += '<span class="title">'+ data.title +'</span>';
+					html += '<span class="value">'+ data.value +'</span>';
+				} else if (sub_type === "status_5") {
+					html += '<span class="title">'+ data.title +'</span>';
+					html += '<span class="value">'+ data.value +'</span>';
+				} else if (sub_type === "status_6") {
+					html += '<span class="title">'+ data.title +'</span>';
+					if( data.amount > 0 ){
+						if (data.amount < 100000) {
+							amount = (data.amount / 1000).toFixed(3) + ' K';
+		            	} else if (data.amount < 10000000) {
+		            		amount = (data.amount / 100000).toFixed(3) + ' L';
+		            	} else {
+		            		amount = (data.amount / 10000000).toFixed(3) + ' C';
+		            	}
+					}
+					html += '<span class="count">'+ (data.count ? data.count : 0) +'</span>';
+					//html += '<span class="amount"> <strong>&#2352;</strong> '+ amount +'</span>';
+					html += '<span class="amount"> <img src="/rsunify/resources/dashboard/imgs/rs.png" > '+ amount +'</span>';
+					
+				} else {
+					/* Unlikely */
+				}
+			} else {
+				html = '<div class="ikea-dashboard-widget ikea-status-widget-custom" data-swtype="'+ sub_type +'">';
+				/* Dirty method, has to be updated with new status type widget */
+				html += '<div class="ikea-widget-db-backup-date-custom"><span>'+ data.title +'</span><span> : </span><span>'+ data.value +'</span></div>';
+			}	
+			html += '</div></td></tr></table>';
+			html += '</div>';
+			_container.prepend($(html));			
+			_container.attr("data-widget-loaded", "yes");
+			if (_can_manage) {
+				_container.append($('<a href="#" class="remove-btn"><i class="fa fa-times"></i></a>'));
+			}				
+		} else {
+			_container.html('<span class="data-corrupted">No Data</span>');
+			_container.append($('<a href="#" class="remove-btn"><i class="fa fa-times"></i></a>'));
+		}	
+		
+		/* Add Help Btn */
+		_meta.options.help = _meta.options.help ? _meta.options.help : "";
+		if (_meta.options.help !== "") {
+			_container.append($('<a href="#" class="help-btn" data-id="'+ _meta.id +'" title="About this Widget"><i class="fa fa-question"></i></a>'));
+		}
+		
+		/* Add Filter Btn */
+		_meta.options.filters = _meta.options.filters ? _meta.options.filters : "";
+		if (_meta.options.filters !== "") {
+			_container.append($('<button class="rsu-dashboard-filter-btn" title="Filter" data-id="'+ _meta.id +'" data-type="WIDGET"><i class="fa fa-filter"></i></button>'));
+		}	
+		var dFTitle = this.prepareDefaultFilter(_meta.options.filters, this.filters[_meta.id], _meta.id);
+		if (dFTitle !== "") {
+			_container.append($('<span class="ikea-widget-active-filter">'+ dFTitle +'</span>'));
+		}	
+	};
+	
+	this.renderTopItemsWidget = function(_container, _meta, _can_manage) {
+		var i = 0,
+			j = 0,
+			_theme = _container.attr("data-theme"),
+			html = '<div class="ikea-dashboard-widget ikea-top-items-widget '+ _theme +' '+ (this.data[_meta.id].header ? "" : "empty") +'">';
+		
+		if (_meta.is_demo) {
+			this.data[_meta.id] = _meta.options.demo;
+		}		
+		
+		if (this.data[_meta.id].header) {
+			_meta.options.columns_template = (_meta.options.columns_template !== "" ? _meta.options.columns_template : "repeat("+ this.data[_meta.id].header.length +", 1fr)");
+			html += '<div class="ikea-top-items-widget-header">';
+			html += '<div class="row" style="grid-template-columns: '+ _meta.options.columns_template +';">'
+			for (i = 0; i < this.data[_meta.id].header.length; i++) {
+				html += '<div>'+ this.data[_meta.id].header[i] +'</div>';
+				
+			}
+			html += '</div></div><div class="ikea-top-items-widget-content">';
+			for (i = 0; i < this.data[_meta.id].rows.length; i++) {
+				html += '<div class="row" style="grid-template-columns: '+ _meta.options.columns_template +';">';
+				for (j = 0; j < this.data[_meta.id].header.length; j++) {
+					html += '<div>'+ this.data[_meta.id].rows[i][j] +'</div>';
+				}
+				html += '</div>';
+			}
+			html += '</div>';		
+		} else {
+			html += '<h4 class="ikea-widget-no-records-h4">No Data</h4>';
+		}
+		html += '</div>';	
+		_container.append($(html));
+		/* Add Filter Btn */
+		_meta.options.filters = _meta.options.filters ? _meta.options.filters : "";
+		if (_meta.options.filters !== "") {
+			_container.append($('<button class="rsu-dashboard-filter-btn" title="Filter" data-id="'+ _meta.id +'" data-type="WIDGET"><i class="fa fa-filter"></i></button>'));
+		}	
+		_container.attr("data-widget-loaded", "yes");
+		if (_can_manage) {
+			_container.append($('<a href="#" class="remove-btn"><i class="fa fa-times"></i></a>'));
+		}
+		/* Add Help Btn */
+		_meta.options.help = _meta.options.help ? _meta.options.help : "";
+		if (_meta.options.help !== "") {
+			_container.append($('<a href="#" class="help-btn" data-id="'+ _meta.id +'" title="About this Widget"><i class="fa fa-question"></i></a>'));
+		}
+		_container.append($('<a href="#" class="zoom-btn" data-type="top_items" data-id="'+ _meta.id +'" data-theme="'+ _theme +'" title="Maximize"><i class="fa fa-window-maximize"></i></a>'));
+		/* Now insert the title */
+		if (_meta.show_title) {
+			_container.prepend($('<h3 class="ikea-widget-title-h3" style="text-align: '+ _meta.title_alignment +';">'+ _meta.title +'</h3>'));
+		}
+	};
+	
+	this.renderPendingItemsWidget = function(_container, _wMeta, _theme) {
+		
+	};
+	
+	this.prepareDefaultFilter = function(_filters, _dOptions, _id) {
+		var optTitle = "",
+			rawDOptions = {};
+		if (this.widgets[_id] && this.widgets[_id].options.default_options !== "") {
+			rawDOptions = JSON.parse(this.widgets[_id].options.default_options);
+		} else if (this.groups[_id] && this.groups[_id] !== "") {
+			rawDOptions = JSON.parse(this.groups[_id].default_options);
+		}		
+		if (rawDOptions && _filters !== "" && (_dOptions !== "" || !$.isEmptyObject(_dOptions))) {
+			optTitle = "[ ";
+			var filters = JSON.parse(_filters);
+			var dOpt = (typeof _dOptions === "string") ? JSON.parse(_dOptions) : _dOptions;
+			if (dOpt) {
+				var keys = Object.keys(dOpt);
+				for(i = keys.length - 1; i >=0 ; i--) {
+					if (i != (keys.length - 1)) {
+						optTitle += " - ";
+					}
+					if (filters[keys[i]]) {						
+						for (j = 0; j < filters[keys[i]].length; j++) {
+							if (filters[keys[i]][j].value == dOpt[keys[i]]) {
+								optTitle += (rawDOptions[keys[i]].title +" : "+filters[keys[i]][j].label);
+							}
+						}
+					}					
+				}
+				optTitle += " ]";
+			} else {
+				optTitle = "";
+			}			
+		}
+		return optTitle;
+	};
+	
+	this.removeWidget = function(_wid, _grHandle) {
+		var i = 0,
+			keys = [],
+			payload = {},
+			options = {};
+		if (this.groups[_grHandle]) {			
+			keys = Object.keys(this.groups[_grHandle].widgets);
+			for (var i = 0; i < keys.length; i++) {
+				if (this.groups[_grHandle].widgets[keys[i]].id == _wid) {
+					this.groups[_grHandle].widgets.splice(i, 1);
+					break;
+				}
+			}
+			options["GROUPS"] = this.groups;
+			options["UVOPTION"] = this.uvoption;
+			options["GENERAL"] = this.general;
+			payload["OPTIONS"] = options;
+			payload["HANDLE"] = this.dashboard;
+			payload["ID"] = this.dashboardID;
+			this.ajaxFlaq = false;
+			this.request = this.prepareRequest("/visualizer/update", "dashboard", "USER_WIDGET", 0, payload);
+			this.dock();
+		}		
+		this.usedWidgets.splice(this.usedWidgets.indexOf(parseInt(_wid)), 1);
+		this.renderWidgetPool();
+		this.reLoadGroupContainer(_grHandle);
+		/* Refresh the sortable - needed to fix some issue */
+		//this.enableEditMode();
+	};
+	
+	this.renderWidgetPool = function(_type) {		
+		var i= 0, 
+			j = 0, 
+			keys = [],
+			icon = "",
+			flaQ = true,
+			options = {},
+			records = [],
+			isEmpty = true,
+			lister = $("#ikea-dashboard-widget-list");		
+		
+		keys = Object.keys(this.widgets);
+		if (_type && _type !== "") {
+			for (i = 0; i <  keys.length; i++) {
+				if (this.widgets[keys[i]].type === _type) {
+					records.push(this.widgets[keys[i]]);
+				}
+			}
+		} else {
+			for (i = 0; i <  keys.length; i++) {
+				records.push(this.widgets[keys[i]]);
+			}
+		}	
+		
+		if (records.length === 0) {
+			lister.html("<h3>Zero Widgets</h3>");
+		} else {
+			lister.html("");
+		}		
+		
+		for (i = 0; i < records.length; i++) {
+			flaQ = true;
+			for (j = 0; j < this.usedWidgets.length; j++) {
+				if (records[i].id == this.usedWidgets[j]) {
+					flaQ = false;
+					break;
+				}
+			}
+			if (flaQ) {
+				isEmpty = false;
+				if (records[i].type === "chart") {
+					icon = "pie-chart";
+				} else if (records[i].type === "status") {
+					icon = "line-chart";
+				} else if (records[i].type === "top_items") {
+					icon = "list-ol";
+				} else if (records[i].type === "pending_items") {
+					icon = "tasks";
+				} else {
+					icon = "clock-o";
+				}
+				lister.append($('<a href="#" data-id="'+ records[i].id +'" data-type="'+ records[i].type +'" draggable="true"><i class="fa fa-'+ icon +'"></i> <span>'+ records[i].title +'</span></a>'));
+			}
+		}
+		
+		if (isEmpty) {
+			lister.html("<h3>Zero Widgets</h3>");
+		}
+	};
+	
+	this.prepareSurvey = function() {
+		var html = '<div class="ikea-survey-ghost-back">';		
+		html += '<div class="ikea-survey-container">';
+		html += '<div class="header"><h3><i class="fa fa-file-text"></i> '+ this.surveyor.survey.TITLE +'</h3>';
+		
+		/* Don't show the close button, if the survey is mandatory */
+		if (!this.surveyor.survey.IS_MANDATORY) {
+			html += '<a href="#" class="ikea-survey-close-btn" title="Close the survey"><i class="fa fa-times"></i></a>';	
+		}				
+				
+		html += '</div><div class="content">';		
+		if (this.surveyor.questions.length === 0) {
+			html += '<h2 class="no-questions">Seems like no questions.!</h2>';
+		} else {
+			html += '<h2>Welcome "'+ ikeaRsName +'"!</h2>';
+			html += '<p>Please complete the Survey to start using LeverEDGE</p>';
+			html += '<div style="text-align: center;">';
+			html += '<button id="ikea-survey-proceed-btn">Proceed</button>';
+			if (!this.surveyor.survey.IS_MANDATORY) {
+				html += '<button class="ikea-survey-close-btn">Later</button>';
+			}
+			html += '</div>';
+		}				
+		html += '</div>';
+		html += '<div class="footer" style="display: none;">';
+		if (this.surveyor.questions.length > 0) {
+			html += '<button style="display: none;" id="ikea-survey-prev-btn">Previous</button>';
+			html += '<button id="ikea-survey-next-btn">Next</button>';
+		} else {
+			html += '<button class="ikea-survey-close-btn">Close</button>';			
+		}
+		html += '</div>';
+		html += '</div>';		
+		html += '</div>';		
+		
+		html = $(html);
+		$('body').append(html);			
+		this.questionBlock = html.find("div.content");
+		
+		/* Check whether the answer stored previously */	
+		this.surveyIndex = 0;	
+		this.surveyAnswers = {};
+		this.surveyLocalKey = "survey_"+ this.surveyor.survey.ID;
+			
+		if (typeof localStorage[this.surveyLocalKey] != "undefined") {
+			this.surveyAnswers = JSON.parse(localStorage[this.surveyLocalKey]);
+			this.surveyIndex = parseInt(localStorage.getItem(this.surveyLocalKey +"_Qindex"), 10);
+		}
+		
+		if (this.surveyIndex > 0) {
+			this.renderSurveyQuestion();
+		}
+		
+	};
+	
+	this.renderSurveyQuestion = function() {
+		var i = 0,
+			html = '',
+			selected = '',
+			choices = [],
+			answer = null,
+			question = null;
+			
+		this.questionBlock.html("");
+		$("#ikea-survey-prev-btn").hide();
+		
+		if (this.surveyIndex < this.surveyor.questions.length) {	
+			question = this.surveyor.questions[this.surveyIndex];
+			
+			if (this.surveyAnswers[question.ID]) {
+				answer = this.surveyAnswers[question.ID];	
+			}
+			
+			this.questionBlock.append($('<h3 class="question">'+ (this.surveyIndex + 1) +'. '+ question.QUESTION +'</h3>'));
+			html += '<div class="answer-block">';
+			if (question.TYPE === "single") {
+				choices = question.OPTIONS.split(",");
+				for (i = 0; i < choices.length; i++) {
+					selected = '';
+					if (answer && answer.trim() == choices[i].trim()) {
+						selected = 'checked';	
+					}
+					html += '<label><input type="radio" value="'+ choices[i] +'" name="ikea-survey-choice" '+ selected +'> '+ choices[i] +'</label>';
+				}
+			} else if (question.TYPE === "multi") {
+				choices = question.OPTIONS.split(",");
+				for (i = 0; i < choices.length; i++) {
+					selected = '';
+					if (answer && answer.indexOf(choices[i].trim()) != -1) {
+						selected = 'checked';	
+					}
+					html += '<label><input type="checkbox" value="'+ choices[i] +'" name="ikea-survey-choice" '+ selected +'> '+ choices[i] +'</label>';
+				}
+			} else if (question.TYPE === "select") {
+				choices = question.OPTIONS.split(",");
+				selected = '';
+				if (answer && answer.indexOf(choices[i].trim()) != -1) {
+					selected = 'selected';	
+				}
+				html += '<select id="ikea-survey-select-field">';
+				for (i = 0; i < choices.length; i++) {
+					html += '<option value="'+ choices[i] +'" '+ selected +'>'+ choices[i] +'</option>';
+				}
+				html += '</select>';			
+			} else {
+				html += '<input type="text" id="ikea-survey-blank-field" class="rsu-popup-field" value="'+ (answer ? answer : "") +'" data-behaviour="alpha" placeholder="Enter your answer">';
+			}
+			html += '</div>';			
+			this.questionBlock.append(html);
+			
+			$("div.ikea-survey-container > div.footer").show();
+			
+			if (this.surveyIndex > 0) {
+				$("#ikea-survey-prev-btn").show();
+			}
+			
+			/* UPdate the survey index on local, so that if it incomplete */
+			localStorage.setItem(this.surveyLocalKey +"_Qindex", this.surveyIndex);
+			
+		} else if (this.surveyIndex === this.surveyor.questions.length) {
+			html = '<div class="ikea-surver-finish-box">';
+			html += '<span><i class="fa fa-check"></i></span>';
+			html += '<h2>Thank you for taking this Survey</h2>';			
+			html += '<button class="ikea-survey-close-btn survey-submit">Submit</button>';
+			html += '<a href="#" id="ikea-survey-restart-btn" style="display: block;margin-top: 5px;">restart</a>';
+			html += '</div>';
+			this.questionBlock.append($(html));
+			$("div.ikea-survey-container > div.footer").hide();
+		}
+	};
+	
+	this.storeAnswer = function() {		
+		if (this.surveyor.questions[this.surveyIndex].TYPE === "single") {
+			this.surveyAnswers[this.surveyor.questions[this.surveyIndex].ID] = $("input:radio[name='ikea-survey-choice']:checked").val()  
+		} else if (this.surveyor.questions[this.surveyIndex].TYPE === "multi") {
+			this.surveyAnswers[this.surveyor.questions[this.surveyIndex].ID] = $('input[name="ikea-survey-choice"]').filter(function() {
+			    return this.checked;
+			}).map(function() {
+			    return this.value;
+			}).get().join(',');
+		} else if (this.surveyor.questions[this.surveyIndex].TYPE === "select") {
+			this.surveyAnswers[this.surveyor.questions[this.surveyIndex].ID] = $("#ikea-survey-select-field").val();
+		} else {
+			this.surveyAnswers[this.surveyor.questions[this.surveyIndex].ID] = $("#ikea-survey-blank-field").val();
+		}
+		
+		localStorage.setItem(this.surveyLocalKey, JSON.stringify(this.surveyAnswers));
+		
+		if (!this.surveyor.questions[this.surveyIndex].CAN_SKIP) {			
+			if (!this.surveyAnswers[this.surveyor.questions[this.surveyIndex].ID]) {
+				$("div.ikea-survey-container").addClass("shakeit");
+				setTimeout(function() {
+					$("div.ikea-survey-container").removeClass("shakeit");
+				}, 500);
+				return false;
+			}
+		}
+		
+		return true;
+	};
+	
+	this.submitSurvey = function() {
+		let answers = [],
+			payload = {},
+			keys = Object.keys(this.surveyAnswers);
+			
+		for (let i = 0; i < keys.length; i++) {
+			answers.push({"QID": keys[i], "ANSWER": this.surveyAnswers[keys[i]]});
+		}
+		payload["ANSWERS"] = answers;
+		this.ajaxFlaq = false;
+		this.request = this.prepareRequest("/visualizer/create", "dashboard", "SURVEY_ANSWER", 0, payload);
+		this.dock();
+	};
+	
+	this.mask = function(_element, _full) {
+		var html = '',
+			pos = _element[0].getBoundingClientRect();
+		html = '<div class="ikea-dashboard-widget-mask" ';
+		
+		if (_full) {
+			html += 'style="top: 0px; left: 0px; right: 0px;';
+			html += 'height: 100%;">';
+		} else {
+			html += 'style="top: '+ (pos.top + window.scrollY) +'px; left: '+ (pos.left + window.scrollX) +'px;';
+			html += 'width: '+ _element.outerWidth() +'px; ';
+			html += 'height: '+ _element.outerHeight() +'px;">';
+		}	
+		html += '<i class="fa fa-cog fa-spin fa-3x fa-fw"></i>';
+		html += '</div>';
+		$('body').append($(html));
+	}
+	
+	this.unmask = function() {
+		$('div.ikea-dashboard-widget-mask').remove();
+	};
+	
+	this.onContainerResize = function() {
+		/**/
+		this.gItemHeight = parseFloat(this.container.css("grid-template-rows").split(' ')[0]);
+		/**/
+		this.gItemWidth = parseFloat(this.container.css("grid-template-columns").split(' ')[0]);
+		/**/
+		this.totalRows = this.container.css("grid-template-rows").split(' ').length;
+		/**/
+		this.totalColumns = this.container.css("grid-template-columns").split(' ').length;
+		/* Well now render the dashboard safely */
+		this.renderDashboard();
+	};
+	
+	this.getCoords = function(elem) { 
+	    var box = elem.getBoundingClientRect();
+
+	    var body = document.body;
+	    var docEl = document.documentElement;
+
+	    var scrollTop = window.pageYOffset || docEl.scrollTop || body.scrollTop;
+	    var scrollLeft = window.pageXOffset || docEl.scrollLeft || body.scrollLeft;
+
+	    var clientTop = docEl.clientTop || body.clientTop || 0;
+	    var clientLeft = docEl.clientLeft || body.clientLeft || 0;
+
+	    var top  = box.top +  scrollTop - clientTop;
+	    var left = box.left + scrollLeft - clientLeft;
+
+	    return { top: Math.round(top), left: Math.round(left) };
+	}
+	
+	this.updateDashboard = function() {
+		var payload = {},
+			options = {};
+		options["GROUPS"] = this.groups;
+		options["UVOPTION"] = this.uvoption;
+		options["GENERAL"] = this.general;
+		payload["OPTIONS"] = options;
+		payload["HANDLE"] = this.dashboard;
+		payload["ID"] = this.dashboardID;
+		this.ajaxFlaq = false;
+		this.request = this.prepareRequest("/visualizer/update", "dashboard", "USER_WIDGET", 0, payload);
+		this.dock();
+	};
+	
+	this.prepareRequest = function( _action, _entity, _task, _page, _payload, _dtype, _ctype ) {		
+		/* Default expecting data type is 'json' */
+		var dtype = ( typeof _dtype !== "undefined" ) ? _dtype : "json";
+		/* 'application/json' will be the default content type, can be overridden otherwise */
+		var ctype = ( typeof _ctype !== "undefined" ) ? _ctype : "application/json; charset=utf-8";		
+		return {
+			action: _action,
+			entity: _entity,
+			task: _task,
+			page: _page,
+			payload: _payload,
+			data_type: dtype,
+			content_type: ctype
+		};
+	};
+	
+	this.dock = function() {
+		/* Store 'this' reference */
+		var me = this;	
+		if (this.ajaxFlaq) {
+			return;
+		}
+		// Prepare Ajax object
+		var param = {  
+			type       : "POST",  
+			data       : JSON.stringify( this.request ),   
+			dataType   : this.request.data_type,
+			contentType: this.request.content_type,
+			url        : ikeaOpt.docker + this.request.action,
+			beforeSend : function() {
+				me.ajaxFlaq = true;
+				/* Notify the user regarding Ajax operation */			
+				//me.controller.helper.notifyUser("Processing...");			
+			},
+			success    : function(_data) {
+				//me.controller.helper.notifyUser("");
+				me.responseHandler(_data);
+			},
+			error      : function( jqXHR, textStatus, errorThrown ) {
+				me.ajaxFlaq = false;
+				me.unmask();
+				//alert("No data to show.!");
+				//me.controller.helper.notifyUser("Communication Error.!", "error");
+			}
+		};		
+		// Boom.........
+		$.ajax( param );		
+	};
+	
+	this.getUserAlertMessage = function(){
+		this.request = this.prepareRequest("/visualizer/getmessage", "dashboard", "GET_MESSAGE", 0, {});
+		this.ajaxFlaq = false;
+		this.dock();
+	};
+	
+	this.putUserAlertMessage = function(message,date){
+		var pad = function(num) { return ('00'+num).slice(-2) };
+		date = date.getUTCFullYear()+'-'+pad(date.getUTCMonth() + 1)+'-'+pad(date.getUTCDate())+' '+pad(date.getUTCHours())+':'+pad(date.getUTCMinutes())+':'+pad(date.getUTCSeconds());
+		this.request = this.prepareRequest("/visualizer/putmessage", "dashboard", "PUT_MESSAGE", 0, {"message":message,"datetime":date});
+		this.ajaxFlaq = false;
+		this.dock();
+	};
+	
+	/* Change the */
+	this.labelNumericFormatter = function(_obj) {
+		return this.value / 1000 + 'K';
+	};
+	
+	this.responseHandler = function(_data) {
+		$("div.ikea-dashboard-filter-box").remove();
+		var i = 0,
+			j = 0,
+			grps = '',
+			keys = [],
+			temp = {},
+			wid = null,
+			wdgts = [],
+			payload = null,
+			grHandle = -1,
+			container = null;
+		if (this.request.action === "/visualizer/list" && this.request.task === "GET_DASHBOARD") {
+			if (_data.payload && _data.payload !== "") {
+				this.prepareDashboardMeta(_data);
+			} else {
+				$("#loadPage").show();
+				$("div.rsu-probe-container").show();
+				$("#rsu-transaction-body-wrapper").show();
+				$("#rsu-dashboard-container").hide();
+				/* Update the menu */
+				$("#rsu-dashboard-menu-item").attr("data-context", "dashboard").find("span.l-btn-text").html("Dashboard");
+			}
+			this.unmask();
+			this.getUserAlertMessage();
+			
+			/* Check for the Survey */
+			
+			
+		} else if (this.request.action === "/visualizer/list" && this.request.task === "WIDGET") {
+			this.widgets = {};
+			for (i = 0; i < _data.payload.length; i++) {
+				this.widgets[_data.payload[i]["ID"]] = {
+					id: _data.payload[i]["ID"],
+					handle: _data.payload[i]["HANDLE"],
+					title: _data.payload[i]["TITLE"],
+					options: JSON.parse(_data.payload[i]["OPTIONS"]),
+					target: _data.payload[i]["TARGET"],
+					type: _data.payload[i]["TYPE"],
+					is_demo: _data.payload[i]["IS_DEMO"] 
+				};
+			}		
+			/* Now get the dashboard */
+			/* Prepare the request object */
+			this.request = this.prepareRequest("/visualizer/list", "dashboard", "GET_DASHBOARD", 0, {HANDLE: this.dashboard, DURATION: 4, IS_RELOAD: true});
+			/* Initiate the request */
+			this.ajaxFlaq = false;
+			this.dock();			
+		} else if(this.request.action === "/visualizer/list" && this.request.task === "GET_DASHBOARD_SECTION") {
+			if (this.activeFilterSection && this.activeFilterSection !== "") {
+				wdgts = [];
+				payload = JSON.parse(_data.payload);
+				grps = this.activeFilterSection.split(",");
+				for (i = 0; i < grps.length; i++) {
+					wdgts = this.groups[grps[i]].widgets;
+					keys = Object.keys(this.groups[grps[i]].widgets);
+					for(j = 0; j < keys.length; j++) {
+						this.data[wdgts[keys[j]].id] = payload["DATA"][wdgts[keys[j]].id]; 
+					}
+				}
+				this.reLoadGroupContainer(this.activeFilterSection);
+				this.unmask();
+			}			
+		} else if(this.request.action === "/visualizer/list" && this.request.task === "GET_GROUP") {
+			wdgts = [];
+			payload = JSON.parse(_data.payload);
+			wdgts = this.groups[this.groupKeys[this.groupIndex]].widgets;
+			keys = Object.keys(this.groups[this.groupKeys[this.groupIndex]].widgets);
+			
+			for(j = 0; j < keys.length; j++) {
+				this.data[wdgts[keys[j]].id] = payload["DATA"][wdgts[keys[j]].id]; 
+			}		
+			this.reLoadGroupContainer(this.groupKeys[this.groupIndex]);
+			this.groupIndex++;
+			if (this.groupIndex < this.groupKeys.length) {
+				this.ajaxFlaq = false;	
+				this.reload();
+			} else {
+				this.groupIndex = 0;
+				this.unmask();
+				this.getUserAlertMessage();
+			}
+			if( isCrossDock_User == "true" ){
+				$("#rsu-dashboard-edit-btn").addClass("disabled");
+			}
+		} else if(this.request.action === "/visualizer/list" && this.request.task === "TRANSFORM_WIDGET") {
+			if (this.widgets[this.request.payload.ID]) {
+				temp = {};
+				container = null;
+				wid = this.request.payload.ID;					
+				$("div.widget-holder.chart").each(function() {
+					if (wid == $(this).attr("data-id")) {
+						container = $(this);
+						grHandle = $(this).closest("div.rsu-dashboard-group-container").attr("data-gr-handle");
+						return;
+					}
+				});				
+				if(container) {
+					container.html("");
+					container.removeAttr("data-highcharts-chart");
+					temp = JSON.parse(_data.payload);
+					/* Update data cache */
+					this.data[wid] = temp[wid];
+					this.widgets[wid].options.sub_type = this.request.payload.SUB_TYPE;
+					this.renderChartWidget(container, this.widgets[wid], this.groups[grHandle].can_manage);					
+					this.unmask();
+					/* Now update the widget record */					
+					var payload = {},
+						options = {};
+					this.uvoption[wid+""] = this.widgets[wid].options.sub_type;
+					options["GROUPS"] = this.groups;
+					options["UVOPTION"] = this.uvoption;
+					options["GENERAL"] = this.general;
+					payload["OPTIONS"] = options;
+					payload["HANDLE"] = this.dashboard;
+					payload["ID"] = this.dashboardID;
+					this.ajaxFlaq = false;
+					this.request = this.prepareRequest("/visualizer/update", "dashboard", "USER_WIDGET", 0, payload);
+					this.dock();
+				}
+			}
+		} else if(this.request.action === "/visualizer/list" && this.request.task === "GET_SINGLE_WIDGET") {			
+			temp = {};
+			grHandle = -1;
+			container = null;
+			wid = this.request.payload.ID;										
+			$("div.widget-holder").each(function() {
+				if (wid == $(this).attr("data-id")) {
+					container = $(this);
+					grHandle = $(this).closest("div.rsu-dashboard-group-container").attr("data-gr-handle");
+					return;
+				}
+			});	
+			
+			if (this.groups[grHandle]) {
+				var keys = Object.keys(this.groups[grHandle].widgets);
+				for (var i = 0; i < keys.length; i++) {
+					if(this.groups[grHandle].widgets[keys[i]].id == wid) {
+						if (this.groups[grHandle].widgets[keys[i]]["pending"]) {
+							delete this.groups[grHandle].widgets[keys[i]]["pending"];
+						}						
+						break;
+					}
+				}
+				
+				this.ajaxFlaq = false;	
+				this.updateDashboard();			
+				if(container) {
+					container.html("");					
+					if (container.hasClass("has-title")) {
+						container.removeClass().addClass("widget-holder "+ this.widgets[wid].type +" has-title");
+					} else {
+						container.removeClass().addClass("widget-holder "+ this.widgets[wid].type +" has-title");
+					}					
+					container.removeClass("pending-data");
+					container.removeAttr("data-highcharts-chart");
+					temp = JSON.parse(_data.payload);
+					/* Update data cache */
+					this.data[wid] = temp[wid];
+					if (this.widgets[wid].type === "chart") {
+						this.renderChartWidget(container, this.widgets[wid], this.groups[grHandle].can_manage);
+					} else if (this.widgets[wid].type === "status") {
+						this.renderStatusWidget(container, this.widgets[wid], this.groups[grHandle].can_manage);
+					} else if (this.widgets[wid].type === "top_items") {
+						this.renderTopItemsWidget(container, this.widgets[wid], this.groups[grHandle].can_manage);
+					} else if (this.widgets[wid].type === "pending_items") {
+						this.renderPendingItemsWidget(container, this.widgets[wid], this.groups[grHandle].can_manage);
+					} else {
+						/* Unlikely */
+					}
+					this.draggedWidget = null;
+					//this.reLoadGroupContainer(null);
+					this.unmask();
+				}	
+			}
+		}else if(this.request.action === "/visualizer/getmessage" && this.request.task === "GET_MESSAGE") {
+			var userMessageData = _data;
+			if( userMessageData != null ){
+				var messArray = [];
+				for(var i=0;i<userMessageData.length;i++){
+					messArray.push({"msg":userMessageData[i].UML_MESSAGE,"time":userMessageData[i].UML_SHEDULETIME});
+				}								
+				if (messArray.length > 0 && this.container.is(":visible")) {
+					/* If no message then hide the marguee bar */
+					$(".ikea-acm-info-marquee").show();
+					this.container.css("margin-top", "58px");
+				} else {
+					$(".ikea-acm-info-marquee").hide();
+					this.container.css("margin-top", "35px");
+				}				 
+				rSuControllerObj.marqueeList(messArray);
+			}
+			if( this.initialDashboardLoad  ){
+				this.initialDashboardLoad = false;
+				this.request = this.prepareRequest("/visualizer/list", "dashboard", "GET_SURVEY", 0, {});
+				this.ajaxFlaq = false;
+				this.dock();
+			}
+			
+
+		} else if(this.request.action === "/visualizer/putmessage" && this.request.task === "PUT_MESSAGE") {
+			//TODO
+		}  else if(this.request.action === "/visualizer/list" && this.request.task === "GET_SURVEY") {
+			/*  */
+			if (_data.payload && _data.payload !== "") {
+				this.surveyor = JSON.parse(_data.payload);
+				
+				if (this.surveyor && !$.isEmptyObject(this.surveyor)) {
+					$("#ikea-take-survey-btn").show();
+					if (this.surveyor.survey.WHEN_TO_SHOW.trim() == "login") {
+						setTimeout(function() {
+							$("#ikea-take-survey-btn").trigger("click");
+						}, 1000);					
+					}		
+				} else {
+					$("#ikea-take-survey-btn").hide();	
+				}									
+			} else {
+				$("#ikea-take-survey-btn").hide();	
+			}			
+		} else if (this.request.action === "/visualizer/create" && this.request.task === "SURVEY_ANSWER") {
+			
+			/* Reset the localstorage survey */
+			localStorage.removeItem(this.surveyLocalKey);
+			localStorage.removeItem(this.surveyLocalKey +"_Qindex");
+			
+			this.surveyor = null;
+			this.surveyIndex = 0;
+			this.surveyAnswers = {};
+			this.surveyLocalKey = "";
+			this.questionBlock = null;		
+			
+			/* Hide the survey button */
+			$("#ikea-take-survey-btn").hide();						
+			if (this.callLogout) {
+				/* Just in case */
+				this.callLogout = false;
+				logout();
+			} else {
+				/* Check for further survey */				
+				this.request = this.prepareRequest("/visualizer/list", "dashboard", "GET_SURVEY", 0, {});
+				this.ajaxFlaq = false;
+				this.dock();				
+			}
+			
+		} else {
+			/* Un known request */
+		}
+		this.ajaxFlaq = false;
+	};
+};
+
+function movable(_container, _trigger) {
+	var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+	
+	if (_trigger) {
+	    // if present, the header is where you move the DIV from:
+		_trigger.onmousedown = dragMouseDown;
+	} else {
+	    // otherwise, move the DIV from anywhere inside the DIV: 
+		_container.onmousedown = dragMouseDown;
+	}
+
+	function dragMouseDown(e) {
+	    e = e || window.event;
+	    //e.preventDefault();
+	    // get the mouse cursor position at startup:
+	    pos3 = e.clientX;
+	    pos4 = e.clientY;
+	    document.onmouseup = closeDragElement;
+	    // call a function whenever the cursor moves:
+	    document.onmousemove = elementDrag;
+	}
+
+	function elementDrag(e) {
+	    e = e || window.event;
+	    e.preventDefault();
+	    // calculate the new cursor position:
+	    pos1 = pos3 - e.clientX;
+	    pos2 = pos4 - e.clientY;
+	    pos3 = e.clientX;
+	    pos4 = e.clientY;
+	    // set the element's new position:
+	    _container.style.top = (_container.offsetTop - pos2) + "px";
+	    _container.style.left = (_container.offsetLeft - pos1) + "px";
+	}
+
+	function closeDragElement() {
+	    // stop moving when mouse button is released:
+	    document.onmouseup = null;
+	    document.onmousemove = null;
+	}
+}
+
+/**
+ * @author: Paranjothi G
+ * version: 1.0
+ */
+
+
+$.fn.dbReArrange = function( _option ) {
+	new db_re_arrange( this, _option );
+};
+
+var db_re_arrange = function( _target ){
+	/**/
+	this.target = $( _target );
+	/**/
+	this.childs = this.target.find( "div.widget-holder" );
+	/**/
+	this.isElemClick = false;
+	/**/
+	this.dragElem = null;
+	/**/
+	this.offsetX = 0;
+	/**/
+	this.offsetY = 0;
+	/**/
+	this.elemHeight = 0;
+	/**/
+	this.elemWidth  = 0
+	/**/
+	this.currPosX    = null;
+	/**/
+	this.currPosY    = null;
+	/**/
+	this.elmPos = [];
+	/**/
+	this.left		= true;
+	/**/
+	var self = this;
+
+	/**/
+	this.childs.on( "mousedown", function(_e){
+		self.mouseDown( this, _e );
+	});
+	
+	/**/
+	this.childs.on( "mouseup", function(_e){
+		self.mouseup( this );
+	});
+	
+	/**/
+	this.target.on( "mousemove", function(_e){
+		self.mouseMove( this, _e );
+	});
+
+	/**/
+	this.mouseDown = function( _target, _e ){
+		this.isElemClick = true;
+		this.dragElem = _target;
+		this.offsetX = _e.offsetX;
+		this.offsetY = _e.offsetY;
+		this.elemHeight = _target.clientHeight;
+		this.elemWidth  = _target.clientWidth;
+
+		this.dragElem.style.height = this.elemHeight;
+		this.dragElem.style.width = this.elemWidth;
+		this.dragElem.style.top = _e.clientY - this.offsetY;
+		this.dragElem.style.left = _e.clientX - this.offsetX;
+		this.dragElem.style.opacity = '.7'
+		this.dragElem.classList.add( "db-re-arrange-elem" );
+		this.elemPositions();
+	};
+	
+	/**/
+	this.mouseup   = function( _target ){
+		this.isElemClick = false;
+		this.offsetX = 0;
+		this.offsetY = 0;
+		this.elemHeight = 0;
+		this.elemWidth  = 0
+		this.currPosX    = null;
+		this.currPosY    = null;
+		this.dragElem.style.opacity = '';
+		this.dragElem.classList.remove( "db-re-arrange-elem" );
+		this.dragElem.style.height = "";
+		this.dragElem.style.width = "";
+		this.dragElem.style.top = "";
+		this.dragElem.style.left = "";
+		$( ".db-rearrange-placeholder" ).remove();
+		if( this.placeIndex != null ){
+			this.dragElem
+			if( this.left ){
+				$( this.childs[this.placeIndex] ).before( this.dragElem );
+			} else {
+				$( this.childs[this.placeIndex] ).after( this.dragElem );
+			}
+			this.placeIndex = null;
+		}
+		this.dragElem = null;
+	};
+	
+	/**/
+	this.mouseMove = function( _target, _e ){
+		if( this.isElemClick && this.dragElem != null ){
+			this.dragElem.style.top = _e.clientY - this.offsetY;
+			this.dragElem.style.left = _e.clientX - this.offsetX;
+			this.currPosX    = _e.clientX;
+			this.currPosY    = _e.clientY;
+			this.showPlaceholder(_target, _e);
+		}
+	};
+	
+	/**/
+	this.elemPositions = function(){
+		this.elmPos = [];
+		for( var i = 0; i < this.childs.length; i++ ){
+			this.elmPos.push( { left : this.childs[i].offsetLeft, top : this.childs[i].offsetTop, width : this.childs[i].offsetWidth , height : this.childs[i].offsetHeight, no_next : this.childs[i].nextElementSibling == null } );
+		}
+	}
+	
+	/**/
+	this.showPlaceholder = function( _target, _e ){
+		if( this.isElemClick && this.dragElem != null ){
+			$( ".db-rearrange-placeholder" ).remove();
+			this.placeIndex = null;
+			this.left		= true;
+			for( var i = 0; i < this.elmPos.length; i++ ){
+				if ( this.elmPos[i].left < this.currPosX && this.currPosX < this.elmPos[i].left + this.elmPos[i].width 
+					&& this.elmPos[i].top < this.currPosY && this.currPosY < this.elmPos[i].top + this.elmPos[i].height  ){
+					this.placeIndex = i;
+					break;
+				} else if( this.elmPos[i].no_next && this.currPosX + ( this.elmPos[i].width / 2 ) < this.elmPos[i].left + this.elmPos[i].width + this.elmPos[i].width
+						   && this.currPosY + ( this.elmPos[i].height / 2 ) < this.elmPos[i].top + this.elmPos[i].height  + this.elmPos[i].height ){
+					this.left = false;
+					this.placeIndex = i;
+					break;
+				}
+			}
+		}
+		if( this.placeIndex != null ){
+			if( this.left ){
+				$( this.childs[this.placeIndex] ).before( '<div class="db-rearrange-placeholder" style="width: '+this.elemWidth+'px; height : '+this.elemHeight+'px;">' );
+			} else {
+				$( this.childs[this.placeIndex] ).after( '<div class="db-rearrange-placeholder" style="width: '+this.elemWidth+'px; height : '+this.elemHeight+'px;">' );
+			}
+		}
+	};
+		
+};
+
+function initIkeaDashboard() {
+	if(!ikeaDashboardManagerObj){
+		try {
+			/* Create the Dashboard Controller Object */
+			ikeaDashboardManagerObj = new ikeaDashboardManager();
+			/* Kick start it */
+			ikeaDashboardManagerObj.init();
+		} catch(e) { 
+			console.log(e);
+			if (ikeaDashboardManagerObj) {
+				ikeaDashboardManagerObj.unmask();
+			}
+		}
+	}
+}
+
+
+function getDashboardFlag(){
+	$.ajax({
+		type: "GET",
+		url: docker_path + "/app/ikeaCommonUtilController/getDashboardFlag",
+		dataType : "json",
+		success: function( data ){
+			if(data != null){
+				ikea_dashboard_enabled_flag = data;
+				if(data.flag == 1){
+					if(!data.isTsi && data.isBusSum == 0){
+						initIkeaDashboard();
+					}else{
+						//$(".middle-content").show();
+						$("#rsu-dashboard-container").hide();
+						$(".ikea-acm-info-marquee").hide();
+					}
+				} else {
+					$(".middle-content").show();
+					$("#rsu-dashboard-container").remove();
+					$("#rsu-dashboard-menu-item").addClass("disabled");
+					$("#rsu-logtodo-menu-item").addClass("disabled");
+					$("#rsu-dashboard-edit-btn").addClass("disabled");
+					
+					$(".ikea-acm-info-marquee").remove();
+				}
+			}
+		},
+		error      : function( jqXHR, textStatus, errorThrown ) {	
+			console.log(jqXHR, textStatus, errorThrown );
+		}
+	});
+}
+
+/* Controller object instantiation */
+$(document).ready(function(){
+	getDashboardFlag();
+});
+
+$(window).resize(function() {
+	if(ikeaDashboardManagerObj) {
+		if (ikeaDashboardManagerObj.container.is(":visible")) {
+			ikeaDashboardManagerObj.onContainerResize();
+		}		
+	}
+});

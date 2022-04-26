@@ -1,0 +1,1044 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LeverEDGE Login</title>
+<link rel="shortcut icon" href="/rsunify/resources/imgs/favico.png" />
+<link rel="stylesheet" type="text/css" href="/rsunify/resources/CSS/login-styles.css?v=R22.3.1_20220329081806">
+<link rel="stylesheet" type="text/css"
+	href="/rsunify/resources/easyui/themes/default/easyui.css">
+<style>
+/*browser detect*/
+/*Different background colors for different browsers*/
+.IE {
+	background-color: #39F;
+	background-image: none !important;
+}
+
+.Chrome {
+	background-color: #35548b;
+}
+
+.Safari {
+	background-color: #2B2930;
+	background-image: none !important;
+}
+
+.Firefox {
+	background-color: #E29249;
+	background-image: none !important;
+}
+
+.Opera {
+	background-color: #CA0F22;
+	background-image: none !important;
+}
+/*General Styles*/
+body {
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+#browser-message {
+	width: 80%;
+	max-width: 767px;
+	font-size: 16px;
+	padding: 60px 40px;
+	margin: 40px auto;
+	border-radius: 8px;
+	background: #fff;
+	box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.4);
+	box-sizing: border-box;
+}
+.pop-wrapper{
+	display: none;
+}
+.content1-dialog{
+	font-weight: bold;
+	padding: 5px;
+}
+#cnfrmList, #cnfrmMessage, #captcha{
+	margin-top: 10px;
+}
+#cap_error{
+	color: red;
+}
+/*browser detect*/
+</style>
+<script type="text/javascript" src="/rsunify/resources/js/jquery-1.10.2.js?v=R22.3.1_20220329081806"></script>
+<script type="text/javascript" src="/rsunify/resources/easyui/jquery.easyui.min.js?v=R22.3.1_20220329081806"></script>
+</head>
+<body>
+<div class="login-wrapper">
+
+		<div class="login-logo"></div>
+
+		<div class="login-row">
+			<div class="user-login float-no-margin-auto">
+				<form id="slick-login" method="post">
+					<h2>USER LOGIN</h2>
+					<label for="user-name">User Name</label> <input type="text" autocomplete="off"
+						id="userName" size="15" maxlength="50" style="text-transform: uppercase;"> <label for="password">Password</label>
+					<input type="password" id="password" maxlength="24" size="15" autocomplete="off"> 
+					<label>RS Code</label> 
+							<input type="text" id="databaseName" maxlength="75" size="15" autocomplete="off" style="text-transform: uppercase;"/>
+						<input type="submit" value="LOGIN" id="gologin"> <a
+						href="#" onclick="passwordReset()" class="forgot-n-signup"
+						title="Fotgot Password?">TSO Password Reset</a>
+				</form>
+				<div id="message" style="display: none !important;"></div>
+			</div>
+		</div>
+
+	</div>
+	<!-- Dailogue warapper -->
+	
+	<div class="pop-wrapper" id="captch">   	
+		<div id='dialogScreen' class="pnl-wrapper pnl-border">     
+		<div class="pnl-header" id="headerDialg"> <h4 style='font-size:14px'>Warning</h4> <div class="cls-btn-top"  onclick="hideDailoguebox()"></div>  </div>
+		<div class='content-dialog'>
+		<div class="col-1 formstock content1-dialog">
+			<div id="cnfrmMessage"></div>
+			<div id="cnfrmList"></div>
+			<div id="captcha"> 
+				<table>
+					<tbody>
+						<tr>
+							<td><label id="cap_question">&nbsp;</label></td>
+							<td><label><input type="text" style="width: 35px;" id="cap_answer" onkeypress="return isNumberPressed(event, 3)"/></label></td>
+							<td><label id="cap_question"><img height="20" width="20" alt="Refresh" src="/rsunify/resources/imgs/captcha-reload.png" onclick="createRandomCaptch()"/></label></td>
+							<td><label id="cap_error"></label></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	    <div class="footer-dialog">
+	          <input type="button" class="btn" value="Yes" onclick="confirmSubmission()"> 
+	          <input type="button" class="btn" value="No" onclick="hideDailoguebox()"> 
+	    </div>
+	  </div>
+	 </div>
+	</div>
+	<!-- Ends here -->
+	
+	<!-- OTP Verification Screen Start -->
+	<div id="otp_verify_popup" style="display:none">
+	<div class='popup-overlay'  style="display:block !important; opacity: 0.6"></div>
+	<div class="pop-wrapper" id="otp" style="display:block !important;top: 48%;">   	
+		<div id='dailog-otp' class="pnl-wrapper pnl-border" style="width: 326px;height: 146px;">     
+		<div class="pnl-header" id="headerDialg" style="background: #daeff1; color: #000;"> <h4 style='font-size:14px; width: 70%;'>OTP Verification</h4> <div class="cls-btn-top"  onclick="hideOTPDailoguebox()"></div>  </div>
+		<div class='content-dialog' style="height: auto;">
+		<div class="col-1 formstock content1-dialog" style="height: 55px;">
+			<div id="content-otp">OTP has been sent to your registered mobile number</div>
+			<div id="captcha"> 
+				<table>
+					<tbody>
+						<tr>
+							<td><label>Enter OTP</label></td>
+							<td><label><input type="text" style="width: 85px;" id="otp_input" onkeypress="return isNumberPressed(event, 8)"/></label></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	    <div class="footer-dialog" style="height: 39px;">
+	    	  <a href="javascript:void(0)"  class="otpResendLink" id="otpResendLink" style="font-weight: bold;">Resend OTP</a>
+	    	  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	          <input type="button" class="btn" id="otp_btn" value="Ok" onclick="otpVerification()" /> 
+	    </div>
+	  </div>
+	 </div>
+	</div>
+	</div>
+	<!-- OTP Verification Screen End -->
+	
+	<script type="text/javascript"
+		src="/rsunify/resources/js/cookiesUtils.js?v=R22.3.1_20220329081806"></script>
+	<script type="text/javascript">
+	var isCloudRs = ("true".toUpperCase() == "TRUE") ? true : false;
+	var dbList = "[133678, 41A392, 133188, 217014, 217396, 134846, 41A650, 41A649, 42A180, 362042, 364885, 364997]";
+	dbList = dbList.replace("[","");
+	dbList = dbList.replace("]","");
+	var databaseArray = dbList.split(", ");
+	$(document).ready(function(e) {
+		if(dbList == undefined || dbList.trim() === "" || databaseArray == undefined || databaseArray.length == 0){
+			$("#databaseName").attr("disabled", "disabled");
+			$("#databaseName").val("NO DATABASE CONFIGURED");
+		} 
+		$("#message").hide();
+		$("#userName").focus();//added code Bug no 5053
+		$("#userName").on('focus keyup',function(e){
+			e.preventDefault();
+			$("#message").text('');
+			if($("#userName").val() == ''){
+				$("#message").text('Enter the User name');
+				//$("#message").show();
+			}	
+		});
+		
+		
+		/*  $("#password").on('focus keyup',function(e){
+			$.ajax({
+	             type: 'POST',
+	             url: contextPath+'/app/user/checkusername.do?',
+	             data: {"userId":  $("#userName").val()},
+	             success: function(data) {
+	  			if(data=='match') {
+	  			} else {
+	  				$("#message").text(data);
+					$("#message").show();
+	  			}  
+	             }
+	      });
+			e.preventDefault();
+			$("#message").text('');
+			if($("#password").val() ==''){
+				$("#message").text('Enter the Password');
+				$("#message").show();
+			}		
+		}); */
+		var params = getQueryParams();
+		if(params['errorMessage'] != undefined && $.trim(params['errorMessage']) != ""){
+			var sessionHTML = "<ul style=list-style-type:none>";
+			sessionHTML += "<li>Session Expired. Possible reasons:<ul>";
+			sessionHTML += "<li>User might have logged in new browser, system.</li>";
+			sessionHTML += "<li>Previous session might abruptly terminated by force stop.</li>";
+			sessionHTML += "<li>Session timeout would have happened.</li></ul></li></ul>";
+			var dlg = $.messager.alert({title: 'LeverEDGE', msg: sessionHTML, width: '500px',icon: "info",
+				buttons:[{
+					text: 'Ok',
+					onClick: function(){
+						dlg.dialog('destroy');
+					}
+				}]
+			});
+			//$(".messager-body").html(sessionHTML);
+		}
+	}); 
+	//Password Reset start
+function passwordReset()
+{
+	var userName=$("#userName").val();
+	var dbname=$.trim($("#databaseName").val());
+	if(userName == ""){
+		 var dlg = $.messager.alert({title: 'LeverEDGE', msg: "Please Enter User Name",
+				buttons:[{
+					text: 'Ok',
+					onClick: function(){
+						dlg.dialog('destroy');
+					}
+				}]
+			});
+		return false;
+	 }
+	//database validation
+	 var isDbExists = false;
+	 var errorMessage = "RS Code can't be empty!.";
+	 if(dbname.trim() != ""){
+		 errorMessage = 'Invalid RS Code'; 
+		 for(var index = 0; index < databaseArray.length; index++){
+		    if(dbname.toUpperCase() == $.trim(databaseArray[index]).toUpperCase()){
+		  	  dbname = $.trim(databaseArray[index]);
+		  	  isDbExists = true;
+		    }
+		  }
+	 }
+	if(isDbExists == false){
+		 var dlg = $.messager.alert({title: 'LeverEDGE', msg: errorMessage,
+				buttons:[{
+					text: 'Ok',
+					onClick: function(){
+						dlg.dialog('destroy');
+					}
+				}], onDestroy:function(){
+		  			$("#databaseName").focus();	
+		  		}
+			});
+		return false;
+		}
+	 var url = contextPath+'/app/user/passwordReset.do?';
+	 dbname = (isCloudRs) ? dbname : $("#databaseName").val(); 
+	 displayLoadingImage_new();
+	 $.ajax({
+            type: 'POST',
+            url: url,
+            data: {"userId":  userName ,"dbName" : dbname},
+            success: function(data) {
+            	hideLoadingImage_new();
+ 			if(data!='Invalid TSI User Name') {
+ 				//pageSubmit();
+ 				//$('a.launchLink' ).trigger("click");
+ 				//alert("success");
+ 				var flag=1;
+ 				if(data == "Your password already sent to the ASM e-Mail ID. Please contact respective ASM"){
+ 					var dlg = $.messager.confirm({title: 'New Password', msg: data,
+ 						buttons:[{
+ 							text: 'Ok',
+ 							onClick: function(){
+ 								dlg.dialog('destroy');
+ 							}
+ 						}]
+ 					});
+ 				}else if(data == "Your password already sent to the ASM/BA e-Mail ID. Please contact respective ASM/BA"){
+ 					var dlg = $.messager.confirm({title: 'New Password', msg: data,
+ 						buttons:[{
+ 							text: 'Ok',
+ 							onClick: function(){
+ 								dlg.dialog('destroy');
+ 							}
+ 						}]
+ 					});
+ 				}else if(data == "Do Sync with another login and please contact to your respective ASM/BA for your new Password"){
+ 					var days = getDormantUserConfigValue(dbname);
+ 					var dlgnewForTSI = $.messager.alert({title: 'Info Message', msg: "Your last login was more than "+days+" days.please click 'Ok' button to Reset the Password",
+  						icon: 'info',
+  					 	buttons:[{
+					        text: 'OK',
+					        onClick: function(){
+					        	var urlVal = "/rsunify/app/user/confirmPasswordReset.do";
+							      $.ajax({
+								  		method : "POST",
+								  		url : urlVal,
+								  		data: {"userId":  userName ,"dbName" : dbname},
+								  		async: false,
+								  		success : function(messag) {
+								  			var dlgnew = $.messager.confirm({title: 'New Password', msg: data,
+			 									buttons:[{
+			 								        text: 'OK',
+			 								        onClick: function(){
+			 								        	dlgnew.dialog('destroy');
+			 								        }
+			 								    }]
+									}); 
+													  		},
+								  		error : function(e) {
+										}
+								      });
+					        	dlgnewForTSI.dialog('destroy');
+					        }
+				    },
+				    {
+				    	text: 'NO',
+				        onClick: function(){
+				        	dlgnewForTSI.dialog('destroy');
+				        }	
+				    }],
+					    onDestroy: function() {
+					    	//triggerLogin(memberId, pwd)
+					    	//pageSubmit(otp_gen_flag);
+						}
+				});						
+ 				}else {
+	 				var dlg = $.messager.confirm({title: 'New Password', msg: data,
+	 					buttons:[
+	 					    {
+	 			        		text: 'Yes',
+	 			        		onClick: function(){
+	 								dlg.dialog('destroy');
+	 								var urlVal = "/rsunify/app/user/confirmPasswordReset.do";
+	 							      $.ajax({
+	 								  		method : "POST",
+	 								  		url : urlVal,
+	 								  		data: {"userId":  userName ,"dbName" : dbname},
+	 								  		async: false,
+	 								  		success : function(data) {
+	 								  			var dlgnew = $.messager.confirm({title: 'New Password', msg: data,
+	 			 									buttons:[{
+	 			 								        text: 'OK',
+	 			 								        onClick: function(){
+	 			 								        	dlgnew.dialog('destroy');
+	 			 								        }
+	 			 								    }]
+											}); 
+	 													  		},
+	 								  		error : function(e) {
+	 											//console.log("ERROR: ", e);
+	 											//alert("Error")
+	 										}
+	 								      });
+	 								/* var dlgnew = $.messager.confirm({title: 'New Password', msg: data,
+	 									buttons:[{
+	 								        text: 'OK',
+	 								        onClick: function(){
+	 								        	dlgnew.dialog('destroy');
+	 								        }
+	 								    }]
+	 								});	
+	 								 */
+	 							}
+	 						},{
+	 							text : 'No',
+	 							onClick : function() {
+	 								flag=0;
+	 								dlg.dialog('destroy');
+	 								
+	 								/* var dlgnew1 = $.messager.confirm({title: 'Information', msg: 'Password Reset Canceled',
+	 									buttons:[{
+	 								        text: 'OK',
+	 								        onClick: function(){
+	 								        	dlgnew1.dialog('destroy');
+	 								        }
+	 								    }] 
+	 								});	*/		
+	 							}
+	 						}],
+	 					    onDestroy:function(){
+	 					    	//dlg.dialog('destroy');
+	 					    	if(flag == 0){
+ 								var dlgnew1 = $.messager.confirm({title: 'Information', msg: 'Password Reset Canceled',
+ 									buttons:[{
+ 								        text: 'OK',
+ 								        onClick: function(){
+ 								        	dlgnew1.dialog('destroy');
+ 								        }
+ 								    }]
+ 								});	
+	 					    	}
+	 						    }
+	 					});
+ 					
+ 				}
+ 			} else if(data =='Invalid TSI User Name'){//
+                 // alert(data);
+                  var dlgnew2 = $.messager.confirm({title: 'Error Message', msg: data,
+						buttons:[{
+					        text: 'OK',
+					        onClick: function(){
+					        	dlgnew2.dialog('destroy');
+					        }
+					    }]
+				});
+ 			} 
+ 			else
+ 				{
+ 				//alert(data);
+ 				var dlgnewmsg = $.messager.confirm({title: 'Message', msg: data,
+						buttons:[{
+					        text: 'OK',
+					        onClick: function(){
+					        	dlgnewmsg.dialog('destroy');
+					        }
+					    }]
+ 				});
+ 				}
+            }, error: function(){
+            	hideLoadingImage_new();
+            }
+     });
+}
+	
+	  var contextPath = '/rsunify';
+	  
+	$(document).keydown(function(e) {
+	if($('#ajax-loaded-id').is(':visible')){
+			e.preventDefault();
+		}
+	else if(e.keyCode==13 && $(event.target).hasClass('forgot-n-signup')){
+	   $('.forgot-n-signup').trigger('click');return false;
+   }
+   else if(e.keyCode == 13 && !$(".pop-wrapper").is(":visible")
+			&& !$(".messager-window").is(":visible")
+			&& !$("#ajax-loaded-id").is(":visible")){
+			$("#userName").val($.trim($("#userName").val()));
+			var memberId = $.trim($("#userName").val());
+          	var pwd = $.trim($("#password").val());
+          	triggerLogin(memberId, pwd);
+	  		return false;
+		}
+	});
+
+	
+	  $('#gologin').click(function() {        
+		  $("#userName").val($.trim($("#userName").val()));    
+		  var memberId = $.trim($("#userName").val());
+          var pwd = $.trim($("#password").val());
+          triggerLogin(memberId, pwd)
+    	  return false;
+	  });
+	
+	  function triggerLogin(memberId, pwd) {
+		//Check for active session
+		  var mainTabOpened = readCookie("maitabOpened");
+		  if(mainTabOpened != undefined && mainTabOpened === "Yes"){
+    		//showBrowserErrorMessage('Current user has one active session. Please logout to continue login again.');
+    		window.location.href = "/rsunify/views/errorPages/ikeaSessionExpired.jsp";
+    		return false;
+   		  }
+		  
+		  var dbname=$.trim($("#databaseName").val());
+		 //database validation
+		 var isDbExists = false;
+		 var errorMessage = "RS Code can't be empty!.";
+		 if(dbname.trim() != ""){
+			 errorMessage = 'Invalid RS Code'; 
+			 for(var index = 0; index < databaseArray.length; index++){
+			    if(dbname.toUpperCase() == $.trim(databaseArray[index]).toUpperCase()){
+			  	  dbname = $.trim(databaseArray[index]);
+			  	  isDbExists = true;
+			    }
+			  }
+		 }
+		  if(isDbExists == false){
+		  	var dlgnewmsg = $.messager.confirm({title: 'LeverEDGE Warning', msg: errorMessage,
+		  		buttons:[{
+		  			text: 'OK',
+		  			onClick: function(){
+		  				//$("#databaseName").focus();
+		  				dlgnewmsg.dialog('destroy');
+		  			}
+		  		}], onDestroy:function(){
+		  			$("#databaseName").focus();	
+		  		}
+		  	});
+		   return false;
+		  }
+		  dbname = (isCloudRs) ? dbname : $("#databaseName").val();
+		  $("#databaseName").val(dbname);
+		  $('#gologin').attr("disabled", "disabled");
+		  var url = contextPath+'/app/user/authentication.do?';
+		  displayLoadingImage_new();
+		  var otp_gen_flag = "false";
+	      $.ajax({
+	             type: 'POST',
+	             url: url,
+	             data: {"userId":  memberId , "password" :  pwd,"dbName" : dbname,"datetime" : new Date().getTime(), "diff" : new Date().getTimezoneOffset()},
+	             success: function(data) {
+	            	 hideLoadingImage_new();
+	            	 $('#gologin,#password,#userName').removeAttr("disabled");
+	            	 if(data=='match') {
+	  				pageSubmit("true");
+	  				//$('a.launchLink' ).trigger("click");
+	  			} else if(data.indexOf('User Already Login') == 0) {
+	                $("#cnfrmMessage").text("User " +$("#userName").val()+ " is already logged in from other browser or device.");
+	  				var tempArray = data.split("_");
+					//Added by Rajesh T 06/07/2018 not allowing to kill session when MOC close is running. 
+	  				if($.inArray("Month Operating Cycle (MOC) - Closing and E-claim submission", tempArray) != -1){
+	  					var dlgnewForTSI = $.messager.confirm({title: 'LeverEDGE Error', msg: "User " +$("#userName").val()+ " is already logged in from other browser or device. <br/>MOC Closure and E-Claim Submission process is in progress.<br /> Please login after some time.",
+							width: 510,
+	  						buttons:[{
+						        text: 'OK',
+						        onClick: function(){
+						        	dlgnewForTSI.dialog('destroy');
+						        }
+						    }],
+						    onDestroy: function() {
+						    	//pageSubmit();
+							}
+						});
+	  				} else {
+	  					if(tempArray.length > 1){
+	                	 	var listHTML = "<ul style='list-style-type:none; padding: 0;'>";
+	                	 	listHTML += "<li>Below screens are open and in use from the previous session:";
+	                	 	listHTML += "<ul style='list-style-type:decimal;'>";
+	                	 	for(var count = 1; count < tempArray.length; count++)
+	                	 		listHTML += "<li>"+tempArray[count]+"</li>"
+	                	 	listHTML += "</ul></li>";
+	                	 	listHTML += "</ul>"
+	               	 		listHTML += "<div style='color: red;'>By login from here, it will terminate the previous session and you"; 
+	               	 		listHTML += " might loose the unsaved information. Do you want to continue?</div>"
+	               	 		$("#cnfrmList").html(listHTML);
+		                } else {
+		                	//$("#cnfrmList").text("No screens are opened for previous session.");
+		                	var listHTML = "<div style='color: red;'>By login from here, it will terminate the previous session and you"; 
+	               	 		listHTML += " might loose the unsaved information. Do you want to continue?</div>"
+		                	$("#cnfrmList").html(listHTML);
+		                }
+		  				createRandomCaptch();
+	                  	$(".pop-wrapper#captch").show(); 
+	                  	$(".footer-dialog .btn:first").focus();
+	  				}
+	  			} else if(data.includes('matchButPasswordGoingToExpire'))
+	  				{
+	  				 var dlgnewForTSI = $.messager.confirm({title: 'Error Message', msg: "Your password will expire in " + data.split('_')[0]+" days. To change your password, click TSO password reset",
+							buttons:[{
+						        text: 'OK',
+						        onClick: function(){
+						        	
+						        	dlgnewForTSI.dialog('destroy');
+						        }
+						    }],
+						    onDestroy: function() {
+						    	pageSubmit(otp_gen_flag);
+						    	
+							}
+					});
+	  				
+	  				}else if(data.includes('CloudPasswordMatchButPasswordGoingToExpire'))
+	  				{
+	  					var userName='"'+memberId+'"';
+		  				 var dlgnewForTSI = $.messager.confirm({title: 'Error Message', msg: "Username " +userName+ " Password Will Expire In " + data.split('_')[0]+" Days.",
+								buttons:[{
+							        text: 'OK',
+							        onClick: function(){
+							        	
+							        	dlgnewForTSI.dialog('destroy');
+							        }
+							    }],
+							    onDestroy: function() {
+							    	pageSubmit("true");
+							    	
+								}
+						});
+		  				
+		  				}else if(data.includes('CLOUD_LOGIN_PASSWORD_EXPIRED'))
+		  				{
+		  					var userName='"'+memberId+'"';
+			  				 var dlgnewForTSI = $.messager.confirm({title: 'Error Message', msg: "Username " +userName+ " Password Was Expired, Please Reset The Password",
+									buttons:[{
+								        text: 'OK',
+								        onClick: function(){
+								        	pageSubmit(otp_gen_flag);
+								        	//window.location.href = "/rsunify/views/userChangePassword.jsp";
+								        	//triggerLogin(memberId, pwd)
+								        	dlgnewForTSI.dialog('destroy');
+								        	
+								        }
+								    }],
+								    onDestroy: function() {
+								    	//triggerLogin(memberId, pwd)
+								    	pageSubmit(otp_gen_flag);
+								    	
+									}
+							});
+			  				
+			  				}
+		  				else if(data.includes('EmptyPassword'))
+		  				{
+		  					var userName='"'+memberId+'"';
+			  				 var dlgnewForTSI = $.messager.alert({title: 'Info Message', msg: "Username " +userName+ " Password Is Blank, Please Set The Password",
+			  						icon: 'info',
+			  					 	buttons:[{
+								        text: 'OK',
+								        onClick: function(){
+								        	pageSubmit(otp_gen_flag);
+								        	//window.location.href = "/rsunify/views/userChangePassword.jsp";
+								        	//triggerLogin(memberId, pwd)
+								        	dlgnewForTSI.dialog('destroy');
+								        	
+								        }
+								    }],
+								    onDestroy: function() {
+								    	//triggerLogin(memberId, pwd)
+								    	pageSubmit(otp_gen_flag);
+								    	
+									}
+							});
+			  				
+			  				}else if(data.includes('Dormant User')){
+			  					passwordReset();
+			  				}else {
+	                  // alert(data);
+	                   var dlgnew5 = $.messager.confirm({title: 'Error Message', msg: data,
+							buttons:[{
+						        text: 'OK',
+						        onClick: function(){
+						        	dlgnew5.dialog('destroy');
+						        }
+						    }],onDestroy: function() {
+						    	$("#password").focus();
+							}
+	 				});
+	  			}  
+	             }, error: function(){
+	            	 hideLoadingImage_new();
+	            	 $('#gologin,#password,#userName').removeAttr("disabled");
+	             }
+	      });
+	  }
+	  
+	  function getQueryParams(){
+		    try{
+		        url = window.location.href;
+		        query_str = url.substr(url.indexOf('?')+1, url.length-1);
+		        r_params = query_str.split('&');
+		        params = {}
+		        for( i in r_params){
+		            param = r_params[i].split('=');
+		            params[ param[0] ] = param[1];
+		        }
+		        return params;
+		    }
+		    catch(e){
+		       return {};
+		    }
+		}
+	  
+	  $("#otp_verify_popup").keypress(function(event){
+		  if(event.keyCode == 13){
+			  $('#otp_btn').trigger('click'); 
+		  }
+	  });
+	  function hideOTPDailoguebox(){
+		  $("#otp_verify_popup").hide();
+		  $("#userName").val("");
+		  $("#password").val("");
+		  $("#databaseName").val("");
+	  }
+	  function reGenerateOTP(){
+		  $("#otp_verify_popup").css(["display","block !important"], ["opacity","0.6"]);
+		  $("#content-otp").hide();
+		  displayLoadingImage_new();
+		  generateOTP();
+		  $("#content-otp").show().css("color","black");
+	  }
+	  function generateOTP(){
+		  $("#otp_input").val("");
+			$.ajax({
+				method : "POST",
+				url : "/rsunify/app/user/otpOrIPAuthentication",
+				success : function(data) {
+					if (data.startsWith("OTP")) {
+						hideLoadingImage_new();
+						$("#otp_verify_popup").show();
+						$("#content-otp").html(data).css("color","black");
+						$("#otp_input").focus();
+						$("#otpResendLink").off('click');
+						$("#otpResendLink").css({color: "#ccc", cursor: "auto"});
+						EnableResendLink();
+					} else if (data == "whitelistedIP") {
+						gotoSuccesspage();
+					}else if(data=="Normal_user_credentials"){
+						gotoSuccesspage();
+					}else{
+						hideLoadingImage_new();
+						var dlg = $.messager.alert({title: 'LeverEDGE', msg: data,
+							buttons:[{
+								text: 'Ok',
+								onClick: function(){
+									dlg.dialog('destroy');
+								}
+							}]
+						});
+					}
+
+				}
+			});
+	  }
+	  function EnableResendLink(){
+		setTimeout(function(){
+			  $("#otpResendLink").css({color: "#000", cursor: "pointer"});
+			  $("#otpResendLink").off("click").on("click", function(){
+					reGenerateOTP(); 
+			  });
+		  },120000); // Enabled the resend link after 2 min of generating the otp message
+	  }
+	  function gotoSuccesspage(){
+		  setCookie("isUserLoggedOut", "No");
+		  setCookie("tabsOpened", JSON.stringify({"date":new Date(), "openedTabs":["Login"]}));
+		  document.getElementById('slick-login').action = contextPath+'/app/user/authenSuccess.htm';
+		  document.getElementById('slick-login').submit(); 
+	  }
+	  
+	  
+		function otpVerification() {
+			 var inputOtp = $.trim($("#otp_input").val());
+			 if(inputOtp.length!=8){
+				 $("#content-otp").html("OTP should not be Empty or less than 8 digits are not allowed?").css("color","red");
+				 $("#otp_input").focus();
+				 return false;
+			 }else {
+			$("#content-otp").hide();
+			displayLoadingImage_new();
+			$.ajax({
+				method : "POST",
+				data: {"enteredOTP" : $.trim($("#otp_input").val()),"pncc" : false},
+				url : "/rsunify/app/user/otpValidationCheck",
+				success : function(data) {
+					if (data) {
+						gotoSuccesspage();
+					}else{
+						 hideLoadingImage_new();
+						 $("#content-otp").html("Wrong OTP Entered/Expired.").css("color","red");
+						 $("#content-otp").show();
+						 $("#otp_input").focus();
+					}
+				}
+			});
+		}
+	}
+		function pageSubmit(otp_flag) {
+			displayLoadingImage_new();
+			var isLemonEnabled = "false";
+			if ((isCloudRs || isLemonEnabled) && otp_flag=="true") {
+				generateOTP();
+			} else {
+				gotoSuccesspage();
+			}
+		}
+
+		//to convert upper case letters
+		$("#userName").on('input', function(evt) {
+
+			var input = $(this);
+			var start = input[0].selectionStart;
+			$(this).val(function(_, val) {
+				return val.toUpperCase();
+			});
+			input[0].selectionStart = input[0].selectionEnd = start;
+
+		});
+
+		$(window)
+				.keydown(
+						function(event) {
+
+							/*
+							 * Preventing Zoom in/out of pages by keys
+							 */
+
+							if (event.ctrlKey == true
+									&& (event.which == '61'
+											|| event.which == '107'
+											|| event.which == '173'
+											|| event.which == '109'
+											|| event.which == '187' || event.which == '189')) {
+								event.preventDefault();
+							}
+
+							if (event.ctrlKey && event.keyCode == 84) {
+								event.preventDefault();
+							}
+							if (event.ctrlKey && event.keyCode == 83) {
+								event.preventDefault();
+							}
+							if (event.keyCode == 38) {
+								//alert("up arrow"+row_dataGrid);
+							}
+							if (event.keyCode == 40) {
+								//alert("down arrow"+row_dataGrid);
+							}
+
+							if (event.ctrlKey && event.keyCode == 66) {
+								event.preventDefault();
+							}
+							if (event.ctrlKey && event.keyCode == 67) {
+								confirmDialog();
+								event.preventDefault();
+							}
+							if (event.ctrlKey && event.keyCode == 68) {
+								event.preventDefault();
+							}
+							if (event.ctrlKey && event.keyCode == 71) {
+								event.preventDefault();
+							}
+							if (event.ctrlKey && event.keyCode == 72) {
+								event.preventDefault();
+							}
+							if (event.ctrlKey && event.keyCode == 76) {
+								event.preventDefault();
+							}
+
+							if (event.ctrlKey && event.keyCode == 78) {
+								newForm();
+								event.preventDefault();
+							}
+							if (event.ctrlKey && event.keyCode == 79) {
+								event.preventDefault();
+							}
+
+							if (event.ctrlKey && event.keyCode == 81) {
+								event.preventDefault();
+							}
+							if (event.ctrlKey && event.keyCode == 70) {
+								findGrnno();
+								event.preventDefault();
+							}
+
+							if (event.ctrlKey && event.keyCode == 80) {
+								event.preventDefault();
+							}
+							if (event.ctrlKey && event.keyCode == 90) {
+								event.preventDefault();
+							}
+
+						});
+
+		/* Preventing Zoom in/out of pages for mouse
+		 *
+		 */
+		$(window).bind('mousewheel DOMMouseScroll', function(event) {
+			if (event.ctrlKey == true) {
+				event.preventDefault();
+			}
+		});
+		window.history.forward();
+		function noBack() {
+			window.history.forward();
+		}
+	</script>
+
+<!-- Jquery Browser Detection -->
+<script type="text/javascript">
+var catchaAnswer = 0;	
+$(document).ready(function() {
+	var windowLink = "https://www.google.com/chrome/browser/desktop/index.html?system=true&standalone=1";
+	var isChrome = /Chrome/.test(navigator.userAgent) && /Google/.test(navigator.vendor);
+	$('#browser-message').html('This application is best viewed in <strong>Chrome</strong> browser! </strong><br><br>Please <a href="'+windowLink+'" target="_blank"><strong>click here</strong></a> to download <strong>Chrome</strong> browser now to start using the application.</strong></a>');
+	//$('#browser-message').html('This application is best viewed in <strong>Chrome</strong> browser, currently you are using <strong>FireFox</strong><br><br>Please <a href="https://www.google.com/chrome/browser/desktop/" target="_blank"><strong>click here</strong></a> to download <strong>Chrome</strong> browser now!</strong></a>');
+	if (isChrome){	//browser check
+		var ua = window.navigator.userAgent;
+	    var uaArray = ua.split(' ');
+	    version = uaArray[uaArray.length - 2].substr(7);
+	    version = version.split(".");
+	    if(version[0] >= 53){	//version check
+	    	var mainTabOpened = readCookie("maitabOpened");
+			if(mainTabOpened != undefined && mainTabOpened === "Yes"){
+	    		//showBrowserErrorMessage('Current user has one active session. Please logout to continue login again.');
+	    		window.location.href = "/rsunify/views/errorPages/ikeaSessionExpired.jsp";
+	    	} else {
+				$('#browser-message').hide();
+				var isLoggedOut = readCookie("isUserLoggedOut");
+				if(  !(isLoggedOut != undefined && isLoggedOut == "Yes" )){
+					forceLogoutSession();
+				}
+				setCookie("tabsOpened", JSON.stringify({}));
+	    	}
+	    } else {
+	    	showBrowserErrorMessage('Your current chrome version is ' + version.join(".") + '</strong><br><br>Please update your chrome to latest version. <a href="'+windowLink+'" target="_blank"><strong>click here</strong></a> to download <strong>Chrome</strong> browser now!</strong></a>');
+	    }
+	} else {
+		showBrowserErrorMessage('This application is best viewed in <strong>Chrome</strong> browser! </strong><br><br>Please <a href="'+windowLink+'" target="_blank"><strong>click here</strong></a> to download <strong>Chrome</strong> browser now to start using the application.</strong></a>');
+	}
+	
+	$(document).on("keydown", "#dialogScreen", function(event){
+		var key = event.keyCode || event.which;
+		var curFocusEle = $(".footer-dialog .btn:focus");
+		if(key == 40 || key == 39){ //Down & Right Arrows
+			if(curFocusEle.is($(".footer-dialog .btn:last"))){
+				$(".footer-dialog .btn:first").focus();
+			} else 
+				curFocusEle.next().focus();
+	 	 } else if(key == 38 || key == 37){ //Up & Left Arrows
+	 		if(curFocusEle.is($(".footer-dialog .btn:first"))){
+				$(".footer-dialog .btn:last").focus();
+			} else 
+				curFocusEle.prev().focus();
+	 	 } else if(key == 32 || key == 13){
+	 		 if(curFocusEle != undefined && curFocusEle.length > 0){
+	 			curFocusEle.trigger("click");
+	 			event.stopPropagation();
+	 		 }
+	 	 } else if(key == 27){
+	 		$(".pop-wrapper#captch").hide();
+	 		 //$(".footer-dialog .btn:first").focus();
+	 	 }
+	});
+});
+function showBrowserErrorMessage(msgHTML){
+	$("body").css("background-image", "none");
+	$(".login-wrapper").hide().html(" ");
+	$('#browser-message').html(msgHTML);
+	$('#browser-message').show();
+}
+function confirmSubmission(){
+	var userAnswer = $("#cap_answer").val();
+	if(userAnswer == ""){
+		//alert("Please enter captch");
+		$("#cap_error").text("Please enter captcha");
+		$("#cap_answer").focus();
+	} else if(userAnswer != catchaAnswer){
+		//alert("Wrong captch entered.");
+		$("#cap_error").text("Wrong captcha entered");
+		$("#cap_answer").focus();
+	} else {
+		hideDailoguebox();
+		pageSubmit("true");
+	}
+}
+function hideDailoguebox(){
+	$(".pop-wrapper#captch").hide();
+}
+function isNumberPressed(evt, maxLength){
+    var charCode = (evt.which) ? evt.which : evt.keyCode;
+    if (charCode > 31 && (charCode<48 || charCode>57))
+        return false;
+    evt = evt || window.event;
+    target = (evt.target) ? evt.target : window.event.srcElement; 
+    var targetValue = (target.value) ? target.value : target.textContent;
+    if(targetValue != undefined && targetValue.length >= maxLength){
+    	return false;
+    }
+    return true;
+}
+
+function createRandomCaptch(){
+	var firsNumber = Math.floor((Math.random() * 9) + 1);
+	var secondNumber = Math.floor((Math.random() * 9) + 1);
+	catchaAnswer =  firsNumber+secondNumber;
+	$("#cap_question").text(" " + firsNumber +" + " + " " + secondNumber + " = ");
+	$("#cap_answer").val("");
+	$("#cap_error").text("");
+}
+function forceLogoutSession(){
+    $.ajax({
+		method : "POST",
+		url : "/rsunify/app/user/forceLogout",
+		async: false,
+		success : function(data) {
+			
+		}
+    });
+}
+
+$("#userName").on('keydown',function(e){
+if(e.keyCode==13){
+	event.preventDefault();
+	$("#userName").val($.trim($("#userName").val()));
+	$('#password').focus();
+	return false;
+}
+});
+$("#password").on('keydown',function(e){
+	if(e.keyCode==13){
+		if($.trim($('#databaseName').val()) == ""){
+			event.preventDefault();
+			$('#databaseName').focus();
+			return false;
+		}
+	}
+	});
+function displayLoadingImage_new(){
+	if($("#ajax-loaded-id").length == 0){
+		var loadHTML = "<div id='ajax-loaded-id' tabindex='-1'>";
+		loadHTML += "<div class='popup-overlay'></div>";
+		loadHTML += "<div class='ajax-loader-to-display' style='display: block;'></div>";
+		$("body").append(loadHTML);
+		// added by jegadish.manoharan to disable click event - when spinner is on
+		$("#ajax-loaded-id").css({
+		      opacity :1, 
+		      filter: 'alpha(opacity=20)',
+		      width: '100%',
+		      height: '100%', 
+		      'z-index': 999999,
+		      top:0, 
+		      left:0, 
+		      position: 'fixed'  
+		});
+	}
+}
+
+function hideLoadingImage_new(){
+	if($("#ajax-loaded-id").length > 0){
+		$("#ajax-loaded-id").remove();
+	}
+}
+function getDormantUserConfigValue(dbname){
+	var configVal = "0";
+	$.ajax({
+        method: "POST",
+        url: "/rsunify/app/user/getDMUserConfigDays",
+        async: false,
+        data: {"dbName" : dbname},
+        success: function(data) {
+	  			configVal=data;
+	  		},
+	  		error : function(e) {
+			}
+	      });        
+       return configVal;
+	}
+</script>
+	<div id="browser-message"></div>
+	<!-- Jquery Browser Detection -->
+</body>
+</html>

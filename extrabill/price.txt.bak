@@ -1,0 +1,30 @@
+function y() {
+var jsonObj= [];
+var x ;
+var jsonObjforheaders= [{"1":"Distributor  :","2":"Brand        :","3":"ProfitCenter :","4":"Item Varient :","5":"Division     :","6":"Product Code :","7":"Category     :","8":"Supplier     :","9":"Sub-Category :","10":"Price As On  :","11":"NOTE         :","val1":"DEVAKI ENTERPRISES","val2":"List of Brands","val3":"List of Profit Center","val4":"List of Item Varients","val5":"List of Divisions","val6":"List of Product Code","val7":"List of Categories","val8":"List of Suppliers","val9":"List of Sub Categories","val10":"_date1_","val11":"Purchase Price and Landed Cost is calculated for source and customer state as same."}];
+var jsonObjfileInfi= [{"title":"Price Master,PriceMaster","reportfilename":"Price Master","viewpage":"report/priceMaster","viewname":"PRICE_MASTER","querycount":1}];
+var jsonObjWhereClause=  {":val1":"''",":val2":"' '",":val3":"' '",":val4":"' '",":val5":"' '",":val6":"' '",":val7":"' '",":val8":"' '",":val9":"Active",":val10":"Active",":val11":"_date2_",":val12":"NO"} ;
+return $.ajax({
+		method : "POST",
+		url : '/rsunify/app/reportsController/generatereport.do',
+		data : {
+			'jsonData' : JSON.stringify(jsonObj),//json object to store  to sql data
+				'jsonObjforheaders':JSON.stringify(jsonObjforheaders),//json object to store header lebel of report
+				'jsonObjfileInfi':JSON.stringify(jsonObjfileInfi),// json object to store report file name,title and view resolver
+				'orderBy':'[Prd.Code]',//order condition
+				'jsonObjWhereClause':JSON.stringify(jsonObjWhereClause),//Where condition 
+				
+		},
+		async:false
+			});
+	}	
+function z() {
+    $.when(y()).done(function (data) {
+	window.open('/rsunify/app/reportsController/downloadReport?filePath='+data,'_blank');
+});}
+
+
+		 		  
+z();
+
+

@@ -1,0 +1,836 @@
+/**
+o * #author  	: Saravana Kumar K
+ * #author url  : http://iamsark.com
+ * #purpose 	: Popup plugin - Used to render any popup ( I mean Window ) across the Application, Of course you need to give the popup meta ( which could be found on context's config )
+ * #version		: 1.0.0
+ */
+var rsu_popup = function( _cObj, _meta, _parent ){
+	/* context object, in which this popup belongs to */
+	this.contextObj = _cObj;
+	/* Popup meta data ( loaded from context configuration ) */
+	this.meta = _meta;
+	/* Parent element object, in which this popup would be appended */
+	this.parent = _parent;
+	/* Holds the UI object of the popup */
+	this.window = null;
+	/* rsuGrid object - responsible for rendering main content */
+	this.grid = null;
+	/* holds the reference object of grid's header table element */
+	this.gridHeader = null;
+	/* holds the reference object of grid's footer table element */
+	this.gridFooter = null;
+	/* Used by pagination popup */
+	this.pageNumber = 1;
+	/* Used by pagination popup */
+	this.totalPages = 1;
+	/* used for focusing last active element */
+	this.lastActive = null;
+	
+	/* Popup Initiator ( It does nothing but calling 'renderPopupSkeleton' append the popup element with the parent ) */
+	this.loadPopup = function() {			
+		
+		var me = this;
+		if( me.meta.type == "pagination" ){	
+			me.meta["width"] = 500;
+			if( typeof this.meta.is_popup != "undefined" ){
+				var param = {};
+				var data = rSuControllerObj.hotSearchCache;
+				var ind = 1; 
+				for( var i = 0; i < me.meta.grid.columns.length; i++ ){
+					if(typeof me.meta.grid.columns[i].header.col_order != "undefined"){
+						if( me.meta.grid.columns[i].header.col_order == data[ me.meta.is_popup ] ){
+							ind = i;
+							i = me.meta.grid.columns.length;
+						}
+					}
+				}
+				if( rSuControllerObj.context != "salesreturn" ){
+					me.meta.grid.columns 	= me.changeIndexArray( me.meta.grid.columns, ind, 1 );
+					me.meta.grid.rows 		= me.changeIndexArray( me.meta.grid.rows, ind, 1 );
+					me.meta.footer.fields.column_1[1].options	=   me.changeIndexArray( me.meta.footer.fields.column_1[1].options, ind-1, 0 );
+				} else {
+					if( typeof me.meta.is_popup != "undefined" && me.meta.is_popup == "product" ){
+						me.meta.grid.columns 	= me.toggleArray( me.meta.grid.columns, ind );
+						me.meta.grid.rows 		= me.toggleArray( me.meta.grid.rows, ind );
+						me.meta.footer.fields.column_1[1].options	=   me.toggleArray( me.meta.footer.fields.column_1[1].options, ind-1, 0 );
+					}
+				}
+				
+				/*me.window.find( ".rsu-popup-content-wrapper" ).replaceWith( me.renderPopupContent() );
+				me.window.find( ".rsu-popup-footer" ).replaceWith( me.renderPopupActionBar() );
+				setTimeout(function(){
+					if( !( typeof me.meta.do_cache != "undefined" && me.meta.do_cache ) && typeof rSuControllerObj.contextObj.popup != "undefined" && rSuControllerObj.contextObj.popup.meta.type == "pagination"){
+						//rSuControllerObj.dock();								
+					//	rSuControllerObj.triggerSearch();
+					}
+				},300);*/
+			}
+		}	
+		this.pageNumber = 1;
+		this.window = $( this.renderPopupSkeleton() );		
+		this.parent.append( this.window );	
+		
+		// Filler flag set, then fill with empty rows
+		if( this.meta.filler ) {			
+			setTimeout( function(){
+				if( ! $.isEmptyObject( me.meta.grid ) ) {
+					me.grid = new rsu_grid( me, me.meta.grid, $( '#rsu-popup-'+ me.meta.name +'-grid-area' ) );
+					me.grid.loadRecord( null, false );
+					me.gridNormalizer( false );
+				}				
+			}, 200 );			
+		}
+		
+		setTimeout( function() {
+			me.gridHeader = me.window.find( "table.rsu-popup-content-header-table" );
+			me.gridFooter = me.window.find( "table.rsu-popup-content-footer-table" );
+			// init the datepicker fields
+			me.window.find( ".rsu-popup-date-field" ).datepicker({
+				showOn: 'button',
+				dateFormat: 'dd/mm/yy',
+				buttonImageOnly: true,
+				changeMonth:true,
+				changeYear:true,
+				yearRange:'-25:+5',
+				buttonImage: docker_path + '/resources/transactions/images/calendar_icon.jpg',
+				onChangeMonthYear: function(){
+					me.datePickerButton(  $( this ) );
+				},
+				beforeShow :  function(){
+					me.datePickerButton(  $( this ) );
+				}
+			});
+			var d = new Date();
+			me.window.find( ".rsu-popup-datetime-field" ).val( d.getHours() +":"+ d.getMinutes() );			
+			/*			
+			me.window.find( ".rsu-popup-datetime-field" ).periodpicker({
+				format:'d.m.Y H:i',
+				timepicker: true,
+				norange: true,
+				cells: [1,1]			
+			});		
+			me.window.find( ".rsu-popup-datetime-time-field" ).TimePickerAlone({
+				hours: true,
+				minutes: true,
+				seconds: false,
+				ampm: true,
+				defaultTime:'23:45'
+			}); */
+			/* make the default field focus */
+			if( me.meta.onfocus != "" ) {
+				if( me.meta.onfocus != "grid" ) {
+					$( "#" + me.meta.onfocus ).focus();
+				} else {				
+					//$("#rsu-popup-"+ me.meta.name +"-grid-area tbody>tr:first-child>td:nth-child(2)").trigger( "click" );		
+					me.contextObj.controller.probeUser( "", "info" );
+				}				
+			} else{
+				me.contextObj.controller.probeUser( "", "info" );
+			}
+			if( me.meta.type == "pagination" ) {
+				me.window.find( "#selectOnId" ).prop( 'disabled', true );
+				/* Close the context menu ( in case if they opened it by right clicking ) */
+				$("#rsu-context-menu-box").hide();
+			}
+			me.gridNormalizer( false );
+			
+			/* For freezing column */
+			var freezerList = $('.freezable');					
+			freezerList.each(function() {
+				ikeaFreezers[$(this).index()] = {
+					"freezer": null,
+					"target": $(this),					
+					"on_screen": false
+				};
+				freezerKeys.push($(this).index());
+			});
+			
+			freezerPopupContentSection = me.window.find('.rsu-popup-content-section');
+			freezerPopupContentWrapper = me.window.find('.rsu-popup-content-wrapper');
+			freezerHeight = (me.window.find('.rsu-popup-content-header-table-wrapper')[0]['clientHeight']) + (freezerPopupContentSection[0]['clientHeight']);
+					
+		}, 250 );
+		
+	};
+	
+	
+	this.datePickerButton = function( _field ){
+		setTimeout(function(){
+			if( !$( "#set_curent_date_picker" ).is( ":visible" ) ){
+				$( "#ui-datepicker-div" ).append( '<button style="margin: 0 auto;display: block;background: #ededed; border: 1px solid #ccc;color: #5f5c5c;" id="set_curent_date_picker">Today - '+$.datepicker.formatDate('dd/mm/yy', new Date())+'</button>' ).find( "#set_curent_date_picker" ).on( "click", function(){
+					_field.datepicker('setDate', new Date());
+				});			
+			}
+		});
+	};
+	
+	this.changeIndexArray = function( array, start_index, target ) {
+	    var statElem = array[start_index];
+	    array.splice( start_index, 1 );
+	    array.splice( target, 0, statElem );
+		return array;
+	}
+	
+
+	this.toggleArray = function( array, target, _strt ) {
+		var strt = typeof _strt != "undefined" ? _strt : 1;
+	    var statElem = JSON.parse( JSON.stringify( array[strt] ) );
+	    var moveElem = JSON.parse( JSON.stringify( array[target] ) );
+	    array[ strt ] = moveElem;
+	    array[ target ] = statElem;
+		return array;
+	}
+	
+	
+	/* Do the actual heavy lifting, it render the base skeleton for the popup and add the Header, Content, Footer & Action Bar  */
+	this.renderPopupSkeleton = function() {
+		
+		var style = 0;
+		
+		if( this.meta.width != "" ) {			
+			style = 'style="width: '+ this.meta.width +'px; margin-left: -'+ parseInt( this.meta.width / 2 ) +'px"';
+		}
+		
+		var popup_type = "sub-popup";		
+		if( this.contextObj.config.main_window == this.meta.name ) {
+			popup_type = "main-popup";
+		}
+		
+		var html = '<div class="rsu-popup-ghost-back rsu-popup-ghost-back-'+ popup_type +' rsu-popup-'+ this.meta.name +'-ghost-back">';
+		html += '<div id="rsu-popup-'+ this.meta.name +'" class="rsu-popup rsu-popup-'+ this.meta.type +' rsu-box-shadow rsu-popup-'+ this.meta.name +'" '+ style +'>';
+		
+		if( this.meta.topbar.show ) {		
+			html += '<div class="rsu-popup-title-bar">';		
+			html += '<h3>'+ this.meta.topbar.title +'</h3>';		
+			html += '<div class="rsu-popup-control-bar">';		
+			if( this.meta.topbar.actions.close ) {
+				html += '<a href="#" data-popup="'+ this.meta.name +'" class="rsu-popup-control-close-btn" title="Exit"></a>';
+			}
+			if( this.meta.topbar.actions.minmax && this.meta.type != "pagination" ) {
+				html += '<a href="#" data-context="'+ this.contextObj.controller.context +'" data-popup="'+ this.meta.name +'" class="rsu-popup-control-minmax-btn" title="Minimize"></i></a>';
+			}				
+			if( this.meta.topbar.actions.help ) {
+				var doc_context = this.meta.topbar.help_context != "undefined" ? this.meta.topbar.help_context : "";
+				html += '<a href="#" data-doc_context="'+doc_context+'" data-popup="'+ this.meta.name +'" class="rsu-popup-control-help-btn" title="Help"></a>';
+			}
+			html += '</div>';		
+			html += '</div>';			
+		}
+		
+		html += this.renderPopupHeader();
+		html += this.renderPopupContent();
+		html += this.renderPopupFooter();
+		html += this.renderPopupActionBar();
+		
+		html += '</div>';
+		html += '</div>';
+		
+		return html;
+		
+	};
+	
+	/* Responsible for rendering Popup Header Section */
+	this.renderPopupHeader = function() {
+
+		var html = "",
+		fields = "",
+		col_class = "";
+		
+		if( this.meta.header.column == 1 ) {
+			col_class = "rsu-popup-col-1";
+		} else if( this.meta.header.column == 2 ) {
+			col_class = "rsu-popup-col-2";
+		} else if( this.meta.header.column == 3 ) {
+			col_class = "rsu-popup-col-3";
+		}
+		
+		html = '<div class="rsu-popup-header">';
+		html += '<div class="rsu-popup-row">';
+		
+		if( this.meta.type == "pagination" ) {
+			
+			html += '<div id="rsu-popup-pagination-header">';
+			html += '<a href="#" class="rsu-btn rsu-pagination-btn rsu-pagination-first"><i class="fa fa-angle-double-left"></i></a>';
+			html += '<a href="#" class="rsu-btn rsu-pagination-btn rsu-pagination-prev"><i class="fa fa-angle-left"></i></a>';
+			html += '<input type="text" data-behaviour="number" class="rsu-popup-field rsu-pagination-page-index" id="rsu-pagination-popup-page" data-message="">';
+			html += '<a href="#" class="rsu-btn rsu-pagination-btn rsu-pagination-next"><i class="fa fa-angle-right"></i></a>';
+			html += '<a href="#" class="rsu-btn rsu-pagination-btn rsu-pagination-last"><i class="fa fa-angle-double-right"></i></a>';
+			html += 'of <span id="rsu-pagination-total-pages"></span>';
+			html += '</div>';
+			
+		} else {
+			
+			for( var i = 1; i <= this.meta.header.column; i++ ) {
+				
+				fields = this.meta.header.fields[ "column_" + i ];			
+				html += '<div class="rsu-popup-col '+ col_class +'">';			
+				html += '<div class="rsu-col-wrapper">';
+					
+				for( var j = 0; j < fields.length; j++ ) {
+					html += '<table class="rsu-popup-header-fields-row">';
+					html += '<tr>';
+					html += '<td>';
+					html += '<label class="rsu-popup-field-label rsu-popup-field-label-' + fields[j].type + '">'+ fields[j].label +'</label>';
+					html += '</td>';
+					html += '<td>';
+					html += this.injectField( fields[j] );
+					html += '</td>';
+					html += '</tr>';
+					html += '</table>';
+				}
+				
+				html += '</div>';
+				html += '</div>';
+				
+			}
+			
+		}	
+		
+		html += '</div>';
+		html += '</div>';
+		
+		html = this.contextObj.onPopupHeaderSectionRendering( html );
+		
+		return html;
+		
+	};
+	
+	/* Responsible for rendering Popup Main Content Section */
+	this.renderPopupContent = function() {
+		
+		var width = "",
+		column = "",
+		unit= "px",
+		freezable = "",
+		classes = "rsu-popup-content-wrapper";
+		
+		if( this.meta.grid.width == "auto" ) {
+			classes += " rsu-popup-content-auto-wrapper";
+		}
+		
+		var html = '<div class="'+ classes +'">';
+		
+		if( ! $.isEmptyObject( this.meta.grid ) ) {
+			if( this.meta.grid.show_header ) {		
+				html += '<div class="rsu-popup-content-header-table-wrapper">';
+				html += '<table class="rsu-popup-content-header-table">';
+				html += '<thead>';
+				html += '<tr>';
+				
+				for( var i = 0; i < this.meta.grid.columns.length; i++ ) {
+					unit= "%";
+					width = "";
+					column = "";
+					freezable = "";
+					if( this.meta.grid.rows[ i ].width != "" ) {
+						if( this.meta.type == "pagination" || this.meta.grid.width == "auto" ) {
+							unit= "px";
+						}
+						width = ';width: '+ this.meta.grid.rows[ i ].width + unit + ';';
+					}
+					if( typeof this.meta.grid.columns[i].header.column != 'undefined' ) {
+						column = this.meta.grid.columns[i].header.column;
+					}
+					if (typeof this.meta.grid.columns[i].freeze != 'undefined') {
+						freezable = 'class="freezable"';
+					}
+					html += '<th data-column="'+ column +'" data-message="'+ this.meta.grid.columns[i].message +'" style="text-align:'+ this.meta.grid.columns[i].header.align + width +'" '+ freezable +'>';
+					html += this.meta.grid.columns[i].header.title;
+					html += '</th>';
+				}
+				
+				html += '</tr>';
+				html += '</thead>';
+				html += '</table>';
+				html += '</div>';		
+			}
+			
+			if( this.meta.grid.show_content ) {
+				html += '<div id="rsu-popup-'+ this.meta.name +'-grid-area" class="rsu-popup-content-section" style="position: relative;">';		
+				html += '</div>';
+			}		
+			
+			if( this.meta.grid.show_footer ) {
+				html += '<div class="rsu-popup-content-footer-table-wrapper">';
+				html += '<table class="rsu-popup-content-footer-table">';
+				html += '<tfoot>';
+				html += '<tr>';
+				
+				for( var i = 0; i < this.meta.grid.columns.length; i++ ) {
+					width = "";
+					if( this.meta.grid.rows[ i ].width != "" ) {
+						width = ';width: '+ this.meta.grid.rows[ i ].width +'%;';
+					}					
+					html += '<td data-type="'+ this.meta.grid.columns[i].footer.type +'" style="text-align:'+ this.meta.grid.columns[i].footer.align + width +'">';
+					html += this.meta.grid.columns[i].footer.title;
+					html += '</td>';
+				}
+				
+				html += '</tr>';
+				html += '</tfoot>';
+				html += '</table>';
+				html += '</div>';
+			}
+		}	
+		
+		html += '</div>';		
+		return html;
+		
+	};
+	
+	/* Responsible for rendering Popup Footer Section */
+	this.renderPopupFooter = function() {
+		var html = '',
+		fields = "",
+		col_class = "";
+		
+		if( this.meta.bottom_action_bar.type == "dedicated" ) {
+		
+			if( this.meta.footer.column == 1 ) {
+				col_class = "rsu-popup-col-1";
+			} else if( this.meta.footer.column == 2 ) {
+				col_class = "rsu-popup-col-2";
+			} else if( this.meta.footer.column == 3 ) {
+				col_class = "rsu-popup-col-3";
+			}
+			
+			html = '<div class="rsu-popup-footer">';
+			html += '<div class="rsu-popup-row">';		
+			
+			for( var i = 1; i <= this.meta.footer.column; i++ ) {				
+				fields = this.meta.footer.fields[ "column_" + i ];			
+				html += '<div class="rsu-popup-col '+ col_class +'">';			
+				html += '<div class="rsu-col-wrapper">';
+					
+				for( var j = 0; j < fields.length; j++ ) {
+					html += '<table class="rsu-popup-header-fields-row">';
+					html += '<tr>';
+					html += '<td>';
+					html += '<label class="rsu-popup-field-label rsu-popup-field-label-' + fields[j].type + '">'+ fields[j].label +'</label>';
+					html += '</td>';
+					html += '<td>';
+					html += this.injectField( fields[j] );
+					html += '</td>';
+					html += '</tr>';
+					html += '</table>';
+				}
+				
+				html += '</div>';
+				html += '</div>';
+			}			
+			
+			html += '</div>';
+			html += '</div>';	
+			
+			html = this.contextObj.onPopupFooterSectionRendering( html );
+			
+		}
+		return html;
+	};
+	
+	/* Responsible for rendering Popup Bottom Action Bar Section */
+	this.renderPopupActionBar = function() {
+		
+		var html = '<div class="rsu-popup-action-bar">';
+		html += '<div class="rsu-popup-row">';
+		
+		if( this.meta.bottom_action_bar.type == "dedicated" ) {
+			html += '<div class="rsu-popup-col rsu-popup-col-1">';			
+			html += '<div class="rsu-col-wrapper" style="text-align:'+ this.meta.bottom_action_bar.align +'">';
+			
+			for( var i = 0; i < this.meta.bottom_action_bar.actions.length; i++ ) {
+					
+				html += '<a tabindex="'+ this.meta.bottom_action_bar.actions[i].tabindex +'" href="#" data-popup="'+ this.meta.name +'" class="rsu-btn rsu-btn-small rsu-popup-action-btn '+ this.meta.bottom_action_bar.actions[i].classes + " " + this.meta.bottom_action_bar.layout +'" title="'+ this.meta.bottom_action_bar.actions[i].title +'" style="float:'+ this.meta.bottom_action_bar.actions[i].position +'" data-message="'+ this.meta.bottom_action_bar.actions[i].message +'">';
+				if( this.meta.bottom_action_bar.actions[i].icon != "" ) {
+					html += '<i class="fa fa-'+ this.meta.bottom_action_bar.actions[i].icon +'"></i>';
+				}				
+				html += this.meta.bottom_action_bar.actions[i].title;				
+				html += '</a>';
+				if( this.meta.bottom_action_bar.actions[i].classes.indexOf( "rsu-popup-action-print" ) != -1 ){
+					//html += '<select class="rsu_footer_print_option"  style="float:'+ this.meta.bottom_action_bar.actions[i].position +'" id="'+this.meta.name+'-print-select"><option value="text">TEXT</option><option value="pdf">PDF</option></select>';
+					html += '<a class="rsu_footer_download rsu-btn rsu-btn-small rsu-popup-action-btn"  style="float:'+ this.meta.bottom_action_bar.actions[i].position +'" data-popup="'+ this.meta.name +'">Download</a>';
+				}
+			}
+			
+			html += '</div>';
+			html += '</div';
+		} else {
+			
+			var fields = "",
+			col_class = "";
+			
+			if( this.meta.footer.column == 1 ) {
+				col_class = "rsu-popup-col-1";
+			} else if( this.meta.footer.column == 2 ) {
+				col_class = "rsu-popup-col-2";
+			} else if( this.meta.footer.column == 3 ) {
+				col_class = "rsu-popup-col-3";
+			}
+			
+			if( this.meta.footer.column > 0 ) {			
+			
+				html = '<div class="rsu-popup-footer">';
+				html += '<div class="rsu-popup-row">';
+				
+				html += '<div class="rsu-popup-col rsu-popup-col-7 rsu-popup-embeded-left-col">';
+				html += '<div class="rsu-popup-row">';
+				for( var i = 1; i <= this.meta.footer.column; i++ ) {				
+					fields = this.meta.footer.fields[ "column_" + i ];			
+					html += '<div class="rsu-popup-col '+ col_class +'">';			
+					html += '<div class="rsu-col-wrapper">';
+						
+					for( var j = 0; j < fields.length; j++ ) {
+						html += '<table class="rsu-popup-header-fields-row">';
+						html += '<tr>';
+						html += '<td>';
+						html += '<label class="rsu-popup-field-label rsu-popup-field-label-' + fields[j].type + '">'+ fields[j].label +'</label>';
+						html += '</td>';
+						html += '<td>';
+						html += this.injectField( fields[j] );
+						html += '</td>';
+						html += '</tr>';
+						html += '</table>';
+					}
+					
+					html += '</div>';
+					html += '</div>';
+				}			
+				
+				html += '</div>';
+				html += '</div>';
+				
+				html += '<div class="rsu-popup-col rsu-popup-col-3 rsu-popup-embeded-right-col">';
+				html += '<div class="rsu-col-wrapper rsu-embed-footer-action-bar" style="text-align:'+ this.meta.bottom_action_bar.align +'">';
+				
+				for( var i = 0; i < this.meta.bottom_action_bar.actions.length; i++ ) {
+										
+					html += '<a tabindex="'+ this.meta.bottom_action_bar.actions[i].tabindex +'" href="#" data-popup="'+ this.meta.name +'" class="rsu-btn rsu-btn-small rsu-popup-action-btn '+ this.meta.bottom_action_bar.actions[i].classes + " " + this.meta.bottom_action_bar.layout +'" title="'+ this.meta.bottom_action_bar.actions[i].title +'">';
+					if( this.meta.bottom_action_bar.actions[i].icon != "" ) {
+						html += '<i class="fa fa-'+ this.meta.bottom_action_bar.actions[i].icon +'"></i>';
+					}					
+					html += this.meta.bottom_action_bar.actions[i].title;					
+					html += '</a>';
+				}
+				
+				html += '</div>';
+				html += '</div>';
+				if( this.meta.grid.columns.length >= 3 && this.meta.type == "pagination" ){					
+					var new_fields = JSON.stringify( this.meta.footer.fields.column_1 );
+						new_fields = JSON.parse( new_fields );
+					for( var i = 0; i < new_fields.length; i++ ){
+						new_fields[i].name = new_fields[i].name + "_1";
+						if( i == 1 ){
+							new_fields[i].options.splice( 0, 1 );
+						}
+					}	
+					html += '<div class="rsu-popup-col rsu-popup-col-3 rsu-popup-embeded-right-col rsu_extra_coloum_search_button_container"> Search Criteria <i class="fa fa-plus-circle rsu_extra_coloum_search_button" aria-hidden="true"> </i></div>';
+					html += '<div style="display: none;" class="rsu-popup-col rsu-popup-col-7 rsu-popup-embeded-left-col rsu_extra_coloum_search_cretiria_container">';
+					html += '<div class="rsu-popup-row">';
+					for( var i = 1; i <= this.meta.footer.column; i++ ) {				
+						fields = this.meta.footer.fields[ "column_" + i ];			
+						html += '<div class="rsu-popup-col '+ col_class +'">';			
+						html += '<div class="rsu-col-wrapper">';
+						for( var j = 0; j < fields.length; j++ ) {
+							html += '<table class="rsu-popup-header-fields-row">';
+							html += '<tr>';
+							html += '<td>';
+							html += '<label class="rsu-popup-field-label rsu-popup-field-label-' + fields[j].type + '">'+ fields[j].label +'</label>';
+							html += '</td>';
+							html += '<td>';
+							html += this.injectField( new_fields[j] );
+							html += '</td>';
+							html += '</tr>';
+							html += '</table>';
+						}
+						
+						html += '</div>';
+						html += '</div>';
+					}			
+					
+					html += '</div>';
+					html += '</div>';
+				}
+			}			
+		}	
+		
+		html += '</div>';
+		html += '</div';
+		
+		html = this.contextObj.onPopupActionSectionRendering( html );
+		
+		return html;
+		
+	};
+	
+	/* responsible for making all th & tds of all rows has equal width ( Header, Grid & Footer ) */
+	this.gridNormalizer = function() {
+		if( this.grid ) {
+			if( ! this.meta.grid.width ) {
+				this.meta.grid[ "width" ] = "fixed";
+			}			
+			if( this.meta.grid.width == "fixed" ) {
+				if( this.gridHeader && this.grid.gridTable ) {
+					this.gridHeader.width( this.grid.gridTable.width() );
+				}
+				if( this.gridFooter && this.grid.gridTable ) {
+					this.gridFooter.width( this.grid.gridTable.width() );
+				}
+			} else {
+				if( this.grid.gridTable ) {			
+					if( this.meta.type != "pagination" ) {
+						//this.grid.gridTable.attr('style', 'width: auto !important');
+						this.grid.gridTable.parent().addClass( "rsu-popup-content-section-auto-width" );				
+						this.grid.gridTable.parent().parent().addClass( "rsu-popup-content-wrapper-auto-width" );
+						if( this.gridHeader ) {					
+							//this.gridHeader.width( this.grid.gridTable.width() );
+							this.grid.gridTable.parent().width( this.gridHeader.width() );
+						}
+						if( this.gridFooter ) {
+							//this.gridFooter.width( this.grid.gridTable.width() );
+						}
+					} else {				
+						if( this.grid.gridTable && this.gridHeader ) {
+							this.grid.gridTable.width( this.gridHeader.width() );						
+							this.grid.gridTable.parent().addClass( "rsu-popup-content-section-auto-width" );					
+							this.grid.gridTable.parent().width( this.grid.gridTable.width() );
+							this.grid.gridTable.parent().height( this.grid.gridTable.height() );
+							this.grid.gridTable.parent().parent().addClass( "rsu-popup-content-wrapper-auto-width" );
+						}						
+					}															
+				}				
+		
+				if( this.meta.type == "pagination" ) {
+					if( this.gridHeader && this.grid.gridTable ) {
+						for( var i = 1; i <= this.gridHeader.find( "th" ).length; i++ ) {											
+							this.grid.gridTable.find( 'td:nth-child('+ i +')' ).width( this.gridHeader.find( 'th:nth-child('+ i +')' ).width() );						
+						}
+					}										
+				} else {					
+					for( var i = 1; i <= this.grid.gridTable.find( "td" ).length; i++ ) {				
+						if( this.grid.meta.show_header && this.gridHeader ) {
+							if( this.meta.grid.width == "fixed" ) {
+								this.gridHeader.find( 'th:nth-child('+ i +')' ).width( this.grid.gridTable.find( 'td:nth-child('+ i +')' ).width() );
+							} else {
+								this.grid.gridTable.find( 'td:nth-child('+ i +')' ).width( this.gridHeader.find( 'th:nth-child('+ i +')' ).width() );
+							}							
+						}
+						if( this.grid.meta.show_footer && this.gridFooter ) {
+							this.gridFooter.find( 'td:nth-child('+ i +')' ).width( this.gridHeader.find( 'th:nth-child('+ i +')' ).width() );
+						}				
+					}
+				}			
+			}			
+		}						
+	}
+	
+	/* Responsible for creating form fields */
+	this.injectField = function( field ) {
+		
+		var html = '',
+		readonly = '',
+		charlength = '',
+		attributes = '',
+		text_align = "";
+		
+		if( field.readonly ) {
+			readonly = 'readonly';
+		}		
+		
+		for( var i = 0; i < field.attributes.length; i++ ) {
+			attributes += field.attributes[i].key + '="'+ field.attributes[i].value +'"';
+		}
+		
+		if( field.char_length != -1 ) {
+			charlength = 'maxlength="'+ field.char_length +'"';
+		}
+		
+		if( field.type == "text" ) {
+			html = '<input autocomplete="off" type="text" data-target-type="field" data-field-type="'+ field.type +'" id="'+ field.name +'" name="'+ field.name +'" tabindex="'+ field.tabindex +'" class="rsu-popup-field '+ field.classes +'" '+ readonly +' '+ attributes +' data-mandatory="'+ field.mandatory +'" data-behaviour="'+ field.behaviour +'" data-message="'+ field.message +'" value="'+ field.value +'" placeholder="'+ field.placeholder +'" '+ charlength +' />';
+		} else if( field.type == "email" ) {
+			html = '<input autocomplete="off" type="email" data-target-type="field" data-field-type="'+ field.type +'" id="'+ field.name +'" name="'+ field.name +'" tabindex="'+ field.tabindex +'" class="rsu-popup-field '+ field.classes +'" '+ readonly +' '+ attributes +' data-mandatory="'+ field.mandatory +'" data-behaviour="'+ field.behaviour +'" data-message="'+ field.message +'" value="'+ field.value +'" placeholder="'+ field.placeholder +'" '+ charlength +' />';
+		} else if( field.type == "number" ) {
+			html = '<input autocomplete="off" type="number" data-target-type="field" data-field-type="'+ field.type +'" id="'+ field.name +'" name="'+ field.name +'" tabindex="'+ field.tabindex +'" class="rsu-popup-field '+ field.classes +'" '+ readonly +' '+ attributes +' data-mandatory="'+ field.mandatory +'" data-behaviour="'+ field.behaviour +'" data-message="'+ field.message +'" value="'+ field.value +'" placeholder="'+ field.placeholder +'" '+ charlength +' />';
+		} else if( field.type == "password" ) {
+			html = '<input autocomplete="off" type="password" data-target-type="field" data-field-type="'+ field.type +'" id="'+ field.name +'" name="'+ field.name +'" tabindex="'+ field.tabindex +'" class="rsu-popup-field '+ field.classes +'" '+ readonly +' '+ attributes +' data-mandatory="'+ field.mandatory +'" data-behaviour="'+ field.behaviour +'" data-message="'+ field.message +'" value="'+ field.value +'" placeholder="'+ field.placeholder +'" '+ charlength +' />';
+		} else if( field.type == "checkbox" ) {
+			html = '<ul class="rsu-popup-option-wrapper">';
+			for( var i = 0; i < field.options.length; i++ ) {
+				html += '<li><label>'+ field.options[i] +' <input type="checkbox" data-target-type="field" id="'+ field.name +'" data-field-type="'+ field.type +'" tabindex="'+ ( field.tabindex + i ) +'" name="'+ field.name +'[]" '+ readonly +' '+ attributes +' class="rsu-popup-field '+ field.classes +'" data-mandatory="'+ field.mandatory +'" data-message="'+ field.message +'" value="'+ field.value +'"/></label></li>';
+			}
+			html += '</ul>';	
+		} else if( field.type == "radio" ) {
+			html = '<ul class="rsu-popup-option-wrapper">';
+			for( var i = 0; i < field.options.length; i++ ) {
+				html += '<li><label>'+ field.options[i] +' <input type="radio" data-target-type="field" data-field-type="'+ field.type +'" tabindex="'+ ( field.tabindex + i ) +'" name="'+ field.name +'" '+ readonly +' '+ attributes +' data-mandatory="'+ field.mandatory +'" class="rsu-popup-field '+ field.classes +'" data-message="'+ field.message +'" value="'+ field.value +'"/></label></li>';
+			}
+			html += '</ul>';
+		} else if( field.type == "select" ) {
+			html = '<select type="text" data-target-type="field" data-field-type="'+ field.type +'" id="'+ field.name +'" name="'+ field.name +'" tabindex="'+ field.tabindex +'" class="rsu-popup-field '+ field.classes +'" '+ readonly +' '+ attributes +' data-mandatory="'+ field.mandatory +'" data-message="'+ field.message +'">';
+			for( var i = 0; i < field.options.length; i++ ) {
+				html += '<option value="'+ field.options[i].key +'">'+ field.options[i].value +'</option>';
+			}
+			html += '</select>';
+		} else if( field.type == "date" ) {
+			html += '<table class="rsu-popup-date-field-wrap"><tr><td><input type="text" data-target-type="field" data-field-type="'+ field.type +'" id="'+ field.name +'" name="'+ field.name +'" '+ readonly +' '+ attributes +' data-mandatory="'+ field.mandatory +'" tabindex="'+ field.tabindex +'" data-behaviour="'+ field.behaviour +'" data-message="'+ field.message +'" value="'+ field.value +'" class="rsu-popup-field rsu-popup-date-field '+ field.classes +'" placeholder="'+ field.placeholder +'" /></td><td></td></tr></table>';
+		} else if( field.type == "textarea" ) {
+			html = '<textarea id="'+ field.name +'" data-target-type="field" data-field-type="'+ field.type +'" name="'+ field.name +'" tabindex="'+ field.tabindex +'" class="rsu-popup-field '+ field.classes +'" '+ readonly +' '+ attributes +' data-mandatory="'+ field.mandatory +'" data-behaviour="'+ field.behaviour +'" data-message="'+ field.message +'" value="'+ field.value +'" placeholder="'+ field.placeholder +'" '+ charlength +'></textarea>';
+		} else if( field.type == "label" ) {
+			html = '<label id="'+ field.name +'" data-target-type="field" data-field-type="'+ field.type +'" name="'+ field.name +'" tabindex="'+ field.tabindex +'" class="rsu-popup-field '+ field.classes +'" '+ attributes +' data-message="'+ field.messag +'">'+ field.value +'</label>';
+		} else if( field.type == "leftcheck-text" ){            
+            html = '<input type="checkbox" style="vertical-align: middle;" data-target-type="field" id="'+ field.chkname +'" name="'+ field.chkname +'" tabindex="'+ field.chktabindex +'" class="rsu-popup-field '+ field.chkclasses +'"  '+ attributes +' data-mandatory="'+ field.chkmandatory +'"  data-message="'+ field.chkmessage +'"  /><input type="text" data-target-type="field" data-field-type="'+ field.type +'" id="'+ field.name +'" name="'+ field.name +'" tabindex="'+ field.tabindex +'" class="rsu-popup-field rsu-popup-lefttextboxwithcheck '+ field.classes +'" '+ readonly +' '+ attributes +' data-mandatory="'+ field.mandatory +'" data-behaviour="'+ field.behaviour +'" data-message="'+ field.message +'" value="'+ field.value +'" placeholder="'+ field.placeholder +'" '+ charlength +' />';
+        } else if( field.type == "rightcheck-text" ){            
+            html = '<input type="text" data-target-type="field" data-field-type="'+ field.type +'" id="'+ field.name +'" name="'+ field.name +'" tabindex="'+ field.tabindex +'" class="rsu-popup-field rsu-popup-lefttextboxwithcheck '+ field.classes +'" '+ readonly +' '+ attributes +' data-mandatory="'+ field.mandatory +'" data-behaviour="'+ field.behaviour +'" data-message="'+ field.message +'" value="'+ field.value +'" placeholder="'+ field.placeholder +'" '+ charlength +' /><input type="checkbox" data-target-type="field" id="'+ field.chkname +'" name="'+ field.chkname +'" style="vertical-align: middle;" tabindex="'+ field.chktabindex +'" class="rsu-popup-field '+ field.chkclasses +'"  '+ attributes +' data-mandatory="'+ field.chkmandatory +'"  data-message="'+ field.chkmessage +'"  />';
+        } else if( field.type == "chkbox" ){            
+        	html = '<input type="checkbox" data-target-type="field" data-field-type="'+ field.type +'" id="'+ field.name +'" name="'+ field.name +'" tabindex="'+ field.tabindex +'" class="rsu-popup-field '+ field.classes +'" '+ readonly +' '+ attributes +' data-mandatory="'+ field.mandatory +'" data-behaviour="'+ field.behaviour +'" data-message="'+ field.message +'" value="'+ field.value +'" placeholder="'+ field.placeholder +'" '+ charlength +' />';
+        } else if( field.type == "datetime" ){            
+        	html = '<input autocomplete="off" type="text" data-target-type="field" data-field-type="'+ field.type +'" id="'+ field.name +'" name="'+ field.name +'" tabindex="'+ field.tabindex +'" class="rsu-popup-field rsu-popup-datetime-field '+ field.classes +'" '+ readonly +' '+ attributes +' data-mandatory="'+ field.mandatory +'" data-behaviour="'+ field.behaviour +'" data-message="'+ field.message +'" value="'+ field.value +'" placeholder="'+ field.placeholder +'" /><input type="text " class="rsu-popup-datetime-time-field" value="" />';
+        }
+		
+		return html;
+		
+	};	
+	
+	this.footerSummary = function() {
+		if( this.meta.grid.show_footer ) {
+			var amount = 0;
+			var aggrigate = 0.00;
+			var record_length = this.grid.gridTable.find("tbody > tr").length;			
+			for( var i = 0; i < this.meta.grid.columns.length; i++ ) {				
+				aggrigate = 0.00;
+				if( this.meta.grid.columns[i].footer.type == "sum" ) {
+					for( var j = 0; j < record_length; j++ ) {
+						amount = this.contextObj.controller.getCellValue( this.grid.gridTable.find( "tbody>tr:nth-child("+ ( j + 1 ) +")" ).find( "td:nth-child("+ ( i + 1 ) +")" ) );						
+						if( ! isNaN( amount ) && amount != "" ) {							
+							aggrigate += parseFloat( amount );														
+						}
+					}		
+					if( this.meta.grid.columns[i].footer.total_type == "number" ) {
+						this.gridFooter.find( 'td:nth-child('+ ( i + 1 ) +')' ).html( parseInt( aggrigate ) );
+					} else {
+						this.gridFooter.find( 'td:nth-child('+ ( i + 1 ) +')' ).html( aggrigate.toFixed(2) );
+					}					
+				}
+			}
+		}
+	}
+	
+	this.handlePaginationResponse = function( data ) {
+		if(this.meta.type != "pagination"){
+			return;
+		}
+		var isEmpty = true;	
+		var me =this;
+		this.grid = new rsu_grid( this, this.meta.grid, $( '#rsu-popup-'+ this.meta.name +'-grid-area' ) );
+		rSuControllerObj.lastSearchTxt = this.window.find("input#inputSrId").val();
+		if( data[0] instanceof Array ) {
+			/* If the user has altered the search text before the arrival of last response
+			 * then initiate the search again */
+			if( this.window.find("input#inputSrId").val() != this.contextObj.controller.lastSearchTxt ) {
+				this.contextObj.controller.isPaginationFilter = true;
+				this.contextObj.controller.isPaginationPager = false;
+				 /*Reset the current page number */
+				this.pageNumber = 1;
+				$("#rsu-pagination-popup-page").val( this.pageNumber );	
+				console.log(" meta chage seach called ");
+				this.contextObj.controller.triggerSearch();
+				/*var params = this.contextObj.controller.prepareRequestParams( null, this.meta.actions.rsu_post.data );					
+				this.contextObj.controller.request = this.contextObj.controller.prepareRequest( "POST", this.meta.actions.rsu_post.action+"?"+params, "", "json", "LIST" );
+				this.contextObj.controller.ajaxFlaQ = true;
+				this.contextObj.controller.dock();*/
+			}
+			
+			if( data[0].length > 1 ) {
+				
+				isEmpty = false;
+				this.grid.loadRecord( data, true );
+				this.footerSummary( data );				
+				this.gridNormalizer( true );
+				setTimeout(function(){
+					me.gridNormalizer();
+				},300);
+				/* Update popup page meta */
+				
+				this.totalPages = data[1][0][0];	
+				
+				$( "#rsu-pagination-popup-page" ).val( this.pageNumber );
+				$( "#rsu-pagination-total-pages" ).html( data[1][0] );
+				$( "#rsu-popup-pagination-header" ).show();		
+								
+				if( this.grid.gridTable  ) {
+					if( this.grid.gridTable.find( "tbody tr td.active" ).length == 0 ){
+						if(rSuControllerObj.isLastSearchFocus){
+							rSuControllerObj.isLastSearchFocus = false;
+							this.grid.gridTable.find( "tbody>tr:last-child>td:nth-child(2)" ).addClass( "active" ).focus();
+							return;
+						}else{
+							this.grid.gridTable.find( "tbody>tr:first-child>td:nth-child(2)" ).addClass( "active" ).focus();
+						}
+						
+					} else{
+						this.grid.gridTable.find( "tbody tr td.active" );
+					}										
+				}
+				/* If any search is being performed, keep the focus on search box */
+				if( rSuControllerObj.isPaginationFilter && ! rSuControllerObj.isPaginationPager ) {				
+					if( this.contextObj.controller.paginationCurrentSearchField != "" ){
+						this.contextObj.controller.paginationCurrentSearchField.trigger( "focus" );
+					} else {
+						$( "input#inputSrId" ).trigger( "focus" );
+					}
+					/* Reset the current page number */
+					this.pageNumber = 1;					
+					$("input#rsu-pagination-popup-page").val( 1 );
+				}
+				/* If any pager is being performed, keep the focus on pager box */
+				if( rSuControllerObj.isPaginationPager ) {
+					setTimeout(function(){
+						var page_nuber = $("input#rsu-pagination-popup-page");
+						page_nuber.focus();
+						page_nuber[0].selectionEnd = page_nuber.val().length;
+						page_nuber[0].selectionStart = page_nuber.val().length;
+					},300);
+					
+				}
+				if( rSuControllerObj.pageText != "" ){					
+					this.window.find( "input#inputSrId" ).val( rSuControllerObj.pageText );	
+					//this.window.find( "select#selectOnId" ).val( rSuControllerObj.pageSearchColumn );
+					rSuControllerObj.pageText = "";
+					rSuControllerObj.pageColumn = "";
+					rSuControllerObj.triggerSearch();					
+				}				
+			} else {
+				$( "#rsu-pagination-popup-page" ).val( 1 );
+				$( "#rsu-pagination-total-pages" ).html( 0 );				
+			}			
+		}
+		
+		if( isEmpty ) {
+			$( "#rsu-pagination-popup-page" ).val( 1 );
+			$( "#rsu-pagination-total-pages" ).html( 0 );
+			//$( "#rsu-popup-pagination-header" ).hide();
+			this.grid.emptyRecordsNotification();
+			if( rSuControllerObj.isPaginationFilter ) {			
+				if( this.contextObj.controller.paginationCurrentSearchField != "" ){
+					this.contextObj.controller.paginationCurrentSearchField.trigger( "focus" );
+				} else {
+					$( "input#inputSrId" ).trigger( "focus" );
+				}
+			} else if( rSuControllerObj.isPaginationPager ) {
+				$('#rsu-pagination-popup-page').focus();
+			} else {				
+				$('#inputSrId').focus();
+			}
+		} 
+		
+	};
+	
+	/*  */
+	this.closePopup = function() {
+		this.window.remove();
+	};
+	
+	this.alignCenterPopup = function() {		
+		this.window.css( "margin-top", ( this.window.height() / 2 ) + "px" );		
+	};
+	
+};

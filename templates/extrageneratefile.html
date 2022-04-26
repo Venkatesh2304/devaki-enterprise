@@ -1,0 +1,11 @@
+<html> 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script>
+function generate (x) {
+	window.open('/extrabill/generate/'+x,'_blank');}
+	</script>
+{% for i in files.keys()%}
+ <a onclick ='generate("{{files[i]}}")' style='cursor:pointer; color:blue;'> {{ i }}</a><br><br>
+ {%endfor%}
+</html>

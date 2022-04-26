@@ -1,0 +1,18 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<script>
+    setTimeout("window.open('/eway', '_blank');",3000)
+    setTimeout("window.close()", 15000);
+</script>
+<body>
+    <p>Process over . you will be redricted </p>
+    {% if fail %}
+    <p onclick="window.open('/download/D:..EWAY..error.xlsx', '_blank'); " style="font:blue;cursor:pointer;">Click to download tthe error file</p>
+    {%endif%}
+    </body>
+</html>

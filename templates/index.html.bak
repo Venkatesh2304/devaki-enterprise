@@ -1,0 +1,97 @@
+<html>
+<script>
+    window.onload = function () {
+        
+    };
+ var loc = window.location.href ;
+  loc = loc.replace('home','') ;
+  
+  function gst(){
+ window.open(loc+'gst','_blank');
+ }
+ function eway() {
+ window.open(loc+'eway','_blank');
+ }
+ function outstanding() { 
+ window.open(loc+'outstanding','_blank');
+    }
+    function repair() {
+        let conf = window.prompt('THIS is only for server side . dont use them ( \n IT MIGHT LEAD TO DELETE THE PREV CONTENT OF THE SOFTWARE)');
+        if (conf == '2304') {
+            window.open(loc + 'repair', '_blank');
+        }
+        else {
+            alert('wrong password');
+        }
+    }
+        function user() {
+            let conf = window.prompt('Type OK');
+            if (conf == 'OK' ) {
+                window.open(loc + 'user', '_blank');
+            }     
+    }
+    function credit() {
+        window.open(loc + 'credit','_blank');
+    }
+    function shogun() {
+        window.open(loc + 'shogun', '_blank');
+    }
+	function shogun() {
+        window.open(loc + 'extrabill', '_blank');
+    }
+</script>
+<style>
+ button:focus{
+    transform:scale(1.04);
+    box-shadow: rgba(70, 74, 85, 0.08) 0px 13px 22px 0px;
+}
+button {
+  width:35%;
+  border-bottom-color: rgb(224, 224, 224);
+border-bottom-left-radius: 10px;
+border-bottom-right-radius: 10px;
+border-bottom-style: solid;
+border-bottom-width: 1px;
+border-left-color: rgb(224, 224, 224);
+border-left-style: solid;
+border-left-width: 1px;
+border-right-color: rgb(224, 224, 224);
+border-right-style: solid;
+border-right-width: 1px;
+border-top-color: rgb(224, 224, 224);
+border-top-left-radius: 10px;
+border-top-right-radius: 10px;
+border-top-style: solid;
+border-top-width: 1px;
+box-sizing: border-box;
+color: rgb(0, 0, 0);
+cursor: text;
+font-family: "Gilroy", sans-serif;
+font-size: 20px;
+height: 40px;
+outline:none;
+margin: 10;
+padding: 10;
+    background: #66d9ff;
+    color: white;
+    height:10%;
+    cursor:default;
+	margin-left:30%;
+    }
+</style>
+<body>
+
+    <button onclick='eway();'> EWAY Billling  </button><br>
+    <button onclick='outstanding();'> Outstanding Report</button><br>
+    <button onclick='credit();'> Credit  </button><br>
+    <button onclick='shogun();'> Shogun Locking  </button><br>
+	<button onclick='extrabill();'> Extra Bill  </button><br>
+    <button onclick='gst();'> GST  </button><br>
+    <button onclick='user();'> User  </button><br>
+    <button onclick='repair();'> Repair  </button><br>
+    <button onclick="sync();"> Tommorow  </button><br>
+    <div id=announcements">
+        <p></p>
+    </div>
+</body>
+</html>

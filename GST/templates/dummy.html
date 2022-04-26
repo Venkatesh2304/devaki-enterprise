@@ -1,0 +1,134 @@
+
+<style>
+
+.leftcontainer,.middlecontainer,.rightcontainer {
+    margin-left: 1%;
+	border: 1px solid rgb(208, 211, 221);
+    border-radius: 8px;
+    padding: 16px;
+    text-align: center;
+    background: rgb(255, 255, 255);
+    cursor: pointer;
+    width:20%;
+}
+.leftcontainer:hover,.middlecontainer:hover,.rightcontainer:hover {
+	transform: scale(1.04);
+	box-shadow: 2px ;
+}
+.title {
+	font-size:30px;
+font-weight:700;
+line-height:30px;
+color:#4dffc3;
+color: #314259;
+
+  padding-bottom: 1.5rem;
+}
+.month {
+	font-size:20px;
+	    color: #1ab2ff;
+    font-weight: 500;
+    margin-top:5px;
+}
+table{
+	width: 100%; 
+    font-family: -webkit-pictograph; 
+}
+th,td {
+	border-bottom: 1px solid #ddd;
+}
+.leftcontainer {
+	float:left;
+	width:20%;
+	
+}
+.middlecontainer {
+	float:left;
+	width:20%;
+	
+}
+.rightcontainer {
+	float:left;
+	width:20%;
+	
+}
+</style>
+<form action='/gets' method='POST' enctype='multipart/form-data' >
+<input type='text' name='month' prefill={{prevmonth}}>
+<input type='text' name='year' prefill={{currentyear}}>
+<input type='submit' text='Load'></input>
+<div id='recent'> 
+   <div class='recent'> </div> 
+</div>
+
+</form>
+<br>
+<div>
+{%for months in month%}
+<div>
+{%if months[0]%}
+	<div class='leftcontainer'>
+	<label class='title'> GSTR-1 </label>
+	<br>
+	<label class='month'> October , 2021  </label> <br>
+    <table>
+     <tr>
+     	<th></th>
+    	<th>Taxable </th>
+    	<th>Net Tax</th>
+     </tr>
+      {% for j in shorts[months[0]]%}
+      <tr>
+     	<td class='name'>{{j[0]}}</td>
+     	<td class='value'>{{j[2]}}</td>
+     	<td class='value'>{{j[3]}}</td>
+      </tr>
+     {%endfor%}
+    </table>
+	</div>
+{%endif%}
+{%if months[1]%}
+	<div class='middlecontainer'>
+	<label class='title'> GSTR-1 </label>
+	<br>
+	<label class='month'> October , 2021  </label> <br>
+    <table>
+     <tr>
+     	<th></th>
+    	<th>Taxable </th>
+    	<th>Net Tax</th>
+     </tr>
+      {% for j in shorts[months[1]]%}
+      <tr>
+     	<td class='name'>{{j[0]}}</td>
+     	<td class='value'>{{j[2]}}</td>
+     	<td class='value'>{{j[3]}}</td>
+      </tr>
+     {%endfor%}
+    </table>
+	</div>
+{%endif%}
+{%if months[2]%}
+	<div class='leftcontainer'>
+	<label class='title'> GSTR-1 </label>
+	<br>
+	<label class='month'> October , 2021  </label> <br>
+    <table>
+     <tr>
+     	<th></th>
+    	<th>Taxable </th>
+    	<th>Net Tax</th>
+     </tr>
+      {% for j in shorts[months[2]]%}
+      <tr>
+     	<td class='name'>{{j[0]}}</td>
+     	<td class='value'>{{j[2]}}</td>
+     	<td class='value'>{{j[3]}}</td>
+      </tr>
+     {%endfor%}
+    </table>
+	</div>
+ {%endif%} 
+</div>
+{%endfor%}
+</div>

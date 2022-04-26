@@ -1,0 +1,137 @@
+
+<style>
+
+.leftcontainer,.middlecontainer,.rightcontainer {
+    margin-left: 1%;
+	border: 1px solid rgb(208, 211, 221);
+    border-radius: 8px;
+    padding: 16px;
+    text-align: center;
+    background: rgb(255, 255, 255);
+    cursor: pointer;
+    width:20%;
+}
+.leftcontainer:hover,.middlecontainer:hover,.rightcontainer:hover {
+	transform: scale(1.04);
+	box-shadow: 2px ;
+}
+.title {
+	font-size:30px;
+font-weight:700;
+line-height:30px;
+color:#4dffc3;
+color: #314259;
+
+  padding-bottom: 1.5rem;
+}
+.month {
+	font-size:20px;
+	    color: #1ab2ff;
+    font-weight: 500;
+    margin-top:5px;
+}
+table{
+	width: 100%; 
+    font-family: -webkit-pictograph; 
+}
+th,td {
+	border-bottom: 1px solid #ddd;
+}
+.leftcontainer {
+	float:left;
+	width:20%;
+	
+}
+.middlecontainer {
+	float:left;
+	width:20%;
+	
+}
+.rightcontainer {
+	float:left;
+	width:20%;
+	
+}
+form {
+    display:flex;
+    width:100%;
+    place-content: center;
+}
+input{
+float :left;
+  width:15%;
+  border-bottom-color: rgb(224, 224, 224);
+border-bottom-left-radius: 10px;
+border-bottom-right-radius: 10px;
+border-bottom-style: solid;
+border-bottom-width: 1px;
+border-left-color: rgb(224, 224, 224);
+border-left-style: solid;
+border-left-width: 1px;
+border-right-color: rgb(224, 224, 224);
+border-right-style: solid;
+border-right-width: 1px;
+border-top-color: rgb(224, 224, 224);
+border-top-left-radius: 10px;
+border-top-right-radius: 10px;
+border-top-style: solid;
+border-top-width: 1px;
+box-sizing: border-box;
+color: rgb(0, 0, 0);
+cursor: text;
+font-family: "Gilroy", sans-serif;
+font-size: 20px;
+height: 40px;
+outline:none;
+margin: 10;
+padding: 10;
+}
+input:focus{
+    transform:scale(1.04);
+    box-shadow: rgba(70, 74, 85, 0.08) 0px 13px 22px 0px;
+}
+input[type='submit'] {
+    background: #66d9ff;
+    color: white;
+    width: 15%;
+    cursor:default;
+    }
+</style>
+<form action='/gst/alreadyexist' method='POST' enctype='multipart/form-data' id='x'>
+<input type='text' name='month' prefill={{prevmonth}} placeholder='Month'>
+<input type='text' name='year' prefill={{currentyear}} placeholder='Year'>
+<input type='submit' innerText='LOAD'></input>
+</form>
+<br>
+
+<div id='recent'> 
+   <div class='recent'> </div> 
+</div>
+
+
+<div>
+
+{%for i in months%}
+<div >
+	<div class='leftcontainer' onclick='document.getElementById("x").action="/gst/view/{{i.split('-')[0]}}/{{i.split('-')[1]}} "; document.getElementById("x").submit();'>
+	<label class='title'> GSTR-1 </label>
+	<br>
+	<label class='month' >  {{names[i]}} </label> <br>
+    <table >
+     <tr>
+     	<th></th>
+    	<th>Taxable </th>
+    	<th>Net Tax</th>
+     </tr>
+      {% for j in shorts[i]%}
+      <tr>
+     	<td class='name'>{{j[0]}}</td>
+     	<td class='value'>{{j[2]}}</td>
+     	<td class='value'>{{j[3]}}</td>
+      </tr>
+     {%endfor%}
+    </table>
+</div>
+{%endfor%}
+
+</div>

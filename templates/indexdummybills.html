@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title> Dummy Bills</title>
+</head>
+<script>
+ 	function add(){
+	prod=document.getElementById('prod').value ;
+	qty=document.getElementById('qty').value ;
+ 	tr=document.createElement('tr');
+ 	tr.id=prod;
+ 	td1=document.createElement('td');
+ 	td1.innerText = prod  ;
+ 	td2=document.createElement('td');
+ 	inputs=document.createElement('input');
+ 	inputs.value = qty ;
+ 	inputs.name = prod ;
+    //inputs.disabled=true;
+    inputs.setAttribute('name',prod);
+    inputs.setAttribute('value',qty);
+ 	td3=document.createElement('button');
+ 	td3.setAttribute('type','button');
+ 	td3.innerText = 'Delete' ;
+ 	td3.id=prod;
+ 	td3.setAttribute('onclick','document.getElementById(this.id).remove();');
+    tr.appendChild(td1);
+    tr.appendChild(td2);
+    tr.appendChild(td3);
+    td2.appendChild(inputs);
+ 	document.getElementById("table").appendChild(tr);
+ }
+ 
+</script>
+
+
+<body>
+<form action='/generatedummy' method='POST'>
+<select name='beat'>
+{%for i in beat%}
+ <option>{{i}}</option>
+{%endfor%}
+</select>
+<select id='prod' >
+{% for i in prods%}
+  <option>{{i}}</<option>
+{%endfor%}
+</select>
+<input id='qty' /> 
+<button type='button' onclick='add();'>Add</button>
+<button>Generate</button>
+<div>
+
+<table id="table">
+<tr>
+ <th>Product</th>
+ <th>Quantity</th>
+</tr>
+</table>
+
+</div>
+</form>
+</body>
+</html>
