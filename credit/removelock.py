@@ -24,15 +24,17 @@ def main() :
                                       "orderdate":date.strftime("%Y-%m-%d")})
    data = [itm["parName"]  for itm in data["quantumImportList"] if itm["assignQty"] != 0 ]
    partys = list(set(data))
+   partys = [ party.split('-')[0] for party in partys]
    if len(partys) == 0 : 
        print("None present")
        return 0
+   print(partys)
    replaces = {'beatkeys':''}
    fpath = report_ajax(driver,'creditlockdown',replaces,make_download=True)
    def filter_excel(fpath,partys) :
        df = pd.read_excel(fpath)
        df = df.astype({'Sr No':str})
-       df = df[df['PAR NAME'].apply(lambda x : x in partys)]
+       df = df[df['PAR NAME'].apply(lambda x : x.split('-')[0] in partys)]
        df = df[df.apply(lambda row : (row['PAR CR BILLS'] <= row["PAR CR BILLS UTILISED"]) and row['PAR CR BILLS']!=0 ,axis=1)]
        df.to_excel(fpath,index=False)
        print("Finsihed credit lock filter")
