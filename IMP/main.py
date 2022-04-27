@@ -80,7 +80,7 @@ def login(paths) :
      print('wait')
      time.sleep(0.5)
  print('finsihed')
- driver.set_script_timeout("300")
+ driver.set_script_timeout("1000")
  return driver
 def OpenExcel(fpath):
   def openWorkbook(xlapp, xlfile):
