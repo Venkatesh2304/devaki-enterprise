@@ -307,6 +307,8 @@ def generateeway() :
          for key in x.keys() :
            if key!='vehicle' and key!='date1' and key!='date2':
              data[key]=x[key]
+         types = data['type']
+         del data['type']
          f=open('eway\\log.txt','w')
          f.write(str({}))
          f.close()
@@ -322,7 +324,6 @@ def generateeway() :
           filename=datetime.now().strftime('%d-%m-%y')
           filename.replace('-','.')
           totaleinv = einv.create(df,filename)
-          #ewayjson.create(df,filename)
           filename+='.json'
           if totaleinv != 0 :
            einvfile,ds = einvsite(filename)
@@ -338,8 +339,13 @@ def generateeway() :
             filename+='.json'
             accept,error=ewaysite(filename)
             print('Finished in : ',time.time()-start,'seconds')
-         einvoicegenerate()
-         ewaygenerate()
+         if types == 'Both' :
+            einvoicegenerate()
+            ewaygenerate()
+         elif types == 'EINVOICE' :
+             einvoicegenerate()
+         else :
+             ewaygenerate()
          return "<p>Success</p>"
 
 @app.route('/download/<filename>',methods=['POST','GET'])

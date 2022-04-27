@@ -1,12 +1,11 @@
 {
   "ExpandedNodes": [
     "",
-    "\\credit",
-    "\\eway",
     "\\IMP",
     "\\outstanding",
+    "\\templates",
     "\\__pycache__"
   ],
-  "SelectedNode": "\\outstanding\\main.py",
+  "SelectedNode": "\\__pycache__\\NewFolder",
   "PreviewInSolutionExplorer": false
 }
