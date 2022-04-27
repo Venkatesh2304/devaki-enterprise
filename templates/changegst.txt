@@ -1,4 +1,0 @@
-
-<form method='POST' action='/gst/view/<{{month}}>/<{{year}}><'>
-<button type='submit' ></button>
-<form>

@@ -169,6 +169,17 @@ def data_ajax(driver,keyword,replaces={},content="json") :
     except :
         print(ajax)
     return data
+def custom_ajax(driver,keyword,replaces={}) : 
+     ajax = ajax_template.split('_'+keyword+'_')[1]
+     for old,new in replaces.items() :
+        ajax = ajax.replace('_'+old+'_',new)
+     try :
+      data = driver.execute_script(ajax)
+     except :
+        print(ajax)
+     return data
+     
+
 path = ''
 base_url = 'leveredge102.hulcd.com'
 with open('ajax.txt') as f :

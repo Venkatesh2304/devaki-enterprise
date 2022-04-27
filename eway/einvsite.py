@@ -7,12 +7,11 @@ import win32com.client
 import pandas as pd
 import time 
 from datetime import datetime
-def einvsite(filename) :
- path='D:\\dataEWAY\\'
+path='D:\\dataEWAY\\'
+def einvlogin() :
  options = webdriver.ChromeOptions()
  prefs = {'download.default_directory' : path }
  options.add_experimental_option('prefs', prefs)
-# options.add_argument("--user-data-dir=D:/vs/devaki enterprises/Profile 1")
  driver = webdriver.Chrome(r'chromedriver.exe',options=options)
  driver.get('https://einvoice1.gst.gov.in/')
  driver.execute_script('document.querySelector("#btnLogin").click();')
@@ -25,7 +24,8 @@ def einvsite(filename) :
      time.sleep(1)
    except :
      break
-
+ return driver 
+def einvupload(driver,filename) : 
  driver.execute_script('window.location.href="https://einvoice1.gst.gov.in/Invoice/BulkUpload"')
  while True :
     try :
@@ -41,12 +41,16 @@ def einvsite(filename) :
     except Exception as e:
         time.sleep(1)
         print(e)
- time.sleep(2)
+ table = "<table>"+driver.execute_script("return document.querySelector('table').innerHTML")+"</table>"
+ upload_res  = pd.read_html(table)[0] 
+ return upload_res 
+
+def einvreport(driver,is_today = True) : 
  driver.execute_script('window.location.href="https://einvoice1.gst.gov.in/MisRpt"')
- driver.execute_script('document.querySelector("#FromDate").value="'+datetime.now().strftime('%d/%m/%Y')+'"')
- driver.execute_script('document.querySelector("#ToDate").value="'+datetime.now().strftime('%d/%m/%Y')+'"')
+ if is_today :
+    driver.execute_script('document.querySelector("#FromDate").value="'+datetime.now().strftime('%d/%m/%Y')+'"')
+    driver.execute_script('document.querySelector("#ToDate").value="'+datetime.now().strftime('%d/%m/%Y')+'"')
  driver.execute_script('document.querySelector("#btngo").click()')
- time.sleep(3)
  intial = os.listdir(path)
  driver.execute_script('window.location.href="https://einvoice1.gst.gov.in/MisRpt/ExcelGenerratedIrnDetails"')
  while True :
@@ -55,10 +59,8 @@ def einvsite(filename) :
     filename = list((set(os.listdir(path))^set(intial))&set(os.listdir(path)))[0]
     if ('tmp' not in filename) and 'crd' not in filename : 
      df = pd.read_excel(path+filename)
-     break
+     break 
   except Exception as e:
      time.sleep(0.5)
      print(e)
- print(path+filename)
- return path+filename,df
-#waysite('26-12-21.json')
+ return df

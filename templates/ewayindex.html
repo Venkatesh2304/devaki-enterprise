@@ -103,7 +103,7 @@ button {
         vehicle = document.getElementById('vehicle').value;
         if (billno2 == '') {
             if (billno1[0] != '.') {
-                creates('DEV' + billno1, vehicle);
+                creates('TKS' + billno1, vehicle);
             }
             else {
                 creates(billno1, vehicle);
@@ -111,11 +111,10 @@ button {
         }
         else {
             for (var a = parseInt(billno1); a < parseInt(billno2) + 1; a++) {
-                creates('DEV' + a.toString(), vehicle);
+                creates('TKS' + a.toString(), vehicle);
                    }
         }
         document.getElementById('billno2').value = '';
-    
 }
     
  window.addEventListener('load',function(){
@@ -149,8 +148,14 @@ while (elements[0]) elements[0].parentNode.removeChild(elements[0]);
     <input type='text' id='billno1' />
     <input type='text' id='billno2' />
     <button type='button' onclick='add();'>Add</button>
-    <button type="button" onclick="document.querySelectorAll('#beat>option').forEach((e) => {document.querySelector('#billno1').value = '.'+e.value ; add() ;} ) ">ALL</button>
-    <button type='button' onclick='document.getElementById("form").action="/eway/generate" ; document.getElementById("form").submit();'>Eway & Einvoice</button>
+    <button type="button" onclick="document.querySelector('#billno1').value = '.ALL' ; add() ; ">ALL</button>
+    <select id="type" name="type" form="form">
+        <option value="Both" default>Both</option>
+        <option value="EINVOICE">EINVOICE</option>
+        <option value="EWAY">EWAY</option>
+    </select>
+    
+    <button type='button' onclick='document.getElementById("form").action="/eway/generate" ; document.getElementById("form").submit();'>Generate</button>
    
     <table name='table'>
         <tr>

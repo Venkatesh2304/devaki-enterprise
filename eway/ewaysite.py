@@ -83,12 +83,6 @@ def ewaysite(filename) :
      time.sleep(0.5)
      print(e)
  df=df[0]
- #df['Errors']=df['Errors'].apply(lambda x: x.split(':')[1].strip() )
- """print(df['Errors'])
- df1=df[df['Errors'].notna()]
- df=df[df['Errors'].isna()]
- df=df[list(df.columns)[:10]]
- df.to_excel(path+filename.split('.')[0]+'.xlsx',index=False)"""
  o = win32com.client.Dispatch("Excel.Application")
  o.Visible = 1
  for i in range(20):
@@ -100,7 +94,4 @@ def ewaysite(filename) :
    print(e)
  ws = wb.Worksheets[0]
  ws.Columns.AutoFit()
- #ws.PageSetup.FitToPagesTall = False
- #ws.PageSetup.FitToPagesWide = 1
  return df,pd.DataFrame()
-#waysite('26-12-21.json')

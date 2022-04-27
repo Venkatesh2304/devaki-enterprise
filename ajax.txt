@@ -127,6 +127,13 @@ var jsonObjWhereClause= {":val1":"Beat wise",":val2":"Party Level",":val3":"",":
 var orderBy = "[Beat Name],[Party Name], CONVERT(DATETIME,[Bill Date],103)"
 _outstanding_
 
+_ebeat_
+var jsonObj= [];
+var jsonObjforheaders= [{},{}];
+var jsonObjfileInfi= [_fileinfo_] ;
+var jsonObjWhereClause= {":val1":"_from_",":val2":"_to_",":val3":0,":val4":"",":val5":"",":val6":"",":val7":"_beat_",":val8":"SecBills"};
+_ebeat_
+
 _ajax_
 return $.ajax({method : "POST",
 		url : '/rsunify/app/reportsController/generatereport.do',
@@ -164,6 +171,21 @@ return $.ajax({
 _datarequest_
 
 
+_getbeats_
+return $.ajax({
+               url: '/rsunify/app/reportsController/getReportScreenDatawithprocedure.do',
+               method: 'POST',
+               data: { jasonParam: '{}' ,
+procedure: 'Beat_Selection_Procedure' ,
+jsonObjWhereClause: '{":P1":"_from_",":P2":"_to_",":P3":"Both",":P4":"SecBills"}',
+orderBy: '[MKM_NAME]' }
+     ,
+               cache: false,
+               async: false
+			   });
+		
+_getbeats_
+
 
 _download_
  window.open("https://base_url/rsunify/app/reportsController/downloadReport?filePath=_dpath_","_blank");
@@ -178,7 +200,7 @@ blhNetAmt: h.blhNetAmt,
 blhRefrNo: h.blhRefrNo
 blhSourceOfOrder: h.blhSourceOfOrder
 eposActive: 0
-parCstNo: 0
+parCstNo: 0_
 partyPhoneNo: h.partyPhoneNo
 semOutlet: "0"
 shikharOutletAutoPosting: "0"

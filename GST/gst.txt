@@ -1,1 +1,0 @@
-{'desktopuser': 'Venkatesh', 'gstnumber': '33AAPFD1365C1ZR', 'version': 'GST3.0.4'}
