@@ -164,7 +164,10 @@ def data_ajax(driver,keyword,replaces={},content="json") :
        ajax = ajax.replace('_content_',"application/x-www-form-urlencoded; charset=UTF-8")
     if content == "json" :
        ajax = ajax.replace('_content_',"application/json;charset=UTF-8;")
-    data = driver.execute_script(ajax)
+    try :
+     data = driver.execute_script(ajax)
+    except :
+        print(ajax)
     return data
 path = ''
 base_url = 'leveredge102.hulcd.com'
