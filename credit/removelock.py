@@ -33,7 +33,7 @@ def main() :
        df = pd.read_excel(fpath)
        df = df.astype({'Sr No':str})
        df = df[df['PAR NAME'].apply(lambda x : x in partys)]
-       df = df[df.apply(lambda row : (row['PAR CR LIMIT'] <= row["PAR CR BILLS UTILISED"]) and row['PAR CR LIMIT']!=0 ,axis=1)]
+       df = df[df.apply(lambda row : (row['PAR CR BILLS'] <= row["PAR CR BILLS UTILISED"]) and row['PAR CR BILLS']!=0 ,axis=1)]
        df.to_excel(fpath,index=False)
        print("Finsihed credit lock filter")
        if len(df['PAR NAME']) == 0 : 
