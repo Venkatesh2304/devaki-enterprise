@@ -148,6 +148,10 @@ _salesmanbeat_
  {divisionId: 0 , salesmanId: _salesmanid_}
 _salesmanbeat_
 
+_getmarketorder_
+JSON.stringify({"qtmBeatList":[],"qtmSalesList":[],"qtmPartyList":[],"orderDate":"_orderdate_T18:30:00.000Z","importDate":"_importdate_T18:30:00.000Z",
+ "futureData":false,"uniqueId":0,"qtmPONumberList":[],"qtmShikharList":[],"sourceOfOrder":"'N','B'","paymentType":"ALL","isRaPartialBilled":0})
+_getmarketorder_
 
 _datarequest_
 return $.ajax({

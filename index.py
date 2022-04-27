@@ -48,6 +48,7 @@ import creditresolve
 #####
 #####
 #####
+from credit.removelock import main as removelock
 
 def macroseway(filename) :
  CoInitialize()
@@ -60,6 +61,10 @@ def macroseway(filename) :
  writeData.Cells(13,5).Value = filename+'.xlsx'
  xl.visible =True
 app = Flask(__name__)
+@app.route('/removelock')
+def removelocks():
+    removelock()
+
 @app.route('/comp/<month1>/<year1>')
 def x(month1,year1) :
     halfpath='C:\\Users\\'+desktopuser+'\Desktop\GST\\'+month1+'-'+year1+'\\'

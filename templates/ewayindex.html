@@ -149,8 +149,9 @@ while (elements[0]) elements[0].parentNode.removeChild(elements[0]);
     <input type='text' id='billno1' />
     <input type='text' id='billno2' />
     <button type='button' onclick='add();'>Add</button>
-    <button type='button' onclick='document.getElementById("form").action="/eway/generate" ; document.getElementById("form").submit();'>Eway</button>
-    <button type='button' onclick='document.getElementById("form").action="/eway/generate" ; document.getElementById("form").submit();'>Invoice</button>
+    <button type="button" onclick="document.querySelectorAll('#beat>option').forEach((e) => {document.querySelector('#billno1').value = '.'+e.value ; add() ;} ) ">ALL</button>
+    <button type='button' onclick='document.getElementById("form").action="/eway/generate" ; document.getElementById("form").submit();'>Eway & Einvoice</button>
+   
     <table name='table'>
         <tr>
             <th>Bill number</th>

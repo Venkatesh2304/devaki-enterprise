@@ -82,6 +82,25 @@ def login(paths) :
  print('finsihed')
  driver.set_script_timeout("300")
  return driver
+def OpenExcel(fpath):
+  def openWorkbook(xlapp, xlfile):
+    try:        
+        xlwb = xlapp.Workbooks(xlfile)            
+    except Exception as e:
+        try:
+            xlwb = xlapp.Workbooks.Open(xlfile)
+        except Exception as e:
+            print(e)
+            xlwb = None                    
+    return(xlwb)
+  try:
+    excel = win32com.client.gencache.EnsureDispatch('Excel.Application')
+    wb = openWorkbook(excel,fpath) 
+    excel.Visible = True
+  except Exception as e:
+    print(e)
+  return wb
+
 def openexcel(filename,t=30) :
  o = win32com.client.Dispatch("Excel.Application")
  o.Visible = 1

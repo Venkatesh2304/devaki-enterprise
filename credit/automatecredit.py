@@ -20,11 +20,11 @@ def main() :
    beats = ajax_plain(driver,'/rsunify/app/reportsController/getReportScreenData?jasonParam={"viewName":"OUTLET_OLD_BEAT_FILTERS_CREDITLIMIT"}')
    beats = {beat[2] : beat[1] for beat in beats[0][1:] } #transform the data into { beatname : beatkeyinteger(string) }
    def retail_condition(beat_name) : 
-       if 'FG' in beat_name.split('-') or 'WHOLESALE' in beat_name :
+       if 'FG' in beat_name.split('-') or 'WHOLESALE' in beat_name  or 'OTR' in beat_name:
            return False 
        return True
    def fg_condition(beat_name) : 
-       if 'FG' not in beat_name.split('-') or 'WHOLESALE' in beat_name :
+       if 'FG' not in beat_name.split('-') or 'WHOLESALE' in beat_name or 'OTR' in beat_name :
            return False 
        return True
    retail = { key : value for key,value in beats.items() if retail_condition(key) }
