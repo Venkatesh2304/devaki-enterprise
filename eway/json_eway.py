@@ -80,7 +80,7 @@ def create(df,filename) :
         "billLists":dicts}
  jsons=json.dumps(jsons)
  jsons=jsons.replace('NaN','""')
- f=open('D:\\EWAY\\'+filename+'.json','w+')
- json=json.replace("NaN",'""')
+ f=open(filename,'w+')
+ jsons=jsons.replace("NaN",'""')
  f.write(jsons)
  f.close()               

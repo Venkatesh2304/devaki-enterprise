@@ -7,7 +7,7 @@ import win32com.client
 import pandas as pd
 import time 
 from datetime import datetime
-path='D:\\dataEWAY\\'
+path='D:\\devaki-data\\eway\\'
 def einvlogin() :
  options = webdriver.ChromeOptions()
  prefs = {'download.default_directory' : path }
@@ -15,8 +15,10 @@ def einvlogin() :
  driver = webdriver.Chrome(r'chromedriver.exe',options=options)
  driver.get('https://einvoice1.gst.gov.in/')
  driver.execute_script('document.querySelector("#btnLogin").click();')
- driver.execute_script('document.querySelector("#txtUserName").value="DEVAKI9999"')
- driver.execute_script('document.querySelector("#txt_password").value="Mosl2121@"')
+ with open("config.txt") as f :
+     config = eval(f.read())
+ driver.execute_script(f'document.querySelector("#txtUserName").value="{config["einvoice_user"]}"')
+ driver.execute_script(f'document.querySelector("#txt_password").value="{config["einvoice_pass"]}"')
  while True :
    try :
      if driver.execute_script('return document.querySelector("#txtUserName")') is None :
@@ -29,7 +31,7 @@ def einvupload(driver,filename) :
  driver.execute_script('window.location.href="https://einvoice1.gst.gov.in/Invoice/BulkUpload"')
  while True :
     try :
-     driver.find_element(By.CSS_SELECTOR ,'input[type="file"]').send_keys("D:\\EINV\\"+filename)
+     driver.find_element(By.CSS_SELECTOR ,'input[type="file"]').send_keys(filename)
      break
     except Exception as e:
         time.sleep(1)
@@ -43,8 +45,13 @@ def einvupload(driver,filename) :
         print(e)
  table = "<table>"+driver.execute_script("return document.querySelector('table').innerHTML")+"</table>"
  upload_res  = pd.read_html(table)[0] 
- return upload_res 
+ driver.execute_script("window.open('/Invoice/FailedInvoiceDetails','_blank')")
+ getdata = lambda row :  upload_res.iloc[row][upload_res.columns[1]] 
+ upload_res = { "Total Bills" : getdata(0) ,
+ "Total Uploaded" :getdata(2) ,
+ "Total Failed" : getdata(3) }
 
+ return upload_res 
 def einvreport(driver,is_today = True) : 
  driver.execute_script('window.location.href="https://einvoice1.gst.gov.in/MisRpt"')
  if is_today :
@@ -63,4 +70,4 @@ def einvreport(driver,is_today = True) :
   except Exception as e:
      time.sleep(0.5)
      print(e)
- return df
+ return {"fpath": path + filename ,"data" : df }

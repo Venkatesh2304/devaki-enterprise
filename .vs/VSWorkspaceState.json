@@ -1,13 +1,8 @@
 {
   "ExpandedNodes": [
     "",
-    "\\credit",
-    "\\eway",
-    "\\IMP",
-    "\\outstanding",
-    "\\templates",
-    "\\__pycache__"
+    "\\eway"
   ],
-  "SelectedNode": "\\index.py",
+  "SelectedNode": "\\eway\\EGenerate.py",
   "PreviewInSolutionExplorer": false
 }

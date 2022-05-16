@@ -33,14 +33,13 @@ def login(paths) :
  options.add_argument("--start-maximized")
  prefs = {'download.default_directory' : path ,'safebrowsing.enabled': 'false',"profile.default_content_setting_values.automatic_downloads":1}
  options.add_experimental_option('prefs', prefs)
- driver = webdriver.Chrome(r'chromedriver.exe',options=options)
- f=open('login.txt')
- userdata=eval(f.read())
- f.close()
- if int(userdata['headless'])==1 :
+ driver = webdriver.Chrome(options=options)
+ with open("config.txt") as f : 
+     config = eval(f.read())
+ if int(config['headless'])==1 :
   driver.set_window_position(-10000,0)
- user,password,rs=userdata['usereway'],userdata['passwordeway'],userdata['rs']
- driver.get('https://leveredge102.hulcd.com/rsunify/')
+ user,password,rs=config['ikea_user'],config['ikea_pass'],config['rs']
+ driver.get('https://leveredge'+config["leveredge_port"]+'.hulcd.com/rsunify/')
  searchbox = driver.find_element_by_xpath('//*[@id="userName"]')
  searchbox.send_keys(user)
  searchbox1 = driver.find_element_by_xpath('//*[@id="password"]')
@@ -180,8 +179,6 @@ def custom_ajax(driver,keyword,replaces={}) :
      return data
      
 
-path = ''
-base_url = 'leveredge102.hulcd.com'
 with open('ajax.txt') as f :
     ajax_template = f.read()
-downt = ajax_template.split('_download_')[1].replace('base_url',base_url)
+downt = ajax_template.split('_download_')[1]

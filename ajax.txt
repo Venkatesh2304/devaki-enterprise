@@ -188,7 +188,7 @@ _getbeats_
 
 
 _download_
- window.open("https://base_url/rsunify/app/reportsController/downloadReport?filePath=_dpath_","_blank");
+ window.open("/rsunify/app/reportsController/downloadReport?filePath=_dpath_","_blank");
 _download_
 
 

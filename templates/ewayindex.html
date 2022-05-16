@@ -103,7 +103,7 @@ button {
         vehicle = document.getElementById('vehicle').value;
         if (billno2 == '') {
             if (billno1[0] != '.') {
-                creates('TKS' + billno1, vehicle);
+                creates(billno1, vehicle);
             }
             else {
                 creates(billno1, vehicle);
@@ -111,15 +111,13 @@ button {
         }
         else {
             for (var a = parseInt(billno1); a < parseInt(billno2) + 1; a++) {
-                creates('TKS' + a.toString(), vehicle);
+                creates( a.toString(), vehicle);
                    }
         }
         document.getElementById('billno2').value = '';
 }
     
- window.addEventListener('load',function(){
-  document.getElementById('date1').value='{{prevdate}}' ;
- });
+ 
  function deletes() {
     var confirmation = prompt("TYPE 'delete' :" );
     if(confirmation=='delete'){          
@@ -132,8 +130,8 @@ while (elements[0]) elements[0].parentNode.removeChild(elements[0]);
 </script>
 <MARQUEE style='color: cornflowerblue;font-size: 25;'>DEVAKI ENTERPRISES - EWAY BILL</marquee>
 <form name='form' id='form' action='/eway/save' method='POST'>
-    <input type='date' id='date1' name='date1' placeholder="from"/>
-    <input type='date' id='date' name='date2' placeholder="to"/>
+    <input type='date' id='date1' name='date1' placeholder="from" value="{{date}}"/>
+    <input type='date' id='date' name='date2' placeholder="to" value="{{date}}"/>
     <select name='vehicle' id='vehicle'>
         {%for i in vehicle.keys()%}
         <option class="{{vehicle[i]}}">{{i}}</option>

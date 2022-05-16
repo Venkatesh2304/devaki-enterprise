@@ -1,0 +1,1 @@
+{'ikea_user': 'CREDIT', 'ikea_pass': 'Ven2005@', 'eway_user': 'DEVAKI9999', 'eway_pass': 'Mosl2121@', 'einvoice_user': 'DEVAKI9999', 'einvoice_pass': 'Mosl2121@', 'rs': '41A392', 'leveredge_port': '102', 'headless': 0, 'autoemail': 1, 'bill_prefix': 'TKS'}

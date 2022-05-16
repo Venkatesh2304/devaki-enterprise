@@ -21,7 +21,7 @@ def c(x) :
         print(x,type(x))
     return x
 
-def create(df,filename,ewb_data=True) :
+def create(df,filename,ewb_data=False) :
  col=df.columns
  inv=list(set(list(df['Document Number'])))
  dicts=[]
@@ -113,7 +113,7 @@ def create(df,filename,ewb_data=True) :
  jsons=dicts
  jsons=json.dumps(jsons,cls=NpEncoder)
  #jsons = jsons.replace("NaN",'"TRICHY"')
- f=open('D:\\EINV\\'+filename+'.json','w+')
+ f=open(filename,'w+')
  f.write(jsons)
  f.close()
  return len(dicts)

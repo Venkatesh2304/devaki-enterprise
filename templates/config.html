@@ -1,0 +1,13 @@
+<html>
+<body>
+    <form  action="/setconfig" method='POST'>
+        {% for key , value in config.items() %}
+          <div>
+              <label> {{key}} </label>
+              <input value="{{value}}" name="{{key}}" />
+          </div>
+        {% endfor %}
+        <button>Save</button>
+    </form>
+</body>
+</html>
