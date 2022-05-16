@@ -11,7 +11,7 @@ import eway.esync as esync
 import os 
 import shutil
 import chromedriver_autoinstaller
-import webrowser
+import webbrowser
 
 
 app = Flask(__name__)
@@ -88,6 +88,6 @@ def generateeway() :
 @app.route("/esync")
 def einv_sync() :
     response = esync.sync()
-    return render_template("esync.html",response = response) 
-app.run(threaded=True,debug=False)
-webbrowser.open('http://127.0.0.1:5000/')
+    return render_template("esync.html",response = response)
+webbrowser.open('http://127.0.0.1:1000/')
+app.run(threaded=True,debug=False,port=1000)
