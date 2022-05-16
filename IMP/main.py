@@ -135,7 +135,7 @@ def download(driver,dpath) :
       final = list(set(os.listdir(path)))
       if len(final)-len(intial) == 1 : 
           fname = list((set(final)^set(intial))&set(final))[0] 
-          if dpath.split('/')[-1] == fname and "." not in fname  and "tmp" not in fname and "crd" not in fname  :
+          if dpath.split('/')[-1] == fname  and "tmp" not in fname.lower() and "crd" not in fname.lower()  :
             return path+fname
       time.sleep(0.5)
 def ajax_plain(driver,url) :
