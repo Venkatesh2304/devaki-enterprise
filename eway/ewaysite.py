@@ -77,6 +77,8 @@ def ewaysite(filename) :
   try :
    if len(os.listdir(path))==len(intial)+1 : 
     filename = list((set(os.listdir(path))^set(intial))&set(os.listdir(path)))[0]
+    if "tmp" in filename or "crd" in filename :
+        continue 
     df=pd.read_html(path+filename)
     break
   except Exception as e:
