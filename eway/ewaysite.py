@@ -64,6 +64,7 @@ def ewaysite(filename) :
      z=0
      for i in driver.find_elements(By.CSS_SELECTOR ,'input[type="submit"]') :
          print(i.get_attribute('innerText'),0,i.get_attribute('value'),1,i.get_attribute('innerHTML'))
+         print("abc")
          if 'xport' in i.get_attribute('value') :
              i.click()
              z=1
