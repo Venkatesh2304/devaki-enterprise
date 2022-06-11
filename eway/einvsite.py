@@ -59,7 +59,7 @@ def einvreport(driver,is_today = True) :
     driver.execute_script('document.querySelector("#ToDate").value="'+datetime.now().strftime('%d/%m/%Y')+'"')
  driver.execute_script('document.querySelector("#btngo").click()')
  intial = os.listdir(path)
- driver.execute_script('window.location.href="https://einvoice1.gst.gov.in/MisRpt/ExcelGenerratedIrnDetails"')
+ driver.execute_script('window.location.href="https://einvoice1.gst.gov.in/MisRpt/ExcelGenerratedIrnDetails?noofRec=1&Actn=GEN"')
  while True :
   try :
    if len(os.listdir(path))==len(intial)+1 : 
