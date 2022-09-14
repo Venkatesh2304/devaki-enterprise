@@ -8,7 +8,6 @@ from selenium.webdriver.common.by import By
 import os
 from threading import Thread
 import sys
-import winsound
 import pandas as pd
 import win32com.client
      
@@ -33,7 +32,7 @@ def login(paths) :
  options.add_argument("--start-maximized")
  prefs = {'download.default_directory' : path ,'safebrowsing.enabled': 'false',"profile.default_content_setting_values.automatic_downloads":1}
  options.add_experimental_option('prefs', prefs)
- driver = webdriver.Chrome(options=options)
+ driver = webdriver.Chrome( r"chromedriver.exe", options=options)
  with open("config.txt") as f : 
      config = eval(f.read())
  if int(config['headless'])==1 :
