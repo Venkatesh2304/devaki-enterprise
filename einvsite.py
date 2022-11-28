@@ -2,6 +2,7 @@ from datetime import date, datetime, timedelta
 from email import header
 import hashlib
 import imp
+import logging
 from random import random
 from time import time
 from urllib import request
@@ -33,26 +34,46 @@ headers = { "Referer": "https://einvoice1.gst.gov.in/" ,
             "User-Agent" : "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36" }
 
 class Einvoice(Session) : 
-      def __init__(self) : 
+      def __init__(self) :
+        logging.debug("Einvoice Session class intiated") 
         self.captcha = ""
         super().__init__()
-        
+       
+      def __getattribute__(self, __name: str) :
+         value = super().__getattribute__(__name) 
+         if type(value) == function : 
+            def new_func(*args) : 
+                logging.debug(f"The function {__name} is started")
+                return_val = value(*args)
+                logging.debug(f"The function {__name} , returned {return_val}")
+            return new_func 
+         return super().__getattribute__(__name)
+      
+      def request(self,*args):
+          res = super().request(*args)
+          logging.log(logging.NOTSET,f"request : {args} \n response : {res.url} {res.status_code} \n {res.text[:max(len(res.text),50)]}")
+          return res 
+          
       def reload(self,user,db) : 
         self.db = db 
         self.cookies.clear()
         session = self.db.find_one({"username" : user})
         if session and "einv_session" in session.keys() and session["einv_session"] != None :
            cookies = json.loads(session["einv_session"])
+           logging.debug("E-invoice db cookies fetched , cookies :: " , cookies )
            for key ,value in cookies.items() : 
                self.cookies.set(key,value,domain="einvoice1.gst.gov.in")
            res = self.get("https://einvoice1.gst.gov.in/Home/MainMenu",headers=headers) #check if logined correctly .
            if "https://einvoice1.gst.gov.in/Home/MainMenu" not in res.url : #reload faileD
+              logging.debug(f"E-invoice reload with db cookies failed , response url : {res.url} , text : {res.text}")
               self.db.update_one( {"username" : user } ,{"$set" :{ "einv_session" : None }} )
               return False
 
            for attr in ["einv_user","einv_password"] :
                self.__setattr__(attr,session[attr])
+           logging.debug(f"Einvoice reload successfull from db old cookie session")
            return True 
+        logging.debug("No cookies available in db for einvoice")
         return False 
 
       def getCaptcha(self) : 
@@ -61,11 +82,9 @@ class Einvoice(Session) :
          captchaImg = self.get("https://einvoice1.gst.gov.in/get-captcha-image" , headers = headers).content 
          with open("captcha.aspx","wb+") as f : 
              f.write(captchaImg)
-
          return BytesIO(captchaImg) , {"cookies" : dict(self.cookies) , "form" : form } 
 
       def login(self,user,db,data) :
-          
           form , captcha , cookies = data["form"] , data["captcha"] , data["cookies"]
           user_data = db.find_one({"username" : user})
           self.user , self.pwd  =  user_data["einv_user"] , user_data["einv_password"] 
@@ -79,7 +98,7 @@ class Einvoice(Session) :
           form["UserLogin.Password"]  , form["CaptchaCode"] = hsh2 , self.captcha 
           form["UserLogin.UserName"] = self.user   
           res = self.post("https://einvoice1.gst.gov.in/Home/Login" , headers = headers , data = form )
-
+        
           if res.url == "https://einvoice1.gst.gov.in/Home/Login" : #reload failed
                if "alert('Invalid Login Credentials" in res.text :  #credentials wrong 
                    return {"status" : False , "err" : "Wrong Credentials"}
@@ -91,15 +110,13 @@ class Einvoice(Session) :
           return {"status" : True }
           
       def upload(self,json_data) : 
+          
           bulk_home = self.get("https://einvoice1.gst.gov.in/Invoice/BulkUpload" , headers=headers).text
           
           files = { "JsonFile" : ("eway.json", StringIO(json_data) ,'application/json') }
           form = extractForm(bulk_home)
     
           upload_home = self.post("https://einvoice1.gst.gov.in/Invoice/BulkUpload" ,  files = files , headers=headers , data = form ).text
-          with open("A.html","w+") as f : 
-             f.write(upload_home) 
-
           success_excel = pd.read_excel(BytesIO(self.get("https://einvoice1.gst.gov.in/Invoice/ExcelUploadedInvoiceDetails" , headers=headers).content))
           failed_excel =  pd.read_excel(BytesIO(self.get("https://einvoice1.gst.gov.in/Invoice/FailedInvoiceDetails" , headers=headers).content))
         

@@ -1,0 +1,16 @@
+DEBUG:root:Wrong Password for login {'username': 'a', 'password': '1'}
+INFO:werkzeug:127.0.0.1 - - [29/Nov/2022 01:07:41] "[31m[1mPOST /login HTTP/1.1[0m" 401 -
+DEBUG:root:Wrong Password for login {'username': 'ven', 'password': '123'}
+INFO:werkzeug:127.0.0.1 - - [29/Nov/2022 01:07:54] "[31m[1mPOST /login HTTP/1.1[0m" 401 -
+DEBUG:root:Jwt token failed
+INFO:werkzeug:127.0.0.1 - - [29/Nov/2022 01:07:59] "[32mGET / HTTP/1.1[0m" 302 -
+INFO:werkzeug:127.0.0.1 - - [29/Nov/2022 01:07:59] "[36mGET /login HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [29/Nov/2022 01:08:58] "[36mGET / HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [29/Nov/2022 01:08:58] "GET /getvehicle HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [29/Nov/2022 01:08:58] "[35m[1mPOST /getbeats HTTP/1.1[0m" 500 -
+INFO:werkzeug: * Detected change in '/home/venkatesh/code/devaki-enterprise/index.py', reloading
+INFO:werkzeug: * Restarting with stat
+DEBUG:root:MongoDB connecting ...
+DEBUG:root:MongoDB connected
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 988-342-374

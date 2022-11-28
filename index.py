@@ -1,6 +1,7 @@
 from fileinput import filename
 import hashlib
 from datetime import timedelta
+import sys
 from urllib import response
 # Flask, request, jsonify , send_file , make_response , Response , send_from_directory
 from flask import *
@@ -10,7 +11,30 @@ from hul import *
 import ewaysite
 from flask_cors import CORS
 # date parser
-def dateParser(date): return datetime.strptime(date, "%Y-%m-%d")
+
+from werkzeug.exceptions import HTTPException
+import logging 
+from flask.logging import default_handler
+
+logging.basicConfig(filename='record.log', level=logging.NOTSET)
+
+class RequestFormatter(logging.Formatter):
+    def format(self, record):
+        if has_request_context():
+            record.url = request.url
+            record.remote_addr = request.remote_addr
+        else:
+            record.url = None
+            record.remote_addr = None
+        return super().format(record)
+
+formatter = RequestFormatter(
+    '[%(asctime)s] %(remote_addr)s requested %(url)s\n'
+    '%(levelname)s in %(module)s: %(message)s'
+)
+default_handler.setFormatter(formatter)
+
+
 
 def SendExcel(df,download_name):
      output = BytesIO()
@@ -23,6 +47,19 @@ def SendExcel(df,download_name):
 
 
 app = Flask(__name__)
+@app.errorhandler(Exception)
+def handle_exception(e):
+    if isinstance(e, HTTPException):
+        return e
+    type, value, tb = sys.exc_info()
+    while tb.tb_next:
+        tb = tb.tb_next
+    frame = tb.tb_frame
+    logging.debug("The stack trace :: " , e)
+    logging.debug(frame.f_locals['v1'])
+    return render_template("500_generic.html", e=e), 500
+
+
 CORS(app, origins=["http://127.0.0.1/:5000",
      "http://127.0.0.1:5501"], supports_credentials=True)
 jwt = JWTManager(app)
@@ -31,24 +68,16 @@ app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(days=15)
 app.config['JWT_TOKEN_LOCATION'] = ['cookies']
 app.config["JWT_COOKIE_CSRF_PROTECT"] = False
 
+
 # your connection string
+logging.debug("MongoDB connecting ...")
 client = MongoClient(
-    "mongodb+srv://venkatesh2004:venkatesh2004@cluster0.9x1ccpv.mongodb.net/?retryWrites=true&w=majority")
+        "mongodb+srv://venkatesh2004:venkatesh2004@cluster0.9x1ccpv.mongodb.net/?retryWrites=true&w=majority")
+logging.debug("MongoDB connected")
+
 db = client["demo"]
 users = db["users"]
 configs = db["config"]
-
-# @app.route("/signup", methods=["POST"])
-# def register():
-#     new_user = request.get_json() # store the json body request
-#     new_user["password"] = hashlib.sha256(new_user["password"].encode("utf-8")).hexdigest() # encrpt password
-#     doc = users.find_one({"username": new_user["username"]}) # check if user exist
-#     if not doc:
-#         users.insert_one(new_user)
-#         return jsonify({'msg': 'User created successfully'}), 201
-#     else:
-#         return jsonify({'msg': 'Username already exists'}), 409
-
 
 
 
@@ -69,10 +98,13 @@ def login():
                 identity=user_from_db["username"])  # create jwt token
             response = jsonify({"status" : True , "redirect" : "/"})
             set_access_cookies(response, access_token)
+            logging.debug(f"Set access token done {access_token}")
             return response
         else:
+            logging.debug(f"Wrong Password for login {login_details}")
             return jsonify({"status": False ,"err": "Wrong Password"}), 401
     else:
+        logging.debug("No account found , signup triggered")
         login_details["password"] = hashlib.sha256(
             login_details['password'].encode("utf-8")).hexdigest()
         users.insert_one(login_details)
@@ -80,11 +112,13 @@ def login():
         access_token = create_access_token(
                 identity= login_details["username"]) 
         set_access_cookies(response, access_token)
+        logging.debug(f"Signup done , login also done , access token : {access_token}")
         return response
 
 
 @jwt.unauthorized_loader
 def custom_unauthorized_response(_err):
+    logging.debug("Jwt token failed")
     return redirect(url_for('login'))
 
 #Web page rendering :: start 
@@ -148,7 +182,6 @@ def postUpdate():
               update = { "vehicles" : { i : j  for [i,j] in df.values.tolist() }}
               configs.update_one({ "username" : user} , { "$set" : update } , upsert =True )
               return redirect("/")
-            #return jsonify({ "status" : True , "err" : "Success"})
     
 #Update Ends :::
 

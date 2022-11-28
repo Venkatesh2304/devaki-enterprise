@@ -1,5 +1,1 @@
-.pyc
-.xlsx
-.exe
-config.txt
-
+__pycache__
