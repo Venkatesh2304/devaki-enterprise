@@ -1,18 +1,9 @@
 from datetime import date, datetime, timedelta
-from email import header
 import hashlib
-import imp
-from os import openpty
-from random import random
-from time import time
-from urllib import request
 from Sessions import Session
 import pandas as pd
-import string 
 import json
 from io import BytesIO, StringIO
-import curlify
-import random
 from collections import defaultdict
 from bs4 import BeautifulSoup
 EWAY_REPORT_DEFAULT_DAYS = 5

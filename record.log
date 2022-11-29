@@ -422,3 +422,9 @@ request : ('POST', 'https://leveredge102.hulcd.com/rsunify/app/reportsController
  response : https://leveredge102.hulcd.com/rsunify/app/reportsController/getReportScreenDatawithprocedure.do 200 
  '[[6,"D-BEEMANAGAR"],[7,"D-BHEL"],[10,"D-FG EDA STR'
 INFO:werkzeug:127.0.0.1 - - [29/Nov/2022 12:29:19] "POST /getbeats HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in '/home/venkatesh/code/devaki-enterprise/ewaysite.py', reloading
+INFO:werkzeug: * Restarting with stat
+DEBUG:root:MongoDB connecting ...
+DEBUG:root:MongoDB connected
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 231-609-158
