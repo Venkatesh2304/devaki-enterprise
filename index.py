@@ -14,6 +14,7 @@ from pprint import pformat
 from werkzeug.exceptions import HTTPException
 import logging 
 from flask.logging import default_handler
+import webbrowser
 
 logging.basicConfig(filename='record.log', level=logging.NOTSET)
 
@@ -264,6 +265,6 @@ def CreditLock():
     user = get_jwt_identity()
     return ikea(user, users).creditlock(configs)
 
-
+webbrowser.open("http://localhost:5001/")
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True,port=5001)
