@@ -1,6 +1,0 @@
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 818-307-108
-INFO:werkzeug: * Detected change in '/home/venkatesh/code/devaki-enterprise/index.py', reloading
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 818-307-108
-INFO:werkzeug: * Detected change in '/home/venkatesh/code/devaki-enterprise/index.py', reloading

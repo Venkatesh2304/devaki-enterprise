@@ -1,16 +1,424 @@
-DEBUG:root:Wrong Password for login {'username': 'a', 'password': '1'}
-INFO:werkzeug:127.0.0.1 - - [29/Nov/2022 01:07:41] "[31m[1mPOST /login HTTP/1.1[0m" 401 -
-DEBUG:root:Wrong Password for login {'username': 'ven', 'password': '123'}
-INFO:werkzeug:127.0.0.1 - - [29/Nov/2022 01:07:54] "[31m[1mPOST /login HTTP/1.1[0m" 401 -
-DEBUG:root:Jwt token failed
-INFO:werkzeug:127.0.0.1 - - [29/Nov/2022 01:07:59] "[32mGET / HTTP/1.1[0m" 302 -
-INFO:werkzeug:127.0.0.1 - - [29/Nov/2022 01:07:59] "[36mGET /login HTTP/1.1[0m" 304 -
-INFO:werkzeug:127.0.0.1 - - [29/Nov/2022 01:08:58] "[36mGET / HTTP/1.1[0m" 304 -
-INFO:werkzeug:127.0.0.1 - - [29/Nov/2022 01:08:58] "GET /getvehicle HTTP/1.1" 200 -
-INFO:werkzeug:127.0.0.1 - - [29/Nov/2022 01:08:58] "[35m[1mPOST /getbeats HTTP/1.1[0m" 500 -
-INFO:werkzeug: * Detected change in '/home/venkatesh/code/devaki-enterprise/index.py', reloading
+INFO:werkzeug: * Detected change in '/home/venkatesh/code/devaki-enterprise/hul.py', reloading
 INFO:werkzeug: * Restarting with stat
 DEBUG:root:MongoDB connecting ...
 DEBUG:root:MongoDB connected
 WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 988-342-374
+INFO:werkzeug: * Debugger PIN: 231-609-158
+DEBUG:root:MongoDB connecting ...
+DEBUG:root:MongoDB connected
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with stat
+DEBUG:root:MongoDB connecting ...
+DEBUG:root:MongoDB connected
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 231-609-158
+INFO:werkzeug:127.0.0.1 - - [29/Nov/2022 12:17:25] "[36mGET / HTTP/1.1[0m" 304 -
+DEBUG:root:The function reload is started
+DEBUG:root:The function reload , returned None
+DEBUG:root:The function getBeats is started
+INFO:werkzeug:127.0.0.1 - - [29/Nov/2022 12:17:25] "GET /getvehicle HTTP/1.1" 200 -
+DEBUG:root:The function resolve_redirects is started
+DEBUG:root:The function resolve_redirects , returned <generator object SessionRedirectMixin.resolve_redirects at 0x7fb4ca68b450>
+DEBUG:root:{'adapter': <requests.adapters.HTTPAdapter object at 0x7fb4ca4f7ac0>,
+ 'allow_redirects': True,
+ 'elapsed': 1.0175282955169678,
+ 'gen': None,
+ 'hooks': {'response': []},
+ 'kwargs': {'cert': None,
+            'proxies': OrderedDict(),
+            'stream': False,
+            'timeout': None,
+            'verify': True},
+ 'r': <Response [200]>,
+ 'request': <PreparedRequest [POST]>,
+ 'self': <hul.ikea object at 0x7fb4ca4f7d60>,
+ 'start': 1669704445.5660787,
+ 'stream': False}
+INFO:werkzeug:127.0.0.1 - - [29/Nov/2022 12:17:26] "[35m[1mPOST /getbeats HTTP/1.1[0m" 500 -
+INFO:werkzeug: * Detected change in '/home/venkatesh/code/devaki-enterprise/Sessions.py', reloading
+INFO:werkzeug: * Restarting with stat
+DEBUG:root:MongoDB connecting ...
+DEBUG:root:MongoDB connected
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 231-609-158
+INFO:werkzeug: * Detected change in '/home/venkatesh/code/devaki-enterprise/Sessions.py', reloading
+INFO:werkzeug: * Restarting with stat
+DEBUG:root:MongoDB connecting ...
+DEBUG:root:MongoDB connected
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with stat
+DEBUG:root:MongoDB connecting ...
+DEBUG:root:MongoDB connected
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 231-609-158
+INFO:werkzeug:127.0.0.1 - - [29/Nov/2022 12:19:13] "[36mGET / HTTP/1.1[0m" 304 -
+DEBUG:root:The function reload is started
+INFO:werkzeug:127.0.0.1 - - [29/Nov/2022 12:19:13] "GET /getvehicle HTTP/1.1" 200 -
+DEBUG:root:The function reload , returned None
+DEBUG:root:The function getBeats is started
+DEBUG:root:The function resolve_redirects is started
+DEBUG:root:The function resolve_redirects , returned <generator object SessionRedirectMixin.resolve_redirects at 0x7f2424efff40>
+DEBUG:root:{'adapter': <requests.adapters.HTTPAdapter object at 0x7f242456bcd0>,
+ 'allow_redirects': True,
+ 'elapsed': 0.8213422298431396,
+ 'gen': None,
+ 'hooks': {'response': []},
+ 'kwargs': {'cert': None,
+            'proxies': OrderedDict(),
+            'stream': False,
+            'timeout': None,
+            'verify': True},
+ 'r': <Response [200]>,
+ 'request': <PreparedRequest [POST]>,
+ 'self': <hul.ikea object at 0x7f242456b910>,
+ 'start': 1669704553.8729732,
+ 'stream': False}
+INFO:werkzeug:127.0.0.1 - - [29/Nov/2022 12:19:14] "[35m[1mPOST /getbeats HTTP/1.1[0m" 500 -
+INFO:werkzeug: * Detected change in '/home/venkatesh/code/devaki-enterprise/Sessions.py', reloading
+DEBUG:root:MongoDB connecting ...
+DEBUG:root:MongoDB connected
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with stat
+DEBUG:root:MongoDB connecting ...
+DEBUG:root:MongoDB connected
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 231-609-158
+INFO:werkzeug:127.0.0.1 - - [29/Nov/2022 12:19:34] "[36mGET / HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [29/Nov/2022 12:19:35] "GET /getvehicle HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in '/home/venkatesh/code/devaki-enterprise/Sessions.py', reloading
+INFO:werkzeug: * Restarting with stat
+DEBUG:root:MongoDB connecting ...
+DEBUG:root:MongoDB connected
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with stat
+DEBUG:root:MongoDB connecting ...
+DEBUG:root:MongoDB connected
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 231-609-158
+INFO:werkzeug:127.0.0.1 - - [29/Nov/2022 12:21:53] "[36mGET / HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [29/Nov/2022 12:21:54] "GET /getvehicle HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in '/home/venkatesh/code/devaki-enterprise/Sessions.py', reloading
+DEBUG:root:MongoDB connecting ...
+DEBUG:root:MongoDB connected
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with stat
+DEBUG:root:MongoDB connecting ...
+DEBUG:root:MongoDB connected
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 231-609-158
+INFO:werkzeug:127.0.0.1 - - [29/Nov/2022 12:22:07] "[36mGET / HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [29/Nov/2022 12:22:07] "GET /getvehicle HTTP/1.1" 200 -
+DEBUG:root:The function reload is started
+DEBUG:root:The function reload , returned None
+DEBUG:root:The function getBeats is started
+DEBUG:root:The function resolve_redirects is started
+DEBUG:root:The function resolve_redirects , returned <generator object SessionRedirectMixin.resolve_redirects at 0x7f2bbb8b3990>
+DEBUG:root:{'adapter': <requests.adapters.HTTPAdapter object at 0x7f2bb971bc40>,
+ 'allow_redirects': True,
+ 'elapsed': 0.48575305938720703,
+ 'gen': None,
+ 'hooks': {'response': []},
+ 'kwargs': {'cert': None,
+            'proxies': OrderedDict(),
+            'stream': False,
+            'timeout': None,
+            'verify': True},
+ 'r': <Response [200]>,
+ 'request': <PreparedRequest [POST]>,
+ 'self': <hul.ikea object at 0x7f2bb971bcd0>,
+ 'start': 1669704733.2045405,
+ 'stream': False}
+INFO:werkzeug:127.0.0.1 - - [29/Nov/2022 12:22:13] "[35m[1mPOST /getbeats HTTP/1.1[0m" 500 -
+DEBUG:root:MongoDB connecting ...
+DEBUG:root:MongoDB connected
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with stat
+DEBUG:root:MongoDB connecting ...
+DEBUG:root:MongoDB connected
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 231-609-158
+INFO:werkzeug:127.0.0.1 - - [29/Nov/2022 12:22:30] "[36mGET / HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [29/Nov/2022 12:22:30] "GET /getvehicle HTTP/1.1" 200 -
+DEBUG:root:The function reload is started
+DEBUG:root:The function reload , returned None
+DEBUG:root:The function getBeats is started
+DEBUG:root:The function resolve_redirects is started
+DEBUG:root:The function resolve_redirects , returned <generator object SessionRedirectMixin.resolve_redirects at 0x7fcb9c323df0>
+DEBUG:root:{'adapter': <requests.adapters.HTTPAdapter object at 0x7fcb9d486320>,
+ 'allow_redirects': True,
+ 'elapsed': 1.03971529006958,
+ 'gen': None,
+ 'hooks': {'response': []},
+ 'kwargs': {'cert': None,
+            'proxies': OrderedDict(),
+            'stream': False,
+            'timeout': None,
+            'verify': True},
+ 'r': <Response [200]>,
+ 'request': <PreparedRequest [POST]>,
+ 'self': <hul.ikea object at 0x7fcb9d486500>,
+ 'start': 1669704765.3139718,
+ 'stream': False}
+INFO:werkzeug:127.0.0.1 - - [29/Nov/2022 12:22:46] "[35m[1mPOST /getbeats HTTP/1.1[0m" 500 -
+INFO:werkzeug: * Detected change in '/home/venkatesh/code/devaki-enterprise/Sessions.py', reloading
+INFO:werkzeug: * Restarting with stat
+DEBUG:root:MongoDB connecting ...
+DEBUG:root:MongoDB connected
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with stat
+DEBUG:root:MongoDB connecting ...
+DEBUG:root:MongoDB connected
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 231-609-158
+INFO:werkzeug:127.0.0.1 - - [29/Nov/2022 12:23:45] "[36mGET / HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [29/Nov/2022 12:23:45] "GET /getvehicle HTTP/1.1" 200 -
+DEBUG:root:The function reload is started
+DEBUG:root:The function reload , returned None
+DEBUG:root:The function getBeats is started
+INFO:werkzeug: * Detected change in '/home/venkatesh/code/devaki-enterprise/Sessions.py', reloading
+DEBUG:root:MongoDB connecting ...
+DEBUG:root:MongoDB connected
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with stat
+DEBUG:root:MongoDB connecting ...
+DEBUG:root:MongoDB connected
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 231-609-158
+INFO:werkzeug:127.0.0.1 - - [29/Nov/2022 12:24:57] "[36mGET / HTTP/1.1[0m" 304 -
+DEBUG:root:The function reload is started
+DEBUG:root:The function reload , returned None
+DEBUG:root:The function getBeats is started
+DEBUG:root:The function post is started
+INFO:werkzeug:127.0.0.1 - - [29/Nov/2022 12:24:57] "GET /getvehicle HTTP/1.1" 200 -
+DEBUG:root:The function get_redirect_target is started
+DEBUG:root:The function get_redirect_target , returned None
+DEBUG:root:
+request : ('POST', 'https://leveredge102.hulcd.com/rsunify/app/reportsController/getReportScreenDatawithprocedure.do') {'data': {'jasonParam': '{}',
+          'jsonObjWhereClause': '{":P1": "20221128",":P2": '
+                                '"20221129",":P3":"Both",":P4":"SecBills"}',
+          'orderBy': '[MKM_NAME]',
+          'procedure': 'Beat_Selection_Procedure'},
+ 'json': None} 
+ response : https://leveredge102.hulcd.com/rsunify/app/reportsController/getReportScreenDatawithprocedure.do 200 
+ '[[6,"D-BEEMANAGAR"],[7,"D-BHEL"],[10,"D-FG EDA STR'
+DEBUG:root:The function post , returned <Response [200]>
+DEBUG:root:{'data': {'jasonParam': '{}',
+          'jsonObjWhereClause': '{":P1": "20221128",":P2": '
+                                '"20221129",":P3":"Both",":P4":"SecBills"}',
+          'orderBy': '[MKM_NAME]',
+          'procedure': 'Beat_Selection_Procedure'},
+ 'fromDate': datetime.datetime(2022, 11, 28, 0, 0),
+ 'res': None,
+ 'self': <hul.ikea object at 0x7f04f18775b0>,
+ 'toDate': datetime.datetime(2022, 11, 29, 0, 0)}
+INFO:werkzeug:127.0.0.1 - - [29/Nov/2022 12:24:58] "[35m[1mPOST /getbeats HTTP/1.1[0m" 500 -
+INFO:werkzeug: * Detected change in '/home/venkatesh/code/devaki-enterprise/Sessions.py', reloading
+INFO:werkzeug: * Restarting with stat
+DEBUG:root:MongoDB connecting ...
+DEBUG:root:MongoDB connected
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 231-609-158
+DEBUG:root:MongoDB connecting ...
+DEBUG:root:MongoDB connected
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with stat
+DEBUG:root:MongoDB connecting ...
+DEBUG:root:MongoDB connected
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 231-609-158
+INFO:werkzeug:127.0.0.1 - - [29/Nov/2022 12:25:12] "[36mGET / HTTP/1.1[0m" 304 -
+DEBUG:root:The function getBeats is started
+DEBUG:root:The function post is started
+INFO:werkzeug:127.0.0.1 - - [29/Nov/2022 12:25:12] "GET /getvehicle HTTP/1.1" 200 -
+DEBUG:root:The function get_redirect_target is started
+DEBUG:root:The function get_redirect_target , returned None
+DEBUG:root:
+request : ('POST', 'https://leveredge102.hulcd.com/rsunify/app/reportsController/getReportScreenDatawithprocedure.do') {'data': {'jasonParam': '{}',
+          'jsonObjWhereClause': '{":P1": "20221128",":P2": '
+                                '"20221129",":P3":"Both",":P4":"SecBills"}',
+          'orderBy': '[MKM_NAME]',
+          'procedure': 'Beat_Selection_Procedure'},
+ 'json': None} 
+ response : https://leveredge102.hulcd.com/rsunify/app/reportsController/getReportScreenDatawithprocedure.do 200 
+ '[[6,"D-BEEMANAGAR"],[7,"D-BHEL"],[10,"D-FG EDA STR'
+DEBUG:root:The function post , returned <Response [200]>
+DEBUG:root:{'data': {'jasonParam': '{}',
+          'jsonObjWhereClause': '{":P1": "20221128",":P2": '
+                                '"20221129",":P3":"Both",":P4":"SecBills"}',
+          'orderBy': '[MKM_NAME]',
+          'procedure': 'Beat_Selection_Procedure'},
+ 'fromDate': datetime.datetime(2022, 11, 28, 0, 0),
+ 'res': None,
+ 'self': <hul.ikea object at 0x7f524dd3b940>,
+ 'toDate': datetime.datetime(2022, 11, 29, 0, 0)}
+INFO:werkzeug:127.0.0.1 - - [29/Nov/2022 12:25:13] "[35m[1mPOST /getbeats HTTP/1.1[0m" 500 -
+INFO:werkzeug: * Detected change in '/home/venkatesh/code/devaki-enterprise/Sessions.py', reloading
+INFO:werkzeug: * Restarting with stat
+DEBUG:root:MongoDB connecting ...
+DEBUG:root:MongoDB connected
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with stat
+DEBUG:root:MongoDB connecting ...
+DEBUG:root:MongoDB connected
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 231-609-158
+INFO:werkzeug:127.0.0.1 - - [29/Nov/2022 12:25:24] "[36mGET / HTTP/1.1[0m" 304 -
+DEBUG:root:The function mount is started
+DEBUG:root:The function mount , returned None
+DEBUG:root:The function mount is started
+DEBUG:root:The function mount , returned None
+DEBUG:root:The function reload is started
+INFO:werkzeug:127.0.0.1 - - [29/Nov/2022 12:25:25] "GET /getvehicle HTTP/1.1" 200 -
+DEBUG:root:The function reload , returned None
+DEBUG:root:The function getBeats is started
+DEBUG:root:The function post is started
+DEBUG:root:The function request is started
+DEBUG:root:The function prepare_request is started
+DEBUG:root:The function prepare_request , returned <PreparedRequest [POST]>
+DEBUG:root:{'allow_redirects': True,
+ 'auth': None,
+ 'cert': None,
+ 'cookies': None,
+ 'data': {'jasonParam': '{}',
+          'jsonObjWhereClause': '{":P1": "20221128",":P2": '
+                                '"20221129",":P3":"Both",":P4":"SecBills"}',
+          'orderBy': '[MKM_NAME]',
+          'procedure': 'Beat_Selection_Procedure'},
+ 'files': None,
+ 'headers': None,
+ 'hooks': None,
+ 'json': None,
+ 'method': 'POST',
+ 'params': None,
+ 'prep': None,
+ 'proxies': {},
+ 'req': <Request [POST]>,
+ 'self': <hul.ikea object at 0x7fd66de3fd00>,
+ 'stream': None,
+ 'timeout': None,
+ 'url': 'https://leveredge102.hulcd.com/rsunify/app/reportsController/getReportScreenDatawithprocedure.do',
+ 'verify': None}
+INFO:werkzeug:127.0.0.1 - - [29/Nov/2022 12:25:25] "[35m[1mPOST /getbeats HTTP/1.1[0m" 500 -
+INFO:werkzeug: * Detected change in '/home/venkatesh/code/devaki-enterprise/Sessions.py', reloading
+DEBUG:root:MongoDB connecting ...
+DEBUG:root:MongoDB connected
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with stat
+DEBUG:root:MongoDB connecting ...
+DEBUG:root:MongoDB connected
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 231-609-158
+INFO:werkzeug:127.0.0.1 - - [29/Nov/2022 12:25:54] "[36mGET / HTTP/1.1[0m" 304 -
+DEBUG:root:{'_Session__name': 'mount',
+ '__class__': <class 'Sessions.Session'>,
+ 'new_func': <function Session.__getattribute__.<locals>.new_func at 0x7f18dd086e60>,
+ 'self': <hul.ikea object at 0x7f18dfa83940>,
+ 'value': <bound method Session.mount of <hul.ikea object at 0x7f18dfa83940>>}
+INFO:werkzeug:127.0.0.1 - - [29/Nov/2022 12:25:54] "[35m[1mPOST /getbeats HTTP/1.1[0m" 500 -
+INFO:werkzeug:127.0.0.1 - - [29/Nov/2022 12:25:55] "GET /getvehicle HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in '/home/venkatesh/code/devaki-enterprise/Sessions.py', reloading
+DEBUG:root:MongoDB connecting ...
+DEBUG:root:MongoDB connected
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with stat
+DEBUG:root:MongoDB connecting ...
+DEBUG:root:MongoDB connected
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 231-609-158
+INFO:werkzeug:127.0.0.1 - - [29/Nov/2022 12:26:18] "[36mGET / HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [29/Nov/2022 12:26:18] "GET /getvehicle HTTP/1.1" 200 -
+DEBUG:root:The function mount is started
+DEBUG:root:The function mount , returned None
+DEBUG:root:The function mount is started
+DEBUG:root:The function mount , returned None
+DEBUG:root:The function reload is started
+DEBUG:root:The function reload , returned None
+DEBUG:root:The function getBeats is started
+DEBUG:root:The function post is started
+DEBUG:root:The function request is started
+DEBUG:root:MongoDB connecting ...
+DEBUG:root:MongoDB connected
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with stat
+DEBUG:root:MongoDB connecting ...
+DEBUG:root:MongoDB connected
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 231-609-158
+INFO:werkzeug:127.0.0.1 - - [29/Nov/2022 12:28:47] "[36mGET / HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [29/Nov/2022 12:28:47] "GET /getvehicle HTTP/1.1" 200 -
+DEBUG:root:The function mount is started
+DEBUG:root:The function mount , returned None
+DEBUG:root:The function mount is started
+DEBUG:root:The function mount , returned None
+DEBUG:root:The function reload is started
+DEBUG:root:The function reload , returned None
+DEBUG:root:The function getBeats is started
+DEBUG:root:The function post is started
+DEBUG:root:
+request : ('POST', 'https://leveredge102.hulcd.com/rsunify/app/reportsController/getReportScreenDatawithprocedure.do') {'data': {'jasonParam': '{}',
+          'jsonObjWhereClause': '{":P1": "20221128",":P2": '
+                                '"20221129",":P3":"Both",":P4":"SecBills"}',
+          'orderBy': '[MKM_NAME]',
+          'procedure': 'Beat_Selection_Procedure'},
+ 'json': None} 
+ response : https://leveredge102.hulcd.com/rsunify/app/reportsController/getReportScreenDatawithprocedure.do 200 
+ '[[6,"D-BEEMANAGAR"],[7,"D-BHEL"],[10,"D-FG EDA STR'
+DEBUG:root:The function post , returned <Response [200]>
+DEBUG:root:{'data': {'jasonParam': '{}',
+          'jsonObjWhereClause': '{":P1": "20221128",":P2": '
+                                '"20221129",":P3":"Both",":P4":"SecBills"}',
+          'orderBy': '[MKM_NAME]',
+          'procedure': 'Beat_Selection_Procedure'},
+ 'fromDate': datetime.datetime(2022, 11, 28, 0, 0),
+ 'res': None,
+ 'self': <hul.ikea object at 0x7f22f0641de0>,
+ 'toDate': datetime.datetime(2022, 11, 29, 0, 0)}
+INFO:werkzeug:127.0.0.1 - - [29/Nov/2022 12:28:51] "[35m[1mPOST /getbeats HTTP/1.1[0m" 500 -
+DEBUG:root:MongoDB connecting ...
+DEBUG:root:MongoDB connected
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with stat
+DEBUG:root:MongoDB connecting ...
+DEBUG:root:MongoDB connected
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 231-609-158
+INFO:werkzeug:127.0.0.1 - - [29/Nov/2022 12:29:17] "[36mGET / HTTP/1.1[0m" 304 -
+INFO:werkzeug:127.0.0.1 - - [29/Nov/2022 12:29:18] "GET /getvehicle HTTP/1.1" 200 -
+DEBUG:root:
+request : ('POST', 'https://leveredge102.hulcd.com/rsunify/app/reportsController/getReportScreenDatawithprocedure.do') {'data': {'jasonParam': '{}',
+          'jsonObjWhereClause': '{":P1": "20221128",":P2": '
+                                '"20221129",":P3":"Both",":P4":"SecBills"}',
+          'orderBy': '[MKM_NAME]',
+          'procedure': 'Beat_Selection_Procedure'},
+ 'json': None} 
+ response : https://leveredge102.hulcd.com/rsunify/app/reportsController/getReportScreenDatawithprocedure.do 200 
+ '[[6,"D-BEEMANAGAR"],[7,"D-BHEL"],[10,"D-FG EDA STR'
+INFO:werkzeug:127.0.0.1 - - [29/Nov/2022 12:29:19] "POST /getbeats HTTP/1.1" 200 -

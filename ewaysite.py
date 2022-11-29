@@ -6,7 +6,7 @@ from os import openpty
 from random import random
 from time import time
 from urllib import request
-from requests import Session
+from Sessions import Session
 import pandas as pd
 import string 
 import json

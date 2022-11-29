@@ -6,7 +6,7 @@ import logging
 from random import random
 from time import time
 from urllib import request
-from requests import Session
+from Sessions import Session
 import pandas as pd
 import string 
 import json
@@ -39,21 +39,7 @@ class Einvoice(Session) :
         self.captcha = ""
         super().__init__()
        
-      def __getattribute__(self, __name: str) :
-         value = super().__getattribute__(__name) 
-         if type(value) == function : 
-            def new_func(*args) : 
-                logging.debug(f"The function {__name} is started")
-                return_val = value(*args)
-                logging.debug(f"The function {__name} , returned {return_val}")
-            return new_func 
-         return super().__getattribute__(__name)
-      
-      def request(self,*args):
-          res = super().request(*args)
-          logging.log(logging.NOTSET,f"request : {args} \n response : {res.url} {res.status_code} \n {res.text[:max(len(res.text),50)]}")
-          return res 
-          
+    
       def reload(self,user,db) : 
         self.db = db 
         self.cookies.clear()

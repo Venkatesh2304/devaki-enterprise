@@ -1,6 +1,7 @@
 import imp
+import logging
 from urllib import response
-from requests import Session
+from Sessions import Session
 from datetime import datetime
 import json
 from collections import defaultdict
@@ -14,6 +15,8 @@ import json_converter
 import outstanding
 import openpyxl
 from itertools import combinations
+
+
 
 REPORT_URL = "/rsunify/app/reportsController/generatereport.do"
 AJAX_FILE = r"ajax.txt"
@@ -36,7 +39,7 @@ class ikea(Session):
         self.json = {'Content-type': "application/json; charset=utf-8"}
         self.download = lambda url: self.get(
             "/rsunify/app/reportsController/downloadReport?filePath="+url)
-
+     
     def post(self, url, **kwargs):
         url = self.baseUrl + url if self.baseUrl not in url else url 
         kwargs["url"] = url
@@ -81,7 +84,6 @@ class ikea(Session):
             self.login()
 
     def login(self):
-        print("login started")
         self.cookies.clear()
         data = self.db.find_one({"username": self.user})
         for attr in ["baseUrl", "ikea_user", "ikea_pwd", "dbName"]:
@@ -117,7 +119,6 @@ class ikea(Session):
         res = self.post(
             "/rsunify/app/reportsController/getReportScreenDatawithprocedure.do", data=data)
         # beats is returned in text format [[1,'AKBAR'],[4,'THIRU']]
-       
         beats = json.loads(res.text)
 
         clean = lambda x:   max(x.replace(" ", "-").replace("+", "-").split("-"),key=len)
@@ -135,7 +136,6 @@ class ikea(Session):
                 temp[beatName].append(beatId)
 
         beats = dict((key, tuple(val)) for key, val in temp.items())
-        print( beats )
         return beats
 
     def Edownload(self, type, fromDate, toDate, data, beats, vehicles):
@@ -209,7 +209,6 @@ class ikea(Session):
         return send_file(outstanding.interpret(excel,days) , as_attachment=True , download_name="outstanding.xlsx")
 
     def creditlock(self , config ) :
-        print(config.find_one({"username" : self.user}))
         config = config.find_one({"username" : self.user})["creditlock"] 
         default = config["OTHERS"]
         del config["OTHERS"]

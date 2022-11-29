@@ -10,13 +10,15 @@ from pymongo import MongoClient
 from hul import *
 import ewaysite
 from flask_cors import CORS
-# date parser
-
+from pprint import pformat
 from werkzeug.exceptions import HTTPException
 import logging 
 from flask.logging import default_handler
 
 logging.basicConfig(filename='record.log', level=logging.NOTSET)
+
+logging.getLogger('urllib3').setLevel(logging.INFO)
+
 
 class RequestFormatter(logging.Formatter):
     def format(self, record):
@@ -35,6 +37,8 @@ formatter = RequestFormatter(
 default_handler.setFormatter(formatter)
 
 
+# date parser
+def dateParser(date): return datetime.strptime(date, "%Y-%m-%d")
 
 def SendExcel(df,download_name):
      output = BytesIO()
@@ -56,8 +60,8 @@ def handle_exception(e):
         tb = tb.tb_next
     frame = tb.tb_frame
     logging.debug("The stack trace :: " , e)
-    logging.debug(frame.f_locals['v1'])
-    return render_template("500_generic.html", e=e), 500
+    logging.debug(pformat(frame.f_locals))
+    return str(e) ,  500
 
 
 CORS(app, origins=["http://127.0.0.1/:5000",
