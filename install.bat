@@ -1,2 +1,1 @@
-winget install --id Git.Git -e --source winget
-
+git clone https://github.com/Venkatesh2304/devaki-enterprise
