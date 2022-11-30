@@ -105,7 +105,7 @@ class Einvoice(Session) :
           upload_home = self.post("https://einvoice1.gst.gov.in/Invoice/BulkUpload" ,  files = files , headers=headers , data = form ).text
           success_excel = pd.read_excel(BytesIO(self.get("https://einvoice1.gst.gov.in/Invoice/ExcelUploadedInvoiceDetails" , headers=headers).content))
           failed_excel =  pd.read_excel(BytesIO(self.get("https://einvoice1.gst.gov.in/Invoice/FailedInvoiceDetails" , headers=headers).content))
-        
+          print ( failed_excel )
           data = { "download" :  success_excel.to_csv(index = False) ,  
                      "success" : len(success_excel.index) , "failed" : len(failed_excel.index) , "failed_data" : failed_excel.to_csv(index=False) } 
           return  data

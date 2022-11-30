@@ -340,6 +340,7 @@
                 generateCreditLock() { 
                     axios.get("/creditlock").then( async (res) => { 
                            var data   = await res.json() ;   
+                           console.log(data)
                            alert( "Total Modified Shops :: " + data["count"].toString() )   
                     })
                 }

@@ -233,7 +233,6 @@ class ikea(Session):
         partyMaster =  partyMaster.drop_duplicates(subset=['PAR CODE HLL'], keep='first')[["PAR CODE HLL","max_bills"]]
 
         creditlock = pd.merge(creditlock , partyMaster , on = "PAR CODE HLL",how="left")
-        
         max_finder = lambda row : max(row["PAR CR BILLS UTILISED"],row["max_bills"]) if row["max_bills"] != 0 else 0
         creditlock["max_bills"] = creditlock.apply( max_finder , axis = 1 )
         creditlock = creditlock[creditlock["max_bills"] != creditlock['PAR CR BILLS']]
@@ -244,13 +243,13 @@ class ikea(Session):
         ws = wb['Credit Locking']
         col = 6 
         for idx , row in creditlock.iterrows() : 
-            ws.cell( int(row["Sr No"]) + 1 , 6).value = row["max_bills"]
-        
+           ws.cell( int(row["Sr No"]) + 1 , 6).value = row["max_bills"]
         x = BytesIO()
         wb.save(x)
         x.seek(0)
-
         files = { "file" : ("credit.xlsx", x ,'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')  }
         res = self.post("/rsunify/app/beatSequenceMaster/uploadFileCLSU", files = files ).text 
+        logging.debug(f"The file upload response for Invalid Excel Sheet is excel contains error but uploaded")
+        logging.debug(f"HTML file response means the account is logged out")
         return  jsonify({ "count" : len(creditlock.index)  , "res" : res }) , 200   
 
