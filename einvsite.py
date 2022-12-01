@@ -53,7 +53,7 @@ class Einvoice(Session) :
            if "https://einvoice1.gst.gov.in/Home/MainMenu" not in res.url : #reload faileD
               logging.debug(f"E-invoice reload with db cookies failed , response url : {res.url} , text : {res.text}")
               self.db.update_one( {"username" : user } ,{"$set" :{ "einv_session" : None }} )
-              return False
+              return True
 
            for attr in ["einv_user","einv_password"] :
                self.__setattr__(attr,session[attr])
@@ -84,7 +84,7 @@ class Einvoice(Session) :
           form["UserLogin.Password"]  , form["CaptchaCode"] = hsh2 , self.captcha 
           form["UserLogin.UserName"] = self.user   
           res = self.post("https://einvoice1.gst.gov.in/Home/Login" , headers = headers , data = form )
-        
+          
           if res.url == "https://einvoice1.gst.gov.in/Home/Login" : #reload failed
                if "alert('Invalid Login Credentials" in res.text :  #credentials wrong 
                    return {"status" : False , "err" : "Wrong Credentials"}

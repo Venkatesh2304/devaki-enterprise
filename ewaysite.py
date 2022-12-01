@@ -39,9 +39,10 @@ headers = { "Referer": "https://ewaybillgst.gov.in/login.aspx" ,
 
 class Eway(Session) : 
       def __init__(self) : 
-        self.captcha = ""
+        self.captcha = "" 
         super().__init__()
         self.cookies.set("ewb_ld_cookie",value = "292419338.20480.0000" , domain = "ewaybillgst.gov.in")   
+      
       def website(self) : 
           for i in range(30) : 
             try :
@@ -98,7 +99,7 @@ class Eway(Session) :
           hsh1 = myHash(self.pwd) #password hashing 
           hsh2 = hashlib.sha256((hsh1 + form["HiddenField3"]).encode()).hexdigest()
           form["txt_password"]  , form["txtCaptcha"] = hsh2 , self.captcha 
-          form["txt_username"] = self.user   
+          form["txt_username"] = self.user  
           res = self.post("https://ewaybillgst.gov.in/login.aspx" , headers = headers , data = form )
      
           if res.url == "https://ewaybillgst.gov.in/login.aspx" : #reload failed

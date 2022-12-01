@@ -39,7 +39,13 @@ class ikea(Session):
         self.json = {'Content-type': "application/json; charset=utf-8"}
         self.download = lambda url: self.get(
             "/rsunify/app/reportsController/downloadReport?filePath="+url)
-     
+    
+    def request(self, *args, **kwargs):
+        res = super().request(*args, **kwargs) 
+        if res.status_code == 502 : 
+             logging.debug("Leveredge is server down currently")
+        return res 
+
     def post(self, url, **kwargs):
         url = self.baseUrl + url if self.baseUrl not in url else url 
         kwargs["url"] = url
@@ -209,6 +215,7 @@ class ikea(Session):
         return send_file(outstanding.interpret(excel,days) , as_attachment=True , download_name="outstanding.xlsx")
 
     def creditlock(self , config ) :
+
         config = config.find_one({"username" : self.user})["creditlock"] 
         default = config["OTHERS"]
         del config["OTHERS"]
@@ -237,7 +244,6 @@ class ikea(Session):
         creditlock["max_bills"] = creditlock.apply( max_finder , axis = 1 )
         creditlock = creditlock[creditlock["max_bills"] != creditlock['PAR CR BILLS']]
         creditlock_binary.seek(0)
-        
         
         wb = openpyxl.load_workbook(creditlock_binary)
         ws = wb['Credit Locking']

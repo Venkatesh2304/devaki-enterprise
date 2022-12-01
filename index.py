@@ -17,12 +17,11 @@ from flask.logging import default_handler
 import webbrowser
 
 logging.basicConfig(filename='record.log', level=logging.NOTSET)
-
 logging.getLogger('urllib3').setLevel(logging.INFO)
 
 
 class RequestFormatter(logging.Formatter):
-    def format(self, record):
+    def format(self, record):        
         if has_request_context():
             record.url = request.url
             record.remote_addr = request.remote_addr
@@ -30,6 +29,7 @@ class RequestFormatter(logging.Formatter):
             record.url = None
             record.remote_addr = None
         return super().format(record)
+
 
 formatter = RequestFormatter(
     '[%(asctime)s] %(remote_addr)s requested %(url)s\n'
@@ -52,17 +52,18 @@ def SendExcel(df,download_name):
 
 
 app = Flask(__name__)
+
 @app.errorhandler(Exception)
 def handle_exception(e):
     if isinstance(e, HTTPException):
         return e
     type, value, tb = sys.exc_info()
-    while tb.tb_next:
+    while tb.tb_next :
         tb = tb.tb_next
     frame = tb.tb_frame
-    logging.debug("The stack trace :: " , e)
+    logging.error(e)
     logging.debug(pformat(frame.f_locals))
-    return str(e) ,  500
+    return str(e) , 500 
 
 
 CORS(app, origins=["http://127.0.0.1/:5000",
@@ -265,6 +266,6 @@ def CreditLock():
     user = get_jwt_identity()
     return ikea(user, users).creditlock(configs)
 
-webbrowser.open("http://localhost:5001/")
+#webbrowser.open("http://localhost:5001/")
 if __name__ == '__main__':
     app.run(debug=True,port=5001)

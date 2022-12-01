@@ -271,10 +271,10 @@
                         }
                     })
                 },
-                generate() {
+                async generate() {
                     switch (this.eType) {
                         case "both":
-                            this.generateEach("einvoice")
+                            await this.generateEach("einvoice")
                             this.generateEach("eway")
                             break
                         case "eway":
