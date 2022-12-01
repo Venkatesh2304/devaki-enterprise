@@ -8,6 +8,11 @@ from collections import defaultdict
 from bs4 import BeautifulSoup
 EWAY_REPORT_DEFAULT_DAYS = 5
 
+def Dict(cookies) : 
+    r = {} 
+    for cookie in cookies :  r[cookie.name] = cookie.value 
+    return r 
+
 
 def parseEwayExcel(data) : 
     err_map = { "No errors" : lambda x : x == "" , "Already Generated" :  lambda x : "already generated" in x }
@@ -85,7 +90,7 @@ class Eway(Session) :
          #with open("captcha.aspx","wb+") as f : 
          #     f.write(captchaImg)
 
-         return BytesIO(captchaImg) , {"cookies" : dict(self.cookies) , "form" : form } 
+         return BytesIO(captchaImg) , {"cookies" : Dict(self.cookies) , "form" : form } 
 
       def login(self,user,db,data) :
           form , captcha , cookies = data["form"] , data["captcha"] , data["cookies"]
@@ -110,7 +115,7 @@ class Eway(Session) :
                with open('res','w+') as f : 
                     f.write(res.text)
                return {"status" : False , "err" : "Unkown error"}
-          db.update_one( {"username" : user } ,{"$set" :{ "eway_session" : json.dumps(dict(self.cookies)) }} )   
+          db.update_one( {"username" : user } ,{"$set" :{ "eway_session" : json.dumps(Dict(self.cookies)) }} )   
           return {"status" : True }
           
       def upload(self,json_data) : 
@@ -119,9 +124,12 @@ class Eway(Session) :
           files = { "ctl00$ContentPlaceHolder1$FileUploadControl" : ("eway.json", StringIO(json_data) ,'application/json') }
           headers["Referer"] =  "https://ewaybillgst.gov.in/BillGeneration/BulkUploadEwayBill.aspx"
           form = extractForm(bulk_home)
-          del form["ctl00$ContentPlaceHolder1$btnGenerate"]
-          form["ctl00$lblContactNo"] = ""
-          del form["ctl00$ContentPlaceHolder1$FileUploadControl"]
+          try : 
+            form["ctl00$lblContactNo"] = ""
+            del form["ctl00$ContentPlaceHolder1$FileUploadControl"]
+            del form["ctl00$ContentPlaceHolder1$btnGenerate"]
+          except : 
+             pass 
           
           upload_home = self.post("https://ewaybillgst.gov.in/BillGeneration/BulkUploadEwayBill.aspx" ,  files = files , headers=headers , data = form ).text
           form = extractForm(upload_home)
@@ -131,10 +139,11 @@ class Eway(Session) :
           soup = BeautifulSoup(generate_home, 'html.parser')
           table = str(soup.find(id="ctl00_ContentPlaceHolder1_BulkEwayBills"))
           try :
-            excel = pd.read_html(StringIO(table))[0]
-          except : 
+              excel = pd.read_html(StringIO(table))[0]
+          except Exception as e  : 
              if "alert('Json Schema" in upload_home :  #json schema is wrong 
                  return {"status" : False , "err" : "Json Schema is Wrong"}
+             return {"status":False,"err" : "Something went wrong"}
           err = parseEwayExcel(excel)
           data = { "download" : excel.to_csv(index=False) }
           return data 

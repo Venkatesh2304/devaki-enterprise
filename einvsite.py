@@ -1,19 +1,13 @@
 from datetime import date, datetime, timedelta
-from email import header
 import hashlib
-import imp
 import logging
 from random import random
 from time import time
 from urllib import request
 from Sessions import Session
 import pandas as pd
-import string 
 import json
 from io import BytesIO, StringIO
-import curlify
-import random
-from collections import defaultdict
 from bs4 import BeautifulSoup
 EWAY_REPORT_DEFAULT_DAYS = 5
 
@@ -101,11 +95,10 @@ class Einvoice(Session) :
           
           files = { "JsonFile" : ("eway.json", StringIO(json_data) ,'application/json') }
           form = extractForm(bulk_home)
-    
+           
           upload_home = self.post("https://einvoice1.gst.gov.in/Invoice/BulkUpload" ,  files = files , headers=headers , data = form ).text
           success_excel = pd.read_excel(BytesIO(self.get("https://einvoice1.gst.gov.in/Invoice/ExcelUploadedInvoiceDetails" , headers=headers).content))
           failed_excel =  pd.read_excel(BytesIO(self.get("https://einvoice1.gst.gov.in/Invoice/FailedInvoiceDetails" , headers=headers).content))
-          print ( failed_excel )
           data = { "download" :  success_excel.to_csv(index = False) ,  
                      "success" : len(success_excel.index) , "failed" : len(failed_excel.index) , "failed_data" : failed_excel.to_csv(index=False) } 
           return  data

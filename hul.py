@@ -1,11 +1,9 @@
-import imp
 import logging
 from urllib import response
 from Sessions import Session
 from datetime import datetime
 import json
 from collections import defaultdict
-import curlify
 import pandas as pd
 from flask import jsonify, send_file, make_response
 import ewaysite
@@ -14,7 +12,6 @@ from io import BytesIO
 import json_converter
 import outstanding
 import openpyxl
-from itertools import combinations
 
 
 

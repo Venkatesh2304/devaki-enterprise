@@ -338,9 +338,10 @@
                     })
                 }, 
                 generateCreditLock() { 
+                    alert("The process is going , after finish u will recieve alert box")
                     axios.get("/creditlock").then( async (res) => { 
-                           var data   = await res.json() ;   
-                           console.log(data)
+                           x = res ; 
+                           var data   =  res.data ;   
                            alert( "Total Modified Shops :: " + data["count"].toString() )   
                     })
                 }

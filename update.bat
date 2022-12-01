@@ -1,3 +1,3 @@
 git stash 
 git pull --ff
-pip install -r requirements.txt
+pip install --no-dependencies -r requirements.txt

@@ -3,7 +3,6 @@ import hashlib
 from datetime import timedelta
 import sys
 from urllib import response
-# Flask, request, jsonify , send_file , make_response , Response , send_from_directory
 from flask import *
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity, set_access_cookies
 from pymongo import MongoClient
@@ -266,6 +265,6 @@ def CreditLock():
     user = get_jwt_identity()
     return ikea(user, users).creditlock(configs)
 
-#webbrowser.open("http://localhost:5001/")
+webbrowser.open("http://localhost:5001/")
 if __name__ == '__main__':
     app.run(debug=True,port=5001)
