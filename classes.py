@@ -172,8 +172,7 @@ class ikea(Session) :
         partyMaster["PAR CODE HLL"] = partyMaster["HUL Code"]
 
         url =self.post("/rsunify/app/reportsController/generatereport.do" , data = self.ajax("creditlock_download",{})).text 
-        creditlock_binary = BytesIO(self.download(url))
-        creditlock = pd.read_excel(creditlock_binary)
+        creditlock = pd.read_excel(self.download(url))
         
         def beatType(beat) : 
             for type , max_bills in config.items() : 
