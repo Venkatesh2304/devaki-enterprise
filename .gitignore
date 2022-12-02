@@ -6,5 +6,7 @@ devaki/
 a.html
 A.html
 a.json
+*.json
 *.xlsx
+captcha.apsx
 !party.xlsx

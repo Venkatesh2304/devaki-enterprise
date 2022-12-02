@@ -56,7 +56,13 @@ class ikea(Session) :
                    value = value.replace("_"+orig+"_", repl)
                temp[key] = value
         return temp 
- 
+      
+      def is_logged_in(self) : 
+         try : 
+           res = self.get("/rsunify/app/billing/getUserId")
+           return True 
+         except : return False 
+      
       def __init__(self) :  
           self.key = "ikea"
           self.db = db 
@@ -72,7 +78,7 @@ class ikea(Session) :
                              (lambda x : x == "CLOUD_LOGIN_PASSWORD_EXPIRED" , lambda :  1 )] )
           self._login  = ("/rsunify/app/user/authenSuccess.htm",{})
           self._login_err = (lambda x : x.status_code ,[(lambda x : x != 200 , False)])
-          self.login()
+          if not self.is_logged_in() :  self.login()
 
       def getBeats(self, fromDate, toDate):
         data = {'jasonParam': '{}','procedure': 'Beat_Selection_Procedure', 'orderBy': '[MKM_NAME]'}
@@ -129,9 +135,11 @@ class ikea(Session) :
          if not esession.is_logged_in() :  return jsonify({"err": "Relogin Again"}), 520
 
          data = self.Edownload(types, fromDate, toDate, data, beats, vehicles)
+         logging.debug("Files Downloaded")
          if data is False :  return jsonify({"err": "No Data Found"}), 521
-
+         logging.debug("Json Started Creating")
          json_data = maps[types][1](data)
+         logging.debug("Json generated")
          return esession.upload(json_data) 
       
       def outstanding(self, date=None , days = 20):
@@ -241,6 +249,7 @@ class Einvoice(ESession) :
           upload_home = self.post("https://einvoice1.gst.gov.in/Invoice/BulkUpload" ,  files = files , data = form ).text
           success_excel = pd.read_excel(self.download("https://einvoice1.gst.gov.in/Invoice/ExcelUploadedInvoiceDetails"))
           failed_excel =  pd.read_excel(self.download("https://einvoice1.gst.gov.in/Invoice/FailedInvoiceDetails"))
+          failed_excel.to_excel("failed.xlsx")
           data = {  "download" :  success_excel.to_csv(index = False) ,  "success" : len(success_excel.index) , 
                     "failed" : len(failed_excel.index) , "failed_data" : failed_excel.to_csv(index=False) } 
           return  jsonify(data) 
@@ -263,6 +272,7 @@ class Eway(ESession) :
               try :
                   return self.get("https://ewaybillgst.gov.in/login.aspx",timeout = 3)
               except :
+                 logging.debug("Retrying Eway website")
                  continue
             raise Exception("EwayBill Page Not loading")          
             

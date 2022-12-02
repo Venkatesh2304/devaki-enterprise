@@ -134,6 +134,7 @@ einv_ewb_format = {
 
 
 def einvJson(data,isVeh = False):
+    data = data.dropna(subset=["Buyer GSTIN"])
     bill_group = data.groupby(by=["Document Number"], as_index=False)
     bills = []
     for idx, bill in bill_group:

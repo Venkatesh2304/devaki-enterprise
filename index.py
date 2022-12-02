@@ -1,3 +1,19 @@
+import warnings
+warnings.filterwarnings('ignore')
+
+#logging config 
+import logging
+logging.basicConfig( level=logging.NOTSET)
+
+rootLogger = logging.getLogger()
+fileHandler = logging.FileHandler( "record.log" )
+rootLogger.addHandler(fileHandler)
+
+# consoleHandler = logging.StreamHandler()
+# rootLogger.addHandler(consoleHandler)
+
+for modu in ["urllib3","chardet"] : logging.getLogger(modu).setLevel(logging.INFO)
+
 from classes import *
 from datetime import timedelta
 import sys
@@ -10,11 +26,8 @@ import logging
 from flask.logging import default_handler
 import webbrowser
 
-from werkzeug.debug import DebuggedApplication
 
-#logging config 
-logging.basicConfig( level=logging.NOTSET)
-logging.getLogger('urllib3').setLevel(logging.INFO)
+
 
 app = Flask(__name__)
 
@@ -107,10 +120,6 @@ def UpdatePage():
 def Preload():
     user = get_jwt_identity()
     data = dict(users.find_one({"username" : user}))
-    #required = ["ikea_user" , "ikea_pwd" , "dbName", "baseUrl" , "eway_user" , "eway_password" , 
-    #            "einv_user" , "einv_password" ]
-    #ikea = ["username","pwd","dbName","website","bill_prefix"]
-    #data = { i : j for i , j in data.items() if i in required }
     del data["_id"]
     return jsonify(data)
 

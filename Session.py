@@ -54,7 +54,6 @@ class Session(requests.Session) :
                      tb = sys.exc_info()[2]
                      frame = tb.tb_frame 
                      logging.debug(f"FUNCTION ERROR : {__name}")
-                     #logging.error( "\n".join( traceback.format_exception(e) ))
                      x = frame.f_locals
                      try : del x["frame"] , x["tb"] 
                      except : pass 
