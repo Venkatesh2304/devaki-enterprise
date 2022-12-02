@@ -188,51 +188,6 @@
         }
 
 
-        //var url = "http://127.0.0.1:5000";
-        // function getCookie(name) {
-        //     const value = `; ${document.cookie}`;
-        //     const parts = value.split(`; ${name}=`);
-        //     if (parts.length === 2) {
-        //         var val = parts.pop().split(';').shift();
-        //         x = val.substring(1, val.length - 1);
-        //         return x;
-        //     }
-        // }
-
-        // function getdelCookie(name = "temp") {
-        //     var val = getCookie(name)
-        //     document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-        //     console.log(val)
-        //     return JSON.parse(val)
-        // }
-
-        // function download(data, filename) {
-        //     var downloadUrl = URL.createObjectURL(data)
-        //     var a = document.createElement("a");
-        //     a.href = downloadUrl;
-        //     a.download = filename
-        //     document.body.appendChild(a);
-        //     a.click();
-        //     a.remove();
-        // }
-
-        // var addToken = (args) => {
-        //     var token = document.cookie.split("token=");
-        //     if (token.length == 0) { console.log("no token") }
-        //     else {
-        //         if ("headers" in args) {
-        //             args["headers"]["Authorization"] = "Bearer " + token[1].split(";")[0]
-        //         } else { args["headers"] = { "Authorization": "Bearer " + token[1].split(";")[0] } }
-        //         args["error"] = (err) => console.log(err)
-        //         if (args.url) { args["url"] = url + args["url"] }
-        //     }
-        //     return args;
-        // }
-
-        // var ajax = (args) => $.ajax(addToken(args))
-        // var Fetch = (_url, args) => fetch(url + _url, addToken(args))
-
-
 
         const { createApp } = Vue
         createApp({
@@ -274,7 +229,7 @@
                 async generate() {
                     switch (this.eType) {
                         case "both":
-                            await this.generateEach("einvoice")
+                            this.generateEach("einvoice")
                             this.generateEach("eway")
                             break
                         case "eway":

@@ -1,68 +1,29 @@
-from fileinput import filename
-import hashlib
+from classes import *
 from datetime import timedelta
 import sys
-from urllib import response
 from flask import *
-from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity, set_access_cookies
+from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity, set_access_cookies 
 from pymongo import MongoClient
-from hul import *
-import ewaysite
 from flask_cors import CORS
-from pprint import pformat
 from werkzeug.exceptions import HTTPException
 import logging 
 from flask.logging import default_handler
 import webbrowser
 
-logging.basicConfig(filename='record.log', level=logging.NOTSET)
+from werkzeug.debug import DebuggedApplication
+
+#logging config 
+logging.basicConfig( level=logging.NOTSET)
 logging.getLogger('urllib3').setLevel(logging.INFO)
-
-
-class RequestFormatter(logging.Formatter):
-    def format(self, record):        
-        if has_request_context():
-            record.url = request.url
-            record.remote_addr = request.remote_addr
-        else:
-            record.url = None
-            record.remote_addr = None
-        return super().format(record)
-
-
-formatter = RequestFormatter(
-    '[%(asctime)s] %(remote_addr)s requested %(url)s\n'
-    '%(levelname)s in %(module)s: %(message)s'
-)
-default_handler.setFormatter(formatter)
-
-
-# date parser
-def dateParser(date): return datetime.strptime(date, "%Y-%m-%d")
-
-def SendExcel(df,download_name):
-     output = BytesIO()
-     with pd.ExcelWriter(output, engine='xlsxwriter') as writer : 
-         df.to_excel(writer,index=False)
-         writer.save()
-     output.seek(0)
-     return  send_file( output ,  mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" , 
-                    download_name= download_name )
-
 
 app = Flask(__name__)
 
 @app.errorhandler(Exception)
 def handle_exception(e):
-    if isinstance(e, HTTPException):
-        return e
-    type, value, tb = sys.exc_info()
-    while tb.tb_next :
-        tb = tb.tb_next
-    frame = tb.tb_frame
-    logging.error(e)
-    logging.debug(pformat(frame.f_locals))
+    exe = traceback.format_exception(e) 
+    logging.error("".join(filter( lambda x : "flask" not in x  and "new_func" not in x , exe )))
     return str(e) , 500 
+
 
 
 CORS(app, origins=["http://127.0.0.1/:5000",
@@ -74,18 +35,20 @@ app.config['JWT_TOKEN_LOCATION'] = ['cookies']
 app.config["JWT_COOKIE_CSRF_PROTECT"] = False
 
 
-# your connection string
-logging.debug("MongoDB connecting ...")
-client = MongoClient(
-        "mongodb+srv://venkatesh2004:venkatesh2004@cluster0.9x1ccpv.mongodb.net/?retryWrites=true&w=majority")
-logging.debug("MongoDB connected")
 
-db = client["demo"]
-users = db["users"]
-configs = db["config"]
+# functions
+# date parser
+def dateParser(date): return datetime.strptime(date, "%Y-%m-%d")
+def SendExcel(df,download_name):
+     output = BytesIO()
+     with pd.ExcelWriter(output, engine='xlsxwriter') as writer : 
+         df.to_excel(writer,index=False)
+         writer.save()
+     output.seek(0)
+     return  send_file( output ,  mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" , 
+                    download_name= download_name )
 
-
-
+#jwt starts (signup and login)
 @app.route("/login", methods=["GET"])
 def loginpage():
     return app.send_static_file("login.html")
@@ -120,11 +83,11 @@ def login():
         logging.debug(f"Signup done , login also done , access token : {access_token}")
         return response
 
-
 @jwt.unauthorized_loader
 def custom_unauthorized_response(_err):
     logging.debug("Jwt token failed")
     return redirect(url_for('login'))
+#jwt ends 
 
 #Web page rendering :: start 
 @app.route("/", methods=["GET"])
@@ -144,9 +107,11 @@ def UpdatePage():
 def Preload():
     user = get_jwt_identity()
     data = dict(users.find_one({"username" : user}))
-    required = ["ikea_user" , "ikea_pwd" , "dbName", "baseUrl" , "eway_user" , "eway_password" , 
-                "einv_user" , "einv_password" ]
-    data = { i : j for i , j in data.items() if i in required }
+    #required = ["ikea_user" , "ikea_pwd" , "dbName", "baseUrl" , "eway_user" , "eway_password" , 
+    #            "einv_user" , "einv_password" ]
+    #ikea = ["username","pwd","dbName","website","bill_prefix"]
+    #data = { i : j for i , j in data.items() if i in required }
+    del data["_id"]
     return jsonify(data)
 
 @app.route("/preDownload/<type>", methods=["GET"])
@@ -186,85 +151,64 @@ def postUpdate():
            if fname == "vehicle" : 
               update = { "vehicles" : { i : j  for [i,j] in df.values.tolist() }}
               configs.update_one({ "username" : user} , { "$set" : update } , upsert =True )
-              return redirect("/")
-    
+              return redirect("/")    
 #Update Ends :::
 
-
-
 #Eway and Einvoice :: Start 
-
 #Preloaders :: getbeats && getVehicle 
+
+
+
 @app.route("/getbeats", methods=["POST"])
 @jwt_required()
 def getBeats():
     data = request.get_json()
-    user = get_jwt_identity()
-    session = ikea(user, users)
-    beats = session.getBeats(dateParser(
-        data["fromDate"]), dateParser(data["toDate"]))
-    return beats
+    return ikea().getBeats( dateParser(data["fromDate"]), dateParser(data["toDate"]) )
 
 @app.route("/getvehicle", methods=["GET"])
 @jwt_required()
 def getVehicle():
-    user = get_jwt_identity()
-    vehicles = configs.find_one({"username": user})
-    if vehicles:
-        return vehicles["vehicles"]
-    else:
-        return jsonify({"err": "No vehciles exists"})
+    vehicles = configs.find_one({"username": get_jwt_identity() })
+    if vehicles:  return vehicles["vehicles"]
+    else: return jsonify({"err": "No vehciles exists"})
 #Preloaders :: End 
 
 #Login For Eway and Einvoice
 @app.route("/ewayLogin", methods=["POST", "GET"])
 @jwt_required()
 def ewayLogin():
-    user = get_jwt_identity()
     types = request.args.get(
         "types") if request.method == "GET" else request.get_json()["types"]
-    maps = {"einvoice": einvsite.Einvoice, "eway": ewaysite.Eway}
+    maps = {"einvoice": Einvoice , "eway": Eway }
     esession = maps[types]()
     if request.method == "POST":
-        data = request.get_json()
-        data.update(json.loads(request.cookies.get("data")))
-        return jsonify(esession.login(user, users, data))
+        return jsonify(esession.login( request.get_json()["captcha"] ))
     else:
-        img, data = esession.getCaptcha()
+        img = esession.get_captcha()
         response = make_response(send_file(img, mimetype='image/aspx'))
-        response.set_cookie("data", json.dumps(data))
         return response
 
 #Generate Eway or Einvoice , return the json ( which contains the excel )
 @app.route("/eGenerate", methods=["POST"])
 @jwt_required()
 def generateEway():
-    user = get_jwt_identity()
     data = request.get_json()
     data["fromDate"],data["toDate"] = dateParser(data["fromDate"]),dateParser(data["toDate"])
-    x = ikea(user,users).EGenerate(**data)
-    return x 
-    #if type(x) == dict :
-    #    return jsonify(x)
-    #return send_file( x ,  mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" , 
-    #                       download_name= data["types"] +  ".xlsx" )
-
+    return ikea().EGenerate(**data)
 
 @app.route("/outstanding", methods=["POST"])
 @jwt_required()
 def Outstanding():
-    user = get_jwt_identity()
     data = request.get_json()
-    date, days = dateParser(data["date"]), data["days"]
-    return ikea(user,users).outstanding(date , days)
-
+    return ikea().outstanding( dateParser(data["date"]), data["days"])
 
 @app.route("/creditlock", methods=["GET"])
 @jwt_required()
 def CreditLock():
-    user = get_jwt_identity()
-    return ikea(user, users).creditlock(configs)
+    return ikea().creditlock()
 
-webbrowser.open("http://localhost:5001/")
+
+
+#webbrowser.open("http://localhost:5002/")
 if __name__ == '__main__':
-    app.run(debug=True,port=5001)
+    app.run(debug=True,port=5002)

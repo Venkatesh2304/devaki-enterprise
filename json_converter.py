@@ -1,6 +1,5 @@
 import json
 
-
 def format(normal_row, _format, sum_row=None):
     new = {}
     for key, value in _format.items():
@@ -28,9 +27,7 @@ def format(normal_row, _format, sum_row=None):
             new[key] = value
     return new
 
-
 def rounds(x): return round(float(x), 2)
-
 
 eway_itm_format = {"productName": ("Product",),
                    "hsnCode": ("HSN", int),
@@ -156,7 +153,7 @@ def einvJson(data,isVeh = False):
         bills.append(bill)
     json_data = bills
     json_data = json.dumps(json_data).replace('NaN', '""')
-    with open("a.json", "w+") as f:
+    with open("einvoice.json", "w+") as f:
         f.write(json_data)
     return json_data
 
@@ -173,6 +170,6 @@ def ewayJson(data):
         bills.append(bill)
     json_data = {"version": "1.0.0621", "billLists": bills}
     json_data = json.dumps(json_data).replace('NaN', '""')
-    with open("a.json", "w+") as f:
+    with open("eway.json", "w+") as f:
         f.write(json_data)
     return json_data

@@ -33,7 +33,7 @@
                 <div v-for="user in userid" class="userContainer col d-flex flex-column ">
                     <h2>{{user.name.toUpperCase()}}</h2>
                     <input v-for="placeholder , field in user.fields" type="text" class="form-control" :placeholder="[[placeholder]]"
-                        :name="[[field]]" v-model="userentry[field]" />
+                        :name="[[user.name + '_' + field]]" v-model="userentry[user.name][field]" />
                     <button type="button" class="btn btn-primary" @click="() => verify(user.name,user.fields)">Verify</button>
                 </div>
             </div>
@@ -65,7 +65,9 @@
         createApp({
             mounted() { 
                  $.ajax({ url : "/preload", method : "get" , 
-                   success : (data) => this.userentry = data  
+                   success : (data) =>  { 
+                     this.userentry = data
+                   }
                 })
             } , 
             methods: {
@@ -91,19 +93,19 @@
             },
             data() {
                 return {
+                    userentry : {"ikea" : {} , "eway" : {} , "einvoice" : {}}  , 
                     userid: 
                     [
                         {
                             "name": "ikea", "fields": {
-                                "ikea_user": "username",
-                                "ikea_pwd": "password", "dbName": "dbName", "baseUrl": "website"
+                                "username": "username",
+                                "pwd": "password", "dbName": "dbName", "home": "website" , "bill_prefix" : "bill_prefix"
                             }
                         },
-                        { "name": "eway", "fields": { "eway_user": "username", "eway_password": "password" } },
-                        { "name": "einvoice", "fields": { "einv_user": "username", "einv_password": "password" } }
+                        { "name": "eway", "fields": { "username": "username", "pwd": "password" } },
+                        { "name": "einvoice", "fields": { "username": "username", "pwd": "password" } }
                     ],
-                    uploads: ["vehicle", "beats"],
-                    userentry: {}
+                    uploads: ["vehicle", "beats"]
                 }
             }
         }).mount("#app")

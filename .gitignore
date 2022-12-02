@@ -7,3 +7,4 @@ a.html
 A.html
 a.json
 *.xlsx
+!party.xlsx
