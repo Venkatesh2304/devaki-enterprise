@@ -19,7 +19,6 @@ from datetime import timedelta
 import sys
 from flask import *
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity, set_access_cookies 
-from pymongo import MongoClient
 from flask_cors import CORS
 from werkzeug.exceptions import HTTPException
 import logging 
@@ -218,6 +217,6 @@ def CreditLock():
 
 
 
-#webbrowser.open("http://localhost:5002/")
+webbrowser.open("http://localhost:5002/")
 if __name__ == '__main__':
     app.run(debug=True,port=5002)
