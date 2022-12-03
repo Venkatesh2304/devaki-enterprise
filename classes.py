@@ -155,12 +155,15 @@ class ikea(Session) :
         beats_data = pd.DataFrame(beats_data)
 
         filteredBeats = list(set(beats_data[beats_data[day] != '0']["beatId"]))       
+        
         data =  self.ajax("outstanding_download", {"date" : date.strftime("%Y-%m-%d") , "beats": ",".join(filteredBeats)})
-
         res = self.post("/rsunify/app/reportsController/generatereport.do" , data = data )
         excel = pd.read_excel(self.download(res.text))
-    
-        return send_file(outstanding.interpret(excel,days) , as_attachment=True , download_name="outstanding.xlsx")
+
+        full_outsanding = self.ajax("prending_bills_download", {"date" : date.strftime("%Y-%m-%d") , "beats": "" })
+        all_outstanding_excel = pd.read_excel(self.download(self.post("/rsunify/app/reportsController/generatereport.do" , data = full_outsanding ).text ))
+
+        return send_file(outstanding.interpret(all_outstanding_excel,excel,days) , as_attachment=True , download_name="outstanding.xlsx")
 
       def creditlock(self) :
         config = configs.find_one({"username" : self.user})["creditlock"] 
