@@ -42,7 +42,7 @@ CORS(app, origins=["http://127.0.0.1/:5000",
      "http://127.0.0.1:5501"], supports_credentials=True)
 jwt = JWTManager(app)
 app.config['JWT_SECRET_KEY'] = 'abcdef'
-app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(days=15)
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(days=365)
 app.config['JWT_TOKEN_LOCATION'] = ['cookies']
 app.config["JWT_COOKIE_CSRF_PROTECT"] = False
 
